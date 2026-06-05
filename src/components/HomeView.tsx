@@ -1,14 +1,29 @@
 import { Logo } from "./Logo";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 interface HomeViewProps {
   onStart: () => void;
 }
 
 export const HomeView = ({ onStart }: HomeViewProps) => {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/auth");
+  };
+
   return (
     <div className="hero-glow relative flex min-h-screen flex-col">
-      <header className="px-6 pt-6 sm:px-10 sm:pt-8">
+      <header className="flex items-center justify-between px-6 pt-6 sm:px-10 sm:pt-8">
         <Logo size="md" />
+        <button
+          onClick={handleLogout}
+          className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-primary/40 hover:text-foreground"
+        >
+          Log out
+        </button>
       </header>
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-12 text-center">
