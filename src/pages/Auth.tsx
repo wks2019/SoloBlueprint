@@ -96,7 +96,7 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-sm">
         <h1 className="font-display text-2xl text-foreground">{titles[mode]}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{subs[mode]}</p>
@@ -166,6 +166,14 @@ const Auth = () => {
           )}
         </div>
       </div>
+
+      {/* Admin access — bottom centre */}
+      <button
+        onClick={() => navigate("/admin")}
+        className="mt-6 text-[10px] text-muted-foreground/30 hover:text-muted-foreground transition"
+      >
+        ⚙
+      </button>
     </div>
   );
 };
