@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { HomeView } from "@/components/HomeView";
 import { FormView, type FormAnswers } from "@/components/FormView";
 import { LoadingView } from "@/components/LoadingView";
@@ -20,9 +21,24 @@ const initialAnswers: FormAnswers = {
 };
 
 const Index = () => {
+  const navigate = useNavigate();
   const [view, setView] = useState<View>("home");
   const [answers, setAnswers] = useState<FormAnswers>(initialAnswers);
   const [report, setReport] = useState<Report | null>(null);
+  const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (!data.session) navigate("/auth");
+      else setChecking(false);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      if (!session) navigate("/auth");
+    });
+    return () => sub.subscription.unsubscribe();
+  }, [navigate]);
+
+  if (checking) return null;
 
   const ideaName = answers.selectedIdea ?? answers.customIdea.trim();
 
@@ -50,7 +66,6 @@ const Index = () => {
         description: `${msg}. Showing a sample plan instead.`,
         variant: "destructive",
       });
-      // Graceful fallback to mock data so the user still gets a result
       setReport(getMockReport(answers.selectedIdea ?? ""));
       setView("results");
     }
@@ -62,9 +77,7 @@ const Index = () => {
     setView("home");
   };
 
-  if (view === "home") {
-    return <HomeView onStart={() => setView("form")} />;
-  }
+  if (view === "home") return <HomeView onStart={() => setView("form")} />;
 
   if (view === "form") {
     return (
@@ -77,9 +90,7 @@ const Index = () => {
     );
   }
 
-  if (view === "loading") {
-    return <LoadingView />;
-  }
+  if (view === "loading") return <LoadingView />;
 
   if (view === "results" && report) {
     return (

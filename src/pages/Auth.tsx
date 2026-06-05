@@ -12,10 +12,10 @@ const Auth = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate("/admin");
+      if (data.session) navigate("/");
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session) navigate("/admin");
+      if (session) navigate("/");
     });
     return () => sub.subscription.unsubscribe();
   }, [navigate]);
@@ -28,10 +28,10 @@ const Auth = () => {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: `${window.location.origin}/admin` },
+          options: { emailRedirectTo: `${window.location.origin}/` },
         });
         if (error) throw error;
-        toast({ title: "Account created", description: "You can sign in now." });
+        toast({ title: "Account created", description: "Check your email to confirm, then sign in." });
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -50,7 +50,9 @@ const Auth = () => {
         <h1 className="font-display text-2xl text-foreground">
           {mode === "signin" ? "Sign in" : "Create account"}
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">Admin & owner access only.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {mode === "signin" ? "Welcome back." : "Start building your blueprint."}
+        </p>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-3">
           <input
