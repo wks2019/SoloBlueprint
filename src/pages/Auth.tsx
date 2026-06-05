@@ -170,9 +170,9 @@ const Auth = () => {
       {/* Admin access — bottom centre */}
       <button
         onClick={() => navigate("/admin")}
-        className="mt-6 text-[10px] text-muted-foreground/30 hover:text-muted-foreground transition"
+        className="mt-8 text-xs text-muted-foreground hover:text-foreground transition"
       >
-        ⚙
+        Admin Access
       </button>
     </div>
   );
