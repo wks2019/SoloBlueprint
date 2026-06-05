@@ -127,6 +127,8 @@ Deno.serve(async (req) => {
 
   try {
     const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+    const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY is not configured");
 
     const { answers } = (await req.json()) as { answers: FormAnswers };
@@ -135,6 +137,62 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: "Idea is required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ── Token check ──
+    let userId: string | null = null;
+    const authHeader = req.headers.get("Authorization");
+    if (authHeader?.startsWith("Bearer ") && SUPABASE_URL && SERVICE_ROLE) {
+      try {
+        const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+          headers: { Authorization: authHeader, apikey: SERVICE_ROLE },
+        });
+        if (userRes.ok) {
+          const u = await userRes.json();
+          userId = u?.id ?? null;
+        }
+      } catch (_) { /* anonymous */ }
+    }
+
+    if (userId && SUPABASE_URL && SERVICE_ROLE) {
+      // Check balance
+      const balRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/token_balance?user_id=eq.${userId}&select=balance`,
+        { headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` } }
+      );
+      const balData = await balRes.json();
+      const balance = balData?.[0]?.balance ?? 0;
+
+      if (balance <= 0) {
+        return new Response(JSON.stringify({ error: "NO_TOKENS", message: "You have no tokens left. Purchase more to continue." }), {
+          status: 402,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Deduct 1 token
+      await fetch(`${SUPABASE_URL}/rest/v1/token_balance?user_id=eq.${userId}`, {
+        method: "PATCH",
+        headers: {
+          apikey: SERVICE_ROLE,
+          Authorization: `Bearer ${SERVICE_ROLE}`,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({ balance: balance - 1, total_used: (balData?.[0]?.total_used ?? 0) + 1, updated_at: new Date().toISOString() }),
+      });
+
+      // Log transaction
+      await fetch(`${SUPABASE_URL}/rest/v1/token_transactions`, {
+        method: "POST",
+        headers: {
+          apikey: SERVICE_ROLE,
+          Authorization: `Bearer ${SERVICE_ROLE}`,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({ user_id: userId, amount: -1, reason: "blueprint_generated" }),
       });
     }
 

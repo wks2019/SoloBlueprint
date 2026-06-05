@@ -2,19 +2,26 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
-interface AccountMenuProps {
-  blueprintCount?: number;
-}
+interface AccountMenuProps {}
 
-export const AccountMenu = ({ blueprintCount = 0 }: AccountMenuProps) => {
+export const AccountMenu = ({}: AccountMenuProps) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [tokenBalance, setTokenBalance] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(async ({ data }) => {
       setEmail(data.session?.user?.email ?? "");
+      if (data.session?.user?.id) {
+        const { data: bal } = await supabase
+          .from("token_balance")
+          .select("balance")
+          .eq("user_id", data.session.user.id)
+          .single();
+        setTokenBalance(bal?.balance ?? 0);
+      }
     });
   }, []);
 
@@ -42,7 +49,7 @@ export const AccountMenu = ({ blueprintCount = 0 }: AccountMenuProps) => {
   };
 
   const initial = email ? email[0].toUpperCase() : "?";
-  const plan = blueprintCount === 0 ? "Free — 1 blueprint available" : blueprintCount === 1 ? "Free used — upgrade to continue" : "Paid";
+  const plan = tokenBalance === 0 ? "No tokens — top up to continue" : `${tokenBalance} token${tokenBalance !== 1 ? "s" : ""} remaining`;
 
   return (
     <div className="relative" ref={ref}>
@@ -74,17 +81,11 @@ export const AccountMenu = ({ blueprintCount = 0 }: AccountMenuProps) => {
           {/* Usage bar */}
           <div className="px-4 py-3 border-b border-border">
             <div className="flex items-center justify-between mb-1.5">
-              <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Blueprint usage</p>
-              <p className="text-[11px] font-semibold text-foreground">{blueprintCount} / 1 free</p>
+              <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">🪙 Tokens</p>
+              <p className="text-[11px] font-semibold text-foreground">{tokenBalance} remaining</p>
             </div>
-            <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all ${blueprintCount >= 1 ? "bg-primary" : "bg-primary/40"}`}
-                style={{ width: `${Math.min(blueprintCount, 1) * 100}%` }}
-              />
-            </div>
-            {blueprintCount >= 1 && (
-              <p className="mt-1.5 text-[11px] text-primary font-medium">Upgrade to generate more →</p>
+            {tokenBalance === 0 && (
+              <p className="mt-1 text-[11px] text-primary font-medium">Top up to generate more →</p>
             )}
           </div>
 

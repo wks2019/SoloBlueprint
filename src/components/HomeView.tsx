@@ -8,19 +8,21 @@ const ADMIN_EMAIL = "mvlasceanu26.vm@gmail.com";
 
 interface HomeViewProps {
   onStart: () => void;
-  blueprintCount?: number;
+  tokenBalance?: number | null;
 }
 
-export const HomeView = ({ onStart, blueprintCount = 0 }: HomeViewProps) => {
+export const HomeView = ({ onStart, tokenBalance = null }: HomeViewProps) => {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
-  const hasUsedFree = blueprintCount >= 1;
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       if (data.session?.user?.email === ADMIN_EMAIL) setIsAdmin(true);
     });
   }, []);
+
+  const hasTokens = tokenBalance === null || tokenBalance > 0;
+  const tokenLabel = tokenBalance === null ? "" : tokenBalance === 0 ? "0 tokens — top up to continue" : `${tokenBalance} token${tokenBalance !== 1 ? "s" : ""} remaining`;
 
   return (
     <div className="hero-glow relative flex min-h-screen flex-col">
@@ -35,7 +37,7 @@ export const HomeView = ({ onStart, blueprintCount = 0 }: HomeViewProps) => {
               Admin
             </button>
           )}
-          <AccountMenu blueprintCount={blueprintCount} />
+          <AccountMenu />
         </div>
       </header>
 
@@ -59,16 +61,17 @@ export const HomeView = ({ onStart, blueprintCount = 0 }: HomeViewProps) => {
           onClick={onStart}
           className="mt-10 w-full max-w-[300px] rounded-xl bg-primary px-6 py-4 text-base font-semibold text-primary-foreground shadow-[0_10px_30px_-10px_hsl(var(--primary)/0.6)] transition hover:brightness-110 active:scale-[0.98]"
         >
-          {hasUsedFree ? "Build Another Blueprint →" : "Build My Blueprint →"}
+          {hasTokens ? "Build My Blueprint →" : "Get Tokens →"}
         </button>
 
-        <p className="mt-4 text-xs text-muted-foreground">
-          {hasUsedFree ? (
-            <span className="text-primary font-medium">Your free blueprint has been used · Unlock from £9</span>
-          ) : (
-            "Your first blueprint is free"
-          )}
-        </p>
+        {tokenLabel && (
+          <p className={`mt-4 text-xs font-medium ${tokenBalance === 0 ? "text-primary" : "text-muted-foreground"}`}>
+            🪙 {tokenLabel}
+          </p>
+        )}
+        {tokenBalance === null && (
+          <p className="mt-4 text-xs text-muted-foreground">Your first blueprint is free</p>
+        )}
 
         <div className="mt-14 flex w-full max-w-2xl flex-wrap items-center justify-center gap-2.5">
           {[
