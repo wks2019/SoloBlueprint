@@ -1,232 +1,192 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/hooks/use-toast";
-import { ResultsView } from "@/components/ResultsView";
+import { Logo } from "@/components/Logo";
+
+const ADMIN_EMAIL = "mvlasceanu26.vm@gmail.com";
 
 interface BlueprintRow {
   id: string;
-  user_id: string | null;
   idea_name: string;
-  answers: any;
-  report: any;
   created_at: string;
+  user_id: string | null;
+  answers: Record<string, unknown>;
 }
 
-interface ProfileRow {
-  user_id: string;
-  email: string | null;
-  display_name: string | null;
-  created_at: string;
+interface DayStat {
+  date: string;
+  count: number;
 }
-
-type Tab = "blueprints" | "users" | "stats";
 
 const Admin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [tab, setTab] = useState<Tab>("blueprints");
   const [blueprints, setBlueprints] = useState<BlueprintRow[]>([]);
-  const [profiles, setProfiles] = useState<ProfileRow[]>([]);
-  const [viewing, setViewing] = useState<BlueprintRow | null>(null);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [dayStats, setDayStats] = useState<DayStat[]>([]);
 
   useEffect(() => {
-    (async () => {
-      const { data: sess } = await supabase.auth.getSession();
-      if (!sess.session) {
-        navigate("/auth");
-        return;
-      }
-      const { data: roleRow } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", sess.session.user.id)
-        .eq("role", "admin")
-        .maybeSingle();
-      if (!roleRow) {
-        toast({
-          title: "Not an admin",
-          description: "Your account doesn't have admin access yet.",
-          variant: "destructive",
-        });
-        setIsAdmin(false);
-        setLoading(false);
-        return;
-      }
-      setIsAdmin(true);
-      const [bp, pr] = await Promise.all([
-        supabase.from("blueprints").select("*").order("created_at", { ascending: false }).limit(500),
-        supabase.from("profiles").select("user_id,email,display_name,created_at").order("created_at", { ascending: false }),
-      ]);
-      if (bp.data) setBlueprints(bp.data as BlueprintRow[]);
-      if (pr.data) setProfiles(pr.data as ProfileRow[]);
-      setLoading(false);
-    })();
+    supabase.auth.getSession().then(async ({ data }) => {
+      if (!data.session) { navigate("/auth"); return; }
+      const email = data.session.user.email;
+      if (email !== ADMIN_EMAIL) { navigate("/"); return; }
+      await loadData();
+    });
   }, [navigate]);
 
-  const stats = useMemo(() => {
-    const total = blueprints.length;
-    const today = new Date().toISOString().slice(0, 10);
-    const todayCount = blueprints.filter((b) => b.created_at.slice(0, 10) === today).length;
-    const last7 = Date.now() - 7 * 86400000;
-    const last7Count = blueprints.filter((b) => new Date(b.created_at).getTime() > last7).length;
-    const ideaCounts: Record<string, number> = {};
-    blueprints.forEach((b) => { ideaCounts[b.idea_name] = (ideaCounts[b.idea_name] ?? 0) + 1; });
-    const topIdeas = Object.entries(ideaCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
-    return { total, todayCount, last7Count, topIdeas, users: profiles.length };
-  }, [blueprints, profiles]);
+  const loadData = async () => {
+    setLoading(true);
 
-  const signOut = async () => {
+    const { data: bps } = await supabase
+      .from("blueprints")
+      .select("id, idea_name, created_at, user_id, answers")
+      .order("created_at", { ascending: false })
+      .limit(200);
+
+    if (bps) {
+      setBlueprints(bps as BlueprintRow[]);
+
+      // Day stats — last 14 days
+      const counts: Record<string, number> = {};
+      bps.forEach((b) => {
+        const day = b.created_at.slice(0, 10);
+        counts[day] = (counts[day] || 0) + 1;
+      });
+      const sorted = Object.entries(counts)
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .slice(-14)
+        .map(([date, count]) => ({ date, count }));
+      setDayStats(sorted);
+
+      // Unique users
+      const unique = new Set(bps.map((b) => b.user_id).filter(Boolean));
+      setTotalUsers(unique.size);
+    }
+
+    setLoading(false);
+  };
+
+  const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/auth");
   };
 
+  const maxCount = Math.max(...dayStats.map((d) => d.count), 1);
+
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Loading…</div>;
-  }
-
-  if (!isAdmin) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-4 text-center">
-        <p className="text-foreground">You're signed in but not an admin.</p>
-        <button onClick={signOut} className="rounded-md border border-border px-4 py-2 text-sm">Sign out</button>
-      </div>
-    );
-  }
-
-  if (viewing) {
-    return (
-      <div>
-        <div className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background/90 px-4 py-2 backdrop-blur">
-          <button onClick={() => setViewing(null)} className="text-sm text-muted-foreground hover:text-foreground">← Back to admin</button>
-          <span className="text-xs text-muted-foreground">{new Date(viewing.created_at).toLocaleString()}</span>
-        </div>
-        <ResultsView
-          ideaName={viewing.idea_name}
-          answers={viewing.answers}
-          report={viewing.report}
-          onStartOver={() => setViewing(null)}
-        />
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-sm text-muted-foreground">Loading...</p>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <h1 className="font-display text-xl text-foreground">Admin</h1>
-          <div className="flex gap-2">
-            <a href="/" className="rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground">App</a>
-            <button onClick={signOut} className="rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground">Sign out</button>
+      {/* Header */}
+      <header className="sticky top-0 z-10 border-b border-border bg-background/90 backdrop-blur">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+          <div className="flex items-center gap-3">
+            <Logo size="sm" />
+            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+              Admin
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate("/")}
+              className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground"
+            >
+              ← App
+            </button>
+            <button
+              onClick={handleLogout}
+              className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground"
+            >
+              Log out
+            </button>
           </div>
         </div>
-        <nav className="mx-auto flex max-w-6xl gap-1 px-4 pb-2">
-          {(["blueprints", "users", "stats"] as Tab[]).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={`rounded-md px-3 py-1.5 text-xs font-medium uppercase tracking-wider ${
-                tab === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {t}
-            </button>
-          ))}
-        </nav>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-6">
-        {tab === "stats" && (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <StatCard label="Total blueprints" value={stats.total} />
-            <StatCard label="Today" value={stats.todayCount} />
-            <StatCard label="Last 7 days" value={stats.last7Count} />
-            <StatCard label="Registered users" value={stats.users} />
-            <div className="sm:col-span-2 lg:col-span-4 rounded-xl border border-border bg-card p-5">
-              <p className="mb-3 text-xs uppercase tracking-wider text-muted-foreground">Top ideas</p>
-              {stats.topIdeas.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No data yet.</p>
-              ) : (
-                <ul className="space-y-1.5">
-                  {stats.topIdeas.map(([idea, n]) => (
-                    <li key={idea} className="flex justify-between text-sm">
-                      <span className="text-foreground truncate pr-3">{idea}</span>
-                      <span className="font-mono-num text-primary">{n}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
+      <main className="mx-auto max-w-5xl px-4 py-8">
+        {/* Stats cards */}
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 mb-8">
+          {[
+            { label: "Total blueprints", value: blueprints.length },
+            { label: "Unique users", value: totalUsers },
+            { label: "Today", value: dayStats.find(d => d.date === new Date().toISOString().slice(0, 10))?.count ?? 0 },
+            { label: "This week", value: dayStats.slice(-7).reduce((s, d) => s + d.count, 0) },
+          ].map((stat) => (
+            <div key={stat.label} className="rounded-xl border border-border bg-card p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
+                {stat.label}
+              </p>
+              <p className="font-display text-3xl text-foreground">{stat.value}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Chart */}
+        {dayStats.length > 0 && (
+          <div className="rounded-xl border border-border bg-card p-5 mb-8">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+              Blueprints generated — last 14 days
+            </p>
+            <div className="flex items-end gap-1.5 h-24">
+              {dayStats.map((d) => (
+                <div key={d.date} className="flex flex-1 flex-col items-center gap-1">
+                  <span className="text-[9px] text-muted-foreground">{d.count}</span>
+                  <div
+                    className="w-full rounded-t bg-primary/70 transition-all"
+                    style={{ height: `${(d.count / maxCount) * 72}px`, minHeight: "4px" }}
+                  />
+                  <span className="text-[8px] text-muted-foreground rotate-[-45deg] origin-top-left mt-1">
+                    {d.date.slice(5)}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
-        {tab === "blueprints" && (
-          <div className="rounded-xl border border-border bg-card overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/30 text-xs uppercase tracking-wider text-muted-foreground">
-                <tr>
-                  <th className="px-4 py-3 text-left">Idea</th>
-                  <th className="px-4 py-3 text-left">User</th>
-                  <th className="px-4 py-3 text-left">Created</th>
-                  <th className="px-4 py-3"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {blueprints.map((b) => (
-                  <tr key={b.id} className="border-t border-border">
-                    <td className="px-4 py-3 text-foreground">{b.idea_name}</td>
-                    <td className="px-4 py-3 text-muted-foreground text-xs">{b.user_id ? b.user_id.slice(0, 8) : "anon"}</td>
-                    <td className="px-4 py-3 text-muted-foreground text-xs">{new Date(b.created_at).toLocaleString()}</td>
-                    <td className="px-4 py-3 text-right">
-                      <button onClick={() => setViewing(b)} className="rounded-md border border-border px-2.5 py-1 text-xs hover:border-primary/50">View</button>
-                    </td>
-                  </tr>
-                ))}
-                {blueprints.length === 0 && (
-                  <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground text-sm">No blueprints yet.</td></tr>
-                )}
-              </tbody>
-            </table>
+        {/* Recent blueprints */}
+        <div className="rounded-xl border border-border bg-card overflow-hidden">
+          <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Recent blueprints
+            </p>
+            <p className="text-xs text-muted-foreground">{blueprints.length} total</p>
           </div>
-        )}
-
-        {tab === "users" && (
-          <div className="rounded-xl border border-border bg-card overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/30 text-xs uppercase tracking-wider text-muted-foreground">
-                <tr>
-                  <th className="px-4 py-3 text-left">Email</th>
-                  <th className="px-4 py-3 text-left">Name</th>
-                  <th className="px-4 py-3 text-left">Joined</th>
-                </tr>
-              </thead>
-              <tbody>
-                {profiles.map((p) => (
-                  <tr key={p.user_id} className="border-t border-border">
-                    <td className="px-4 py-3 text-foreground">{p.email ?? "—"}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{p.display_name ?? "—"}</td>
-                    <td className="px-4 py-3 text-muted-foreground text-xs">{new Date(p.created_at).toLocaleDateString()}</td>
-                  </tr>
-                ))}
-                {profiles.length === 0 && (
-                  <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground text-sm">No users yet.</td></tr>
-                )}
-              </tbody>
-            </table>
+          <div className="divide-y divide-border">
+            {blueprints.slice(0, 50).map((b) => (
+              <div key={b.id} className="flex items-center justify-between px-5 py-3 gap-4">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">{b.idea_name}</p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                    {(b.answers as Record<string, string>)?.budget ?? "—"} ·{" "}
+                    {(b.answers as Record<string, string>)?.hours ?? "—"} ·{" "}
+                    {(b.answers as Record<string, string>)?.experience ?? "—"}
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="text-[11px] text-muted-foreground">
+                    {new Date(b.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground/60">
+                    {new Date(b.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
+                  </p>
+                </div>
+              </div>
+            ))}
+            {blueprints.length === 0 && (
+              <p className="px-5 py-8 text-center text-sm text-muted-foreground">No blueprints yet.</p>
+            )}
           </div>
-        )}
+        </div>
       </main>
     </div>
   );
 };
-
-const StatCard = ({ label, value }: { label: string; value: number }) => (
-  <div className="rounded-xl border border-border bg-card p-5">
-    <p className="text-xs uppercase tracking-wider text-muted-foreground">{label}</p>
-    <p className="mt-2 font-mono-num text-3xl text-foreground">{value}</p>
-  </div>
-);
 
 export default Admin;

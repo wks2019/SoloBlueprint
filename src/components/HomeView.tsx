@@ -1,6 +1,9 @@
+import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+
+const ADMIN_EMAIL = "mvlasceanu26.vm@gmail.com";
 
 interface HomeViewProps {
   onStart: () => void;
@@ -8,6 +11,13 @@ interface HomeViewProps {
 
 export const HomeView = ({ onStart }: HomeViewProps) => {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session?.user?.email === ADMIN_EMAIL) setIsAdmin(true);
+    });
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -18,12 +28,22 @@ export const HomeView = ({ onStart }: HomeViewProps) => {
     <div className="hero-glow relative flex min-h-screen flex-col">
       <header className="flex items-center justify-between px-6 pt-6 sm:px-10 sm:pt-8">
         <Logo size="md" />
-        <button
-          onClick={handleLogout}
-          className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-primary/40 hover:text-foreground"
-        >
-          Log out
-        </button>
+        <div className="flex items-center gap-2">
+          {isAdmin && (
+            <button
+              onClick={() => navigate("/admin")}
+              className="rounded-lg border border-primary/40 bg-primary/5 px-3 py-1.5 text-xs font-semibold text-primary transition hover:bg-primary/10"
+            >
+              Admin
+            </button>
+          )}
+          <button
+            onClick={handleLogout}
+            className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-primary/40 hover:text-foreground"
+          >
+            Log out
+          </button>
+        </div>
       </header>
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-12 text-center">
