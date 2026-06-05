@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
+import { AccountMenu } from "./AccountMenu";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 
@@ -21,11 +22,6 @@ export const HomeView = ({ onStart, blueprintCount = 0 }: HomeViewProps) => {
     });
   }, []);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate("/auth");
-  };
-
   return (
     <div className="hero-glow relative flex min-h-screen flex-col">
       <header className="flex items-center justify-between px-6 pt-6 sm:px-10 sm:pt-8">
@@ -39,12 +35,7 @@ export const HomeView = ({ onStart, blueprintCount = 0 }: HomeViewProps) => {
               Admin
             </button>
           )}
-          <button
-            onClick={handleLogout}
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-primary/40 hover:text-foreground"
-          >
-            Log out
-          </button>
+          <AccountMenu blueprintCount={blueprintCount} />
         </div>
       </header>
 
