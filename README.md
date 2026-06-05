@@ -325,6 +325,29 @@ Set in Supabase dashboard → Edge Functions → Secrets:
 
 > Every decision, feature, and build must be made with the goal of growing this into a million-dollar product. Always think scale, retention, and revenue impact before building anything.
 
+**Default skills always active:** `/g` (growth) · `/p` (prioritize) · `/sd` (system design)
+
+**On-demand build commands:**
+| Command | Skill |
+|---------|-------|
+| `/rm` | Roadmap — timeline-based steps |
+| `/ss` | Step-by-step — clear numbered steps |
+| `/o` | Optimizer — improve what's given |
+| `/oc` | Optimize code — improve performance |
+| `/tr` | Track — build a tracking system |
+
+**On-demand content commands:**
+| Command | Skill |
+|---------|-------|
+| `/icp` | Ideal customer profile |
+| `/h` | Hook — strong opening lines |
+| `/v` | Viral — high engagement style |
+| `/per` | Persuasive — convincing tone |
+| `/auth` | Authority — expert tone |
+| `/d` | Data — include stats |
+| `/eng` | Engagement — increase engagement |
+| `/tf` | Tone formal — formal writing |
+
 ---
 
 ## Legal
