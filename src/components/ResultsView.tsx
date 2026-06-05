@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Logo } from "./Logo";
 import type { FormAnswers } from "./FormView";
 import { downloadBlueprintPdf, buildMarketingPrompt, flattenLaunchPlan } from "@/lib/exports";
@@ -39,6 +40,7 @@ interface ResultsViewProps {
   report: ReportData;
   onStartOver: () => void;
   isPaid?: boolean;
+  isShared?: boolean;
 }
 
 const FREE_SECTIONS = 3;
@@ -294,9 +296,11 @@ const PaywallGate = ({ ideaName }: { ideaName: string }) => {
   );
 };
 
-export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = false }: ResultsViewProps) => {
+export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = false, isShared = false }: ResultsViewProps) => {
+  const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [promptCopied, setPromptCopied] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
 
   const copyText = async (text: string) => {
     try { await navigator.clipboard.writeText(text); }
@@ -310,6 +314,12 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
   const handleCopy = async () => { await copyText(buildPlainText(ideaName, report)); setCopied(true); setTimeout(() => setCopied(false), 2000); };
   const handleCopyPrompt = async () => { await copyText(buildMarketingPrompt(ideaName, answers, report)); setPromptCopied(true); setTimeout(() => setPromptCopied(false), 2000); };
   const handleDownloadPdf = () => { downloadBlueprintPdf(ideaName, answers, report); };
+  const handleShare = async () => {
+    const url = window.location.href;
+    await copyText(url);
+    setShareCopied(true);
+    setTimeout(() => setShareCopied(false), 2000);
+  };
 
   const meta = [answers.budget, answers.hours, answers.experience, answers.goal].filter(Boolean).join(" · ");
   const freeSections = SECTIONS.slice(0, FREE_SECTIONS);
@@ -322,14 +332,19 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
         <div className="mx-auto flex max-w-[820px] items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <Logo size="sm" />
           <div className="flex flex-wrap items-center justify-end gap-2">
-            {isPaid && (
+            {isPaid && !isShared && (
               <>
                 <button onClick={handleDownloadPdf} className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground shadow-[0_8px_24px_-12px_hsl(var(--primary)/0.7)] transition hover:brightness-110 sm:text-sm">↓ PDF</button>
-                <button onClick={handleCopyPrompt} className="rounded-lg border border-primary/60 bg-transparent px-3 py-2 text-xs font-semibold text-primary transition hover:bg-primary/10 sm:text-sm">{promptCopied ? "Copied ✓" : "Marketing Prompt"}</button>
-                <button onClick={handleCopy} className="rounded-lg border border-border bg-transparent px-3 py-2 text-xs font-medium text-muted-foreground transition hover:border-primary/50 hover:text-foreground sm:text-sm">{copied ? "Copied ✓" : "Copy Plan"}</button>
+                <button onClick={handleShare} className="rounded-lg border border-primary/60 bg-transparent px-3 py-2 text-xs font-semibold text-primary transition hover:bg-primary/10 sm:text-sm">{shareCopied ? "Link copied ✓" : "Share"}</button>
+                <button onClick={handleCopyPrompt} className="rounded-lg border border-border bg-transparent px-3 py-2 text-xs font-medium text-muted-foreground transition hover:border-primary/50 hover:text-foreground sm:text-sm">{promptCopied ? "Copied ✓" : "Marketing Prompt"}</button>
+                <button onClick={handleCopy} className="rounded-lg border border-border bg-transparent px-3 py-2 text-xs font-medium text-muted-foreground transition hover:border-primary/50 hover:text-foreground sm:text-sm">{copied ? "Copied ✓" : "Copy"}</button>
+                <button onClick={() => navigate("/history")} className="rounded-lg border border-border bg-transparent px-3 py-2 text-xs font-medium text-muted-foreground transition hover:text-foreground sm:text-sm">History</button>
               </>
             )}
-            <button onClick={onStartOver} className="rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground transition hover:text-foreground sm:text-sm">Start Over</button>
+            {isShared && (
+              <button onClick={() => navigate("/")} className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground transition hover:brightness-110 sm:text-sm">Build mine →</button>
+            )}
+            {!isShared && <button onClick={onStartOver} className="rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground transition hover:text-foreground sm:text-sm">Start Over</button>}
           </div>
         </div>
       </div>

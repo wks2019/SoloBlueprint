@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
+import History from "./pages/History";
+import BlueprintView from "./pages/BlueprintView";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -22,6 +24,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/blueprint/:id" element={<BlueprintView />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
