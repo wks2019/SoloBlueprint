@@ -1,0 +1,238 @@
+import { useMemo } from "react";
+
+export interface FormAnswers {
+  selectedIdea: string | null;
+  customIdea: string;
+  budget: string | null;
+  hours: string | null;
+  experience: string | null;
+  goal: string | null;
+}
+
+export const IDEAS: { name: string; emoji: string }[] = [
+  { emoji: "🎬", name: "AI Content Repurposing Service" },
+  { emoji: "⚙️", name: "AI Automation Setup for SMBs" },
+  { emoji: "🎨", name: "Canva Template Shop" },
+  { emoji: "📋", name: "Notion Template Shop" },
+  { emoji: "📄", name: "Resume & LinkedIn Profile Writer" },
+  { emoji: "🌐", name: "Simple Landing Page Service" },
+  { emoji: "✉️", name: "AI-Written Email Newsletter" },
+  { emoji: "🔍", name: "Digital Product Audit & Funnel Fix" },
+  { emoji: "📅", name: "Niche Booking Tool (Micro-SaaS)" },
+  { emoji: "📊", name: "Lead List Service" },
+];
+
+const BUDGETS = [
+  "£0 – £50",
+  "£50 – £200",
+  "£200 – £1k",
+  "£1k – £10k",
+  "£10k – £100k",
+  "£100k – £1M",
+];
+const HOURS = ["1 – 5 hours", "5 – 15 hours", "15+ hours"];
+const EXPERIENCE = ["Complete beginner", "Some experience", "Technical background"];
+const GOALS = ["Earn my first £500", "Replace my income", "Build a product"];
+
+interface FormViewProps {
+  answers: FormAnswers;
+  setAnswers: (next: FormAnswers) => void;
+  onBack: () => void;
+  onSubmit: () => void;
+}
+
+const Pill = ({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`rounded-full border px-4 py-2.5 text-sm font-medium transition ${
+      active
+        ? "border-primary bg-primary text-primary-foreground shadow-[0_8px_24px_-12px_hsl(var(--primary)/0.7)]"
+        : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"
+    }`}
+  >
+    {children}
+  </button>
+);
+
+const QuestionLabel = ({ index, label }: { index: number; label: string }) => (
+  <div className="mb-4 flex items-baseline gap-3">
+    <span className="font-mono-num text-xs text-muted-foreground">
+      {String(index).padStart(2, "0")}
+    </span>
+    <h3 className="text-base font-semibold text-foreground sm:text-lg">{label}</h3>
+  </div>
+);
+
+export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProps) => {
+  const update = (patch: Partial<FormAnswers>) =>
+    setAnswers({ ...answers, ...patch });
+
+  const ideaSelected = answers.selectedIdea !== null || answers.customIdea.trim().length > 0;
+  const isComplete = useMemo(
+    () =>
+      ideaSelected &&
+      !!answers.budget &&
+      !!answers.hours &&
+      !!answers.experience &&
+      !!answers.goal,
+    [ideaSelected, answers]
+  );
+
+  return (
+    <div className="min-h-screen">
+      <div className="mx-auto w-full max-w-[680px] px-6 py-8 sm:py-12">
+        <button
+          onClick={onBack}
+          className="mb-8 text-sm text-muted-foreground transition hover:text-foreground"
+        >
+          ← Back
+        </button>
+
+        <header className="mb-10">
+          <h2 className="font-display text-3xl text-foreground sm:text-4xl">
+            Tell us about your idea
+          </h2>
+          <p className="mt-3 text-sm text-muted-foreground sm:text-base">
+            Answer 5 quick questions and we'll build your personalised blueprint.
+          </p>
+        </header>
+
+        {/* Q1 */}
+        <section className="mb-12">
+          <QuestionLabel index={1} label="What business do you want to launch?" />
+
+          {/* Custom idea — prominent search-style input */}
+          <div className="relative mb-5">
+            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg text-muted-foreground">
+              🔍
+            </span>
+            <input
+              type="text"
+              value={answers.customIdea}
+              onChange={(e) =>
+                update({
+                  customIdea: e.target.value,
+                  selectedIdea: e.target.value ? null : answers.selectedIdea,
+                })
+              }
+              placeholder="Describe your own idea..."
+              className="w-full rounded-xl border border-border bg-card py-3.5 pl-12 pr-4 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 sm:text-base"
+            />
+          </div>
+
+          {/* OR divider */}
+          <div className="my-5 flex items-center gap-3">
+            <div className="h-px flex-1 bg-border" />
+            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              Or pick one
+            </span>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {IDEAS.map((idea) => {
+              const active = answers.selectedIdea === idea.name;
+              return (
+                <button
+                  key={idea.name}
+                  type="button"
+                  onClick={() =>
+                    update({
+                      selectedIdea: active ? null : idea.name,
+                      customIdea: "",
+                    })
+                  }
+                  className={`group relative rounded-xl border bg-card p-3 text-left transition ${
+                    active
+                      ? "border-primary"
+                      : "border-border hover:border-primary/40"
+                  }`}
+                >
+                  {active && (
+                    <span className="absolute right-2 top-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
+                      ✓
+                    </span>
+                  )}
+                  <div className="mb-2 text-2xl">{idea.emoji}</div>
+                  <div className="text-xs font-semibold leading-snug text-foreground sm:text-sm">
+                    {idea.name}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Q2 */}
+        <section className="mb-10">
+          <QuestionLabel index={2} label="What is your available starting budget?" />
+          <div className="flex flex-wrap gap-2.5">
+            {BUDGETS.map((b) => (
+              <Pill key={b} active={answers.budget === b} onClick={() => update({ budget: b })}>
+                {b}
+              </Pill>
+            ))}
+          </div>
+        </section>
+
+        {/* Q3 */}
+        <section className="mb-10">
+          <QuestionLabel index={3} label="How many hours per week can you commit?" />
+          <div className="flex flex-wrap gap-2.5">
+            {HOURS.map((h) => (
+              <Pill key={h} active={answers.hours === h} onClick={() => update({ hours: h })}>
+                {h}
+              </Pill>
+            ))}
+          </div>
+        </section>
+
+        {/* Q4 */}
+        <section className="mb-10">
+          <QuestionLabel index={4} label="What is your experience level?" />
+          <div className="flex flex-wrap gap-2.5">
+            {EXPERIENCE.map((e) => (
+              <Pill key={e} active={answers.experience === e} onClick={() => update({ experience: e })}>
+                {e}
+              </Pill>
+            ))}
+          </div>
+        </section>
+
+        {/* Q5 */}
+        <section className="mb-12">
+          <QuestionLabel index={5} label="What is your main goal in the next 90 days?" />
+          <div className="flex flex-wrap gap-2.5">
+            {GOALS.map((g) => (
+              <Pill key={g} active={answers.goal === g} onClick={() => update({ goal: g })}>
+                {g}
+              </Pill>
+            ))}
+          </div>
+        </section>
+
+        <button
+          type="button"
+          onClick={onSubmit}
+          disabled={!isComplete}
+          className={`w-full rounded-xl px-6 py-4 text-base font-semibold transition ${
+            isComplete
+              ? "bg-primary text-primary-foreground shadow-[0_10px_30px_-10px_hsl(var(--primary)/0.6)] hover:brightness-110 active:scale-[0.99]"
+              : "cursor-not-allowed bg-muted text-muted-foreground"
+          }`}
+        >
+          Generate My Blueprint →
+        </button>
+      </div>
+    </div>
+  );
+};

@@ -1,0 +1,7 @@
+project_id = "gsxqbffdhdsisisbhpak"
+
+[functions.generate-blueprint]
+verify_jwt = false
+
+[functions.deepseek-proxy]
+verify_jwt = false
