@@ -109,6 +109,20 @@ export const AccountMenu = ({ blueprintCount = 0 }: AccountMenuProps) => {
               Change password
             </button>
             <button
+              onClick={() => {
+                if (window.confirm("Cancel your subscription? You'll keep access until the end of your billing period.")) {
+                  window.location.href = "mailto:support@soloblueprint.co.uk?subject=Cancel%20Subscription&body=Please%20cancel%20my%20subscription.%20Account%20email:%20" + encodeURIComponent(email);
+                }
+                setOpen(false);
+              }}
+              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-red-500/70 transition hover:bg-red-50 hover:text-red-600"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+              </svg>
+              Cancel subscription
+            </button>
+            <button
               onClick={handleLogout}
               className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-muted-foreground transition hover:bg-muted/40 hover:text-foreground"
             >
