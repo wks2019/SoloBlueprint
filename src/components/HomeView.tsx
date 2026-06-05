@@ -7,11 +7,13 @@ const ADMIN_EMAIL = "mvlasceanu26.vm@gmail.com";
 
 interface HomeViewProps {
   onStart: () => void;
+  blueprintCount?: number;
 }
 
-export const HomeView = ({ onStart }: HomeViewProps) => {
+export const HomeView = ({ onStart, blueprintCount = 0 }: HomeViewProps) => {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
+  const hasUsedFree = blueprintCount >= 1;
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -66,11 +68,15 @@ export const HomeView = ({ onStart }: HomeViewProps) => {
           onClick={onStart}
           className="mt-10 w-full max-w-[300px] rounded-xl bg-primary px-6 py-4 text-base font-semibold text-primary-foreground shadow-[0_10px_30px_-10px_hsl(var(--primary)/0.6)] transition hover:brightness-110 active:scale-[0.98]"
         >
-          Build My Blueprint →
+          {hasUsedFree ? "Build Another Blueprint →" : "Build My Blueprint →"}
         </button>
 
         <p className="mt-4 text-xs text-muted-foreground">
-          Your first blueprint is free
+          {hasUsedFree ? (
+            <span className="text-primary font-medium">Your free blueprint has been used · Unlock from £9</span>
+          ) : (
+            "Your first blueprint is free"
+          )}
         </p>
 
         <div className="mt-14 flex w-full max-w-2xl flex-wrap items-center justify-center gap-2.5">
