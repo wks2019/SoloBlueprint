@@ -55,7 +55,7 @@ export const TokenStore = ({ onClose, inline = false }: TokenStoreProps) => {
 
       <button
         type="button"
-        onClick={() => navigate("/checkout?pack=" + selected)}
+        onClick={() => navigate("/app/checkout?pack=" + selected)}
         className="w-full rounded-xl bg-primary py-3 text-sm font-semibold text-white shadow-[0_4px_20px_rgba(79,70,229,0.35)] transition hover:brightness-110"
       >
         Continue to payment →

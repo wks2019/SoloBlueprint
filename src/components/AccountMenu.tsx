@@ -36,7 +36,7 @@ export const AccountMenu = ({}: AccountMenuProps) => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate("/auth");
+    navigate("/");
   };
 
   const handleChangePassword = async () => {
@@ -92,7 +92,7 @@ export const AccountMenu = ({}: AccountMenuProps) => {
           {/* Actions */}
           <div className="py-1">
             <button
-              onClick={() => { navigate("/history"); setOpen(false); }}
+              onClick={() => { navigate("/app/history"); setOpen(false); }}
               className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-muted-foreground transition hover:bg-muted/40 hover:text-foreground"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

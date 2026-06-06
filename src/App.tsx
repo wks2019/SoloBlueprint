@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Landing from "./pages/Landing";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
@@ -23,13 +24,23 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          {/* Public marketing site */}
+          <Route path="/" element={<Landing />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/blueprint/:id" element={<BlueprintView />} />
+
+          {/* App */}
+          <Route path="/app" element={<Index />} />
+          <Route path="/app/auth" element={<Auth />} />
+          <Route path="/app/admin" element={<Admin />} />
+          <Route path="/app/history" element={<History />} />
+
+          {/* Legacy redirects — keep old routes working */}
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/history" element={<History />} />
-          <Route path="/blueprint/:id" element={<BlueprintView />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/privacy" element={<Privacy />} />
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

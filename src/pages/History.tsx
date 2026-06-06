@@ -17,7 +17,7 @@ const History = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
-      if (!data.session) { navigate("/auth"); return; }
+      if (!data.session) { navigate("/app/auth"); return; }
       const { data: bps } = await supabase
         .from("blueprints")
         .select("id, idea_name, created_at, answers")
@@ -33,7 +33,7 @@ const History = () => {
       <header className="sticky top-0 z-10 border-b border-border bg-background/90 backdrop-blur">
         <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-3">
           <Logo size="sm" />
-          <button onClick={() => navigate("/")} className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground">
+          <button onClick={() => navigate("/app")} className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground">
             ← Back
           </button>
         </div>
@@ -48,7 +48,7 @@ const History = () => {
         {!loading && blueprints.length === 0 && (
           <div className="rounded-xl border border-border bg-card p-8 text-center">
             <p className="text-sm text-muted-foreground mb-4">No blueprints yet.</p>
-            <button onClick={() => navigate("/")} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
+            <button onClick={() => navigate("/app")} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
               Build your first blueprint →
             </button>
           </div>

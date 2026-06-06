@@ -31,12 +31,12 @@ const Index = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
-      if (!data.session) { navigate("/auth"); return; }
+      if (!data.session) { navigate("/app/auth"); return; }
       await refreshTokenBalance(data.session.user.id);
       setChecking(false);
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (!session) navigate("/auth");
+      if (!session) navigate("/app/auth");
     });
     return () => sub.subscription.unsubscribe();
   }, [navigate]);

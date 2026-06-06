@@ -17,11 +17,11 @@ const Auth = () => {
     const hash = window.location.hash;
     if (hash && hash.includes("type=recovery")) { setMode("reset"); return; }
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate("/");
+      if (data.session) navigate("/app");
     });
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") setMode("reset");
-      else if (session) navigate("/");
+      else if (session) navigate("/app");
     });
     return () => sub.subscription.unsubscribe();
   }, [navigate]);
@@ -39,7 +39,7 @@ const Auth = () => {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       } else if (mode === "forgot") {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/auth` });
+        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/app/auth` });
         if (error) throw error;
         toast({ title: "Reset email sent", description: "Check your inbox for a password reset link." });
         setMode("signin");
@@ -141,7 +141,7 @@ const Auth = () => {
       <footer className="flex items-center justify-center gap-6 px-6 pb-6 pt-2">
         <span className="text-xs text-muted-foreground">© 2026 SoloBlueprint</span>
         <button
-          onClick={() => navigate("/admin")}
+          onClick={() => navigate("/app/admin")}
           className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-primary/40 hover:text-primary"
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

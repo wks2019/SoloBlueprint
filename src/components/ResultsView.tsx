@@ -338,7 +338,7 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
                 <button onClick={handleShare} className="rounded-lg border border-primary/60 bg-transparent px-3 py-2 text-xs font-semibold text-primary transition hover:bg-primary/10 sm:text-sm">{shareCopied ? "Link copied ✓" : "Share"}</button>
                 <button onClick={handleCopyPrompt} className="rounded-lg border border-border bg-transparent px-3 py-2 text-xs font-medium text-muted-foreground transition hover:border-primary/50 hover:text-foreground sm:text-sm">{promptCopied ? "Copied ✓" : "Marketing Prompt"}</button>
                 <button onClick={handleCopy} className="rounded-lg border border-border bg-transparent px-3 py-2 text-xs font-medium text-muted-foreground transition hover:border-primary/50 hover:text-foreground sm:text-sm">{copied ? "Copied ✓" : "Copy"}</button>
-                <button onClick={() => navigate("/history")} className="rounded-lg border border-border bg-transparent px-3 py-2 text-xs font-medium text-muted-foreground transition hover:text-foreground sm:text-sm">History</button>
+                <button onClick={() => navigate("/app/history")} className="rounded-lg border border-border bg-transparent px-3 py-2 text-xs font-medium text-muted-foreground transition hover:text-foreground sm:text-sm">History</button>
               </>
             )}
             {isShared && (

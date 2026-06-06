@@ -27,9 +27,9 @@ const Admin = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
-      if (!data.session) { navigate("/auth"); return; }
+      if (!data.session) { navigate("/app/auth"); return; }
       const email = data.session.user.email;
-      if (email !== ADMIN_EMAIL) { navigate("/"); return; }
+      if (email !== ADMIN_EMAIL) { navigate("/app"); return; }
       await loadData();
     });
   }, [navigate]);
@@ -68,7 +68,7 @@ const Admin = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate("/auth");
+    navigate("/app/auth");
   };
 
   const maxCount = Math.max(...dayStats.map((d) => d.count), 1);
@@ -94,7 +94,7 @@ const Admin = () => {
           </div>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/app")}
               className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground"
             >
               ← App

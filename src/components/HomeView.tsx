@@ -31,7 +31,7 @@ export const HomeView = ({ onStart, tokenBalance = null }: HomeViewProps) => {
         <div className="flex items-center gap-2">
           {isAdmin && (
             <button
-              onClick={() => navigate("/admin")}
+              onClick={() => navigate("/app/admin")}
               className="rounded-lg border border-primary/40 bg-primary/5 px-3 py-1.5 text-xs font-semibold text-primary transition hover:bg-primary/10"
             >
               Admin
