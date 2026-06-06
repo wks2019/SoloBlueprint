@@ -334,11 +334,10 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
           <div className="flex flex-wrap items-center justify-end gap-2">
             {isPaid && !isShared && (
               <>
-                <button onClick={handleDownloadPdf} className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground shadow-[0_8px_24px_-12px_hsl(var(--primary)/0.7)] transition hover:brightness-110 sm:text-sm">↓ PDF</button>
-                <button onClick={handleShare} className="rounded-lg border border-primary/60 bg-transparent px-3 py-2 text-xs font-semibold text-primary transition hover:bg-primary/10 sm:text-sm">{shareCopied ? "Link copied ✓" : "Share"}</button>
-                <button onClick={handleCopyPrompt} className="rounded-lg border border-border bg-transparent px-3 py-2 text-xs font-medium text-muted-foreground transition hover:border-primary/50 hover:text-foreground sm:text-sm">{promptCopied ? "Copied ✓" : "Marketing Prompt"}</button>
-                <button onClick={handleCopy} className="rounded-lg border border-border bg-transparent px-3 py-2 text-xs font-medium text-muted-foreground transition hover:border-primary/50 hover:text-foreground sm:text-sm">{copied ? "Copied ✓" : "Copy"}</button>
-                <button onClick={() => navigate("/app/history")} className="rounded-lg border border-border bg-transparent px-3 py-2 text-xs font-medium text-muted-foreground transition hover:text-foreground sm:text-sm">History</button>
+                <button onClick={handleDownloadPdf} className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground shadow-[0_4px_12px_rgba(79,70,229,0.3)] transition hover:brightness-110 sm:text-sm">↓ PDF</button>
+                <button onClick={handleShare} className="rounded-lg border border-border px-3 py-2 text-xs font-medium text-muted-foreground transition hover:border-primary/50 hover:text-primary sm:text-sm">{shareCopied ? "✓ Copied" : "Share"}</button>
+                <button onClick={handleCopy} className="hidden sm:block rounded-lg border border-border px-3 py-2 text-xs font-medium text-muted-foreground transition hover:text-foreground">{copied ? "✓" : "Copy"}</button>
+                <button onClick={() => navigate("/app/history")} className="hidden sm:block rounded-lg border border-border px-3 py-2 text-xs font-medium text-muted-foreground transition hover:text-foreground">History</button>
               </>
             )}
             {isShared && (

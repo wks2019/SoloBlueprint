@@ -55,7 +55,7 @@ const Pill = ({
     onClick={onClick}
     className={`rounded-full border px-4 py-2.5 text-sm font-medium transition ${
       active
-        ? "border-primary bg-primary text-primary-foreground shadow-[0_8px_24px_-12px_hsl(var(--primary)/0.7)]"
+        ? "border-indigo-500 bg-indigo-600 text-white shadow-[0_4px_16px_rgba(79,70,229,0.35)] scale-[1.02]"
         : "border-indigo-100 bg-indigo-50 text-indigo-600 hover:border-indigo-300 hover:bg-indigo-100"
     }`}
   >

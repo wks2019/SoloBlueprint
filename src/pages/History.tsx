@@ -46,9 +46,11 @@ const History = () => {
         {loading && <p className="text-sm text-muted-foreground">Loading…</p>}
 
         {!loading && blueprints.length === 0 && (
-          <div className="rounded-xl border border-border bg-card p-8 text-center">
-            <p className="text-sm text-muted-foreground mb-4">No blueprints yet.</p>
-            <button onClick={() => navigate("/app")} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
+          <div className="rounded-2xl border border-indigo-100 bg-indigo-50/50 p-10 text-center">
+            <p className="text-3xl mb-3">📋</p>
+            <p className="font-display text-lg text-foreground mb-2" style={{ fontFamily: "'DM Serif Display', serif" }}>No blueprints yet</p>
+            <p className="text-sm text-muted-foreground mb-6">Your first blueprint is free. Takes under 60 seconds.</p>
+            <button onClick={() => navigate("/app")} className="rounded-full bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow-[0_4px_16px_rgba(79,70,229,0.3)] transition hover:bg-indigo-700">
               Build your first blueprint →
             </button>
           </div>

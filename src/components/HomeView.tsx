@@ -73,6 +73,16 @@ export const HomeView = ({ onStart, tokenBalance = null }: HomeViewProps) => {
           <p className="mt-4 text-xs text-muted-foreground">Your first blueprint is free</p>
         )}
 
+        {/* What you'll get */}
+        <div className="mt-12 w-full max-w-lg">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3 text-center">Your blueprint includes</p>
+          <div className="flex flex-wrap justify-center gap-1.5">
+            {["Idea Diagnosis", "Market Research", "Target Audience", "Clear Offer", "AI Tool Stack", "Launch Plan", "Pricing Strategy", "Outreach Scripts", "7-Day Plan", "Scale Path"].map((s) => (
+              <span key={s} className="rounded-full bg-indigo-50 border border-indigo-100 px-3 py-1 text-[11px] text-indigo-600 font-medium">{s}</span>
+            ))}
+          </div>
+        </div>
+
         <div className="mt-14 flex w-full max-w-2xl flex-wrap items-center justify-center gap-2.5">
           {[
             "✓ 14-section blueprint",
