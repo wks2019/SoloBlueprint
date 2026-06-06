@@ -39,7 +39,7 @@ const History = () => {
         </div>
       </header>
 
-      <main className="mx-auto max-w-2xl px-4 py-8">
+      <main className="mx-auto max-w-2xl px-4 py-6 sm:py-8">
         <h1 className="font-display text-2xl text-foreground mb-1">Your blueprints</h1>
         <p className="text-sm text-muted-foreground mb-8">{blueprints.length} blueprint{blueprints.length !== 1 ? "s" : ""} generated</p>
 

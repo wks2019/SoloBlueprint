@@ -194,7 +194,7 @@ const LaunchPlanSection = ({ num, title, plan }: { num: string; title: string; p
   const isDesktop = typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches;
   if (typeof plan === "string" || !plan?.phases?.length) {
     return (
-      <article className="animate-fade-in rounded-xl border border-border border-l-2 border-l-primary bg-card p-5 sm:p-6">
+      <article className="animate-fade-in rounded-xl border border-border border-l-2 border-l-primary bg-card p-4 sm:p-6">
         <div className="mb-3 flex items-baseline gap-3">
           <span className="text-xs font-semibold text-indigo-500 bg-indigo-50 border border-indigo-100 rounded-full px-2 py-0.5">{num}</span>
           <h2 className="text-base font-semibold text-foreground sm:text-lg">{title}</h2>
@@ -206,7 +206,7 @@ const LaunchPlanSection = ({ num, title, plan }: { num: string; title: string; p
     );
   }
   return (
-    <article className="animate-fade-in rounded-xl border border-border border-l-2 border-l-primary bg-card p-5 sm:p-6">
+    <article className="animate-fade-in rounded-xl border border-border border-l-2 border-l-primary bg-card p-4 sm:p-6">
       <div className="mb-4 flex items-baseline gap-3">
         <span className="text-xs font-semibold text-indigo-500 bg-indigo-50 border border-indigo-100 rounded-full px-2 py-0.5">{num}</span>
         <h2 className="text-base font-semibold text-foreground sm:text-lg">{title}</h2>
@@ -329,7 +329,7 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
     <div className="min-h-screen">
       {/* Sticky action bar */}
       <div className="sticky top-0 z-20 border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
-        <div className="mx-auto flex max-w-[820px] items-center justify-between gap-3 px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-[820px] items-center justify-between gap-2 px-3 py-2.5 sm:px-6 sm:py-3">
           <Logo size="sm" />
           <div className="flex flex-wrap items-center justify-end gap-2">
             {isPaid && !isShared && (
@@ -348,15 +348,15 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
         </div>
       </div>
 
-      <main className="mx-auto w-full max-w-[820px] px-4 py-10 sm:px-6 sm:py-14">
+      <main className="mx-auto w-full max-w-[820px] px-3 py-6 sm:px-6 sm:py-14">
         <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Your SoloBlueprint for:</p>
-        <h1 className="mt-2 font-display text-3xl text-foreground sm:text-4xl md:text-5xl">{ideaName}</h1>
+        <h1 className="mt-2 font-display text-2xl text-foreground sm:text-4xl md:text-5xl">{ideaName}</h1>
         {meta && <p className="mt-3 text-xs text-muted-foreground sm:text-sm">{meta}</p>}
 
         {/* Free sections */}
         <div className="mt-10 space-y-5">
           {freeSections.map((section) => (
-            <article key={section.num} className="animate-fade-in rounded-xl border border-border border-l-2 border-l-primary bg-card p-5 sm:p-6">
+            <article key={section.num} className="animate-fade-in rounded-xl border border-border border-l-2 border-l-primary bg-card p-4 sm:p-6">
               <div className="mb-3 flex items-baseline gap-3">
                 <span className="text-xs font-semibold text-indigo-500 bg-indigo-50 border border-indigo-100 rounded-full px-2 py-0.5">{section.num}</span>
                 <h2 className="text-base font-semibold text-foreground sm:text-lg">{section.title}</h2>
@@ -376,7 +376,7 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
                 return <LaunchPlanSection key={section.num} num={section.num} title={section.title} plan={report.launch_plan} />;
               }
               return (
-                <article key={section.num} className="animate-fade-in rounded-xl border border-border border-l-2 border-l-primary bg-card p-5 sm:p-6">
+                <article key={section.num} className="animate-fade-in rounded-xl border border-border border-l-2 border-l-primary bg-card p-4 sm:p-6">
                   <div className="mb-3 flex items-baseline gap-3">
                     <span className="text-xs font-semibold text-indigo-500 bg-indigo-50 border border-indigo-100 rounded-full px-2 py-0.5">{section.num}</span>
                     <h2 className="text-base font-semibold text-foreground sm:text-lg">{section.title}</h2>

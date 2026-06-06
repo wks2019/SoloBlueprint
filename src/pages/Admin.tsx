@@ -111,7 +111,7 @@ const Admin = () => {
 
       <main className="mx-auto max-w-5xl px-4 py-8">
         {/* Stats cards */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 mb-8">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 mb-6 sm:mb-8">
           {[
             { label: "Total blueprints", value: blueprints.length },
             { label: "Unique users", value: totalUsers },
@@ -122,7 +122,7 @@ const Admin = () => {
               <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
                 {stat.label}
               </p>
-              <p className="font-display text-3xl text-foreground">{stat.value}</p>
+              <p className="font-display text-2xl sm:text-3xl text-foreground">{stat.value}</p>
             </div>
           ))}
         </div>

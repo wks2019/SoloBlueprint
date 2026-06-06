@@ -26,7 +26,7 @@ export const HomeView = ({ onStart, tokenBalance = null }: HomeViewProps) => {
 
   return (
     <div className="hero-glow relative flex min-h-screen flex-col">
-      <header className="flex items-center justify-between px-6 pt-6 sm:px-10 sm:pt-8">
+      <header className="flex items-center justify-between px-4 pt-5 sm:px-10 sm:pt-8">
         <Logo size="md" />
         <div className="flex items-center gap-2">
           {isAdmin && (
@@ -41,7 +41,7 @@ export const HomeView = ({ onStart, tokenBalance = null }: HomeViewProps) => {
         </div>
       </header>
 
-      <main className="flex flex-1 flex-col items-center justify-center px-6 py-12 text-center">
+      <main className="flex flex-1 flex-col items-center justify-center px-4 py-10 sm:py-12 text-center">
         <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
           Built for solo founders who are done overthinking
         </p>
@@ -59,7 +59,7 @@ export const HomeView = ({ onStart, tokenBalance = null }: HomeViewProps) => {
 
         <button
           onClick={onStart}
-          className="mt-10 w-full max-w-[300px] rounded-xl bg-primary px-6 py-4 text-base font-semibold text-primary-foreground shadow-[0_10px_30px_-10px_hsl(var(--primary)/0.6)] transition hover:brightness-110 active:scale-[0.98]"
+          className="mt-8 w-full max-w-[320px] rounded-xl bg-primary px-6 py-4 text-base font-semibold text-primary-foreground shadow-[0_10px_30px_-10px_hsl(var(--primary)/0.6)] transition hover:brightness-110 active:scale-[0.98]"
         >
           {hasTokens ? "Let's build this →" : "Top up tokens →"}
         </button>

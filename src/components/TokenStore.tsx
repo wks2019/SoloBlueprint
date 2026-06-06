@@ -74,8 +74,8 @@ export const TokenStore = ({ onClose, inline = false }: TokenStoreProps) => {
   if (inline) return <div className="rounded-2xl border border-border bg-background">{content}</div>;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm px-4 pb-4 sm:pb-0">
-      <div className="w-full max-w-sm rounded-2xl border border-border bg-background shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm px-3 pb-3 sm:pb-0">
+      <div className="w-full max-w-sm rounded-t-2xl sm:rounded-2xl border border-border bg-background shadow-2xl">
         {content}
       </div>
     </div>

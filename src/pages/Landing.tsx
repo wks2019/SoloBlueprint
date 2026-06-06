@@ -46,11 +46,11 @@ const Landing = () => {
           <p className="text-lg sm:text-xl text-gray-500 max-w-xl mx-auto mb-10 leading-relaxed font-light">
             You have an idea. You don't have a plan. SoloBlueprint fixes that — in under 60 seconds. Real tools, real pricing in £, copy-paste scripts, and a 7-day action plan. No fluff.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
-            <button onClick={handleCTA} className="rounded-xl bg-indigo-600 px-8 py-4 text-base font-semibold text-white shadow-[0_8px_30px_rgba(79,70,229,0.35)] transition hover:bg-indigo-700 hover:-translate-y-0.5">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12">
+            <button onClick={handleCTA} className="w-full sm:w-auto rounded-xl bg-indigo-600 px-8 py-4 text-base font-semibold text-white shadow-[0_8px_30px_rgba(79,70,229,0.35)] transition hover:bg-indigo-700 hover:-translate-y-0.5">
               Build my blueprint →
             </button>
-            <button onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })} className="rounded-xl border border-gray-200 px-8 py-4 text-base font-medium text-gray-600 transition hover:border-indigo-200 hover:text-indigo-600">
+            <button onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })} className="w-full sm:w-auto rounded-xl border border-gray-200 px-8 py-4 text-base font-medium text-gray-600 transition hover:border-indigo-200 hover:text-indigo-600">
               How does it work?
             </button>
           </div>
@@ -61,10 +61,10 @@ const Landing = () => {
             ))}
           </div>
         </div>
-        <div className="relative z-10 mt-16 flex flex-wrap justify-center gap-10">
+        <div className="relative z-10 mt-16 flex flex-wrap justify-center gap-6 sm:gap-10">
           {[["14", "Blueprint sections"], ["<60s", "Time to generate"], ["£0", "To get started"], ["AI", "Powered by AI"]].map(([num, label]) => (
             <div key={label} className="text-center">
-              <p style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl text-indigo-600">{num}</p>
+              <p style={{ fontFamily: "'DM Serif Display', serif" }} className="text-2xl sm:text-3xl text-indigo-600">{num}</p>
               <p className="text-xs text-gray-400 mt-1 uppercase tracking-wider">{label}</p>
             </div>
           ))}
@@ -72,12 +72,12 @@ const Landing = () => {
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="how" className="bg-gray-50 border-y border-gray-100 px-6 py-20 sm:px-10">
+      <section id="how" className="bg-gray-50 border-y border-gray-100 px-4 py-16 sm:px-10 sm:py-20">
         <div className="max-w-4xl mx-auto">
           <p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">How it works</p>
           <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-4">From idea to blueprint in three steps</h2>
           <p className="text-gray-500 text-center max-w-md mx-auto mb-14 font-light">Stop planning to plan. Here's how it actually works.</p>
-          <div className="grid sm:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
               { num: "01", icon: "✏️", title: "Describe your idea", body: "Type your idea — or pick from 10 popular ones. Tell us your budget, time, and what you want to achieve. Takes 90 seconds." },
               { num: "02", icon: "⚡", title: "AI builds your plan", body: "Our AI does the heavy lifting — market research, positioning, pricing, tools, scripts. All of it. Tailored to your exact situation." },
@@ -105,11 +105,11 @@ const Landing = () => {
       </section>
 
       {/* SOCIAL PROOF */}
-      <section className="px-6 py-20 sm:px-10 bg-white">
+      <section className="px-4 py-16 sm:px-10 sm:py-20 bg-white">
         <div className="max-w-4xl mx-auto">
           <p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">Early users</p>
           <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-14">Real results from real founders</h2>
-          <div className="grid sm:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
               { quote: "I've been sitting on my idea for 6 months. SoloBlueprint gave me a clear plan in under a minute. I launched my first product the following week.", name: "James M.", role: "Freelance consultant, London" },
               { quote: "The outreach scripts alone were worth it. Sent 12 DMs using the template, got 4 replies and 2 paying customers in the first week.", name: "Sarah R.", role: "Digital product creator" },
@@ -133,7 +133,7 @@ const Landing = () => {
       </section>
 
       {/* PRICING */}
-      <section id="pricing" className="px-6 py-20 sm:px-10 bg-gray-50 border-y border-gray-100">
+      <section id="pricing" className="px-4 py-16 sm:px-10 sm:py-20 bg-gray-50 border-y border-gray-100">
         <div className="max-w-4xl mx-auto">
           <p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">Pricing</p>
           <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-4">Simple token pricing</h2>
@@ -165,7 +165,7 @@ const Landing = () => {
       </section>
 
       {/* FAQ */}
-      <section className="px-6 py-20 sm:px-10 bg-white">
+      <section className="px-4 py-16 sm:px-10 sm:py-20 bg-white">
         <div className="max-w-2xl mx-auto">
           <p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">FAQ</p>
           <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-14">Questions you're probably thinking</h2>
@@ -178,7 +178,7 @@ const Landing = () => {
               { q: "Is this just generic AI output?", a: "No. We built a detailed system that forces the AI to give you specific tools, real UK prices, named competitors, and copy-paste scripts — not vague advice. Every output is shaped around your idea, budget, and goals." },
               { q: "How is this different from just using ChatGPT?", a: "ChatGPT gives you words. SoloBlueprint gives you a structured 14-section plan with actual tool names, £ prices, outreach scripts ready to send, and a day-by-day action plan. One click. Done." },
             ].map((faq, i) => (
-              <details key={i} className="group rounded-2xl border border-gray-100 bg-gray-50 px-6 py-4 cursor-pointer">
+              <details key={i} className="group rounded-2xl border border-gray-100 bg-gray-50 px-4 sm:px-6 py-4 cursor-pointer">
                 <summary className="flex items-center justify-between text-sm font-semibold text-gray-900 list-none">
                   {faq.q}
                   <span className="ml-4 text-indigo-400 group-open:rotate-180 transition-transform">↓</span>
@@ -194,7 +194,7 @@ const Landing = () => {
       <section className="bg-indigo-600 px-6 py-20 text-center sm:px-10">
         <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-white mb-4">Stop sitting on your idea.</h2>
         <p className="text-indigo-200 mb-8 font-light max-w-md mx-auto">Your first blueprint is free. No card needed. You're 60 seconds away from knowing exactly what to do.</p>
-        <button onClick={handleCTA} className="rounded-xl bg-white px-8 py-4 text-base font-semibold text-indigo-600 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
+        <button onClick={handleCTA} className="w-full sm:w-auto rounded-xl bg-white px-8 py-4 text-base font-semibold text-indigo-600 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
           I want my blueprint →
         </button>
       </section>
@@ -207,7 +207,7 @@ const Landing = () => {
               <span style={{ fontFamily: "'DM Serif Display', serif" }} className="text-xl text-gray-900">SoloBlueprint</span>
               <p className="text-sm text-gray-400 mt-2 max-w-xs leading-relaxed">Most solo founders never launch because they don't have a clear plan. We fix that.</p>
             </div>
-            <div className="flex gap-12">
+            <div className="flex flex-col sm:flex-row gap-6 sm:gap-12">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Product</p>
                 <div className="flex flex-col gap-2">

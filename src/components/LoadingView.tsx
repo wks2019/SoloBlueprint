@@ -63,7 +63,7 @@ export const LoadingView = () => {
         </h2>
 
         {/* Step list */}
-        <div className="mt-8 w-full max-w-xs space-y-2.5">
+        <div className="mt-8 w-full max-w-[280px] sm:max-w-xs space-y-2">
           {STEPS.map((step, i) => (
             <div
               key={step.label}
