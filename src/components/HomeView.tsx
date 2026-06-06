@@ -1,28 +1,18 @@
-import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 import { AccountMenu } from "./AccountMenu";
-import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-
-const ADMIN_EMAIL = "mvlasceanu26.vm@gmail.com";
 
 interface HomeViewProps {
   onStart: () => void;
   tokenBalance?: number | null;
+  isAdmin?: boolean;
 }
 
-export const HomeView = ({ onStart, tokenBalance = null }: HomeViewProps) => {
+export const HomeView = ({ onStart, tokenBalance = null, isAdmin = false }: HomeViewProps) => {
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session?.user?.email === ADMIN_EMAIL) setIsAdmin(true);
-    });
-  }, []);
-
-  const hasTokens = tokenBalance === null || tokenBalance > 0;
-  const tokenLabel = tokenBalance === null ? "" : tokenBalance === 0 ? "0 tokens — top up to continue" : `${tokenBalance} token${tokenBalance !== 1 ? "s" : ""} remaining`;
+  const hasTokens = isAdmin || tokenBalance === null || tokenBalance > 0;
+  const tokenLabel = isAdmin ? "" : tokenBalance === null ? "" : tokenBalance === 0 ? "0 tokens — top up to continue" : `${tokenBalance} token${tokenBalance !== 1 ? "s" : ""} remaining`;
 
   return (
     <div className="hero-glow relative flex min-h-screen flex-col">

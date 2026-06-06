@@ -156,44 +156,38 @@ Deno.serve(async (req) => {
     }
 
     if (userId && SUPABASE_URL && SERVICE_ROLE) {
-      // Check balance
-      const balRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/token_balance?user_id=eq.${userId}&select=balance`,
-        { headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` } }
-      );
-      const balData = await balRes.json();
-      const balance = balData?.[0]?.balance ?? 0;
+      // Admin bypasses token system entirely
+      const isAdmin = (await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+        headers: { Authorization: authHeader ?? "", apikey: SERVICE_ROLE },
+      }).then(r => r.json()).catch(() => ({}))).email === "mvlasceanu26.vm@gmail.com";
 
-      if (balance <= 0) {
-        return new Response(JSON.stringify({ error: "NO_TOKENS", message: "You have no tokens left. Purchase more to continue." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+      if (!isAdmin) {
+        const balRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/token_balance?user_id=eq.${userId}&select=balance`,
+          { headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` } }
+        );
+        const balData = await balRes.json();
+        const balance = balData?.[0]?.balance ?? 0;
+
+        if (balance <= 0) {
+          return new Response(JSON.stringify({ error: "NO_TOKENS", message: "You have no tokens left. Purchase more to continue." }), {
+            status: 402,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+
+        await fetch(`${SUPABASE_URL}/rest/v1/token_balance?user_id=eq.${userId}`, {
+          method: "PATCH",
+          headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+          body: JSON.stringify({ balance: balance - 1, total_used: (balData?.[0]?.total_used ?? 0) + 1, updated_at: new Date().toISOString() }),
+        });
+
+        await fetch(`${SUPABASE_URL}/rest/v1/token_transactions`, {
+          method: "POST",
+          headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+          body: JSON.stringify({ user_id: userId, amount: -1, reason: "blueprint_generated" }),
         });
       }
-
-      // Deduct 1 token
-      await fetch(`${SUPABASE_URL}/rest/v1/token_balance?user_id=eq.${userId}`, {
-        method: "PATCH",
-        headers: {
-          apikey: SERVICE_ROLE,
-          Authorization: `Bearer ${SERVICE_ROLE}`,
-          "Content-Type": "application/json",
-          Prefer: "return=minimal",
-        },
-        body: JSON.stringify({ balance: balance - 1, total_used: (balData?.[0]?.total_used ?? 0) + 1, updated_at: new Date().toISOString() }),
-      });
-
-      // Log transaction
-      await fetch(`${SUPABASE_URL}/rest/v1/token_transactions`, {
-        method: "POST",
-        headers: {
-          apikey: SERVICE_ROLE,
-          Authorization: `Bearer ${SERVICE_ROLE}`,
-          "Content-Type": "application/json",
-          Prefer: "return=minimal",
-        },
-        body: JSON.stringify({ user_id: userId, amount: -1, reason: "blueprint_generated" }),
-      });
     }
 
     const userPrompt = `Generate a complete SoloBlueprint launch plan for this founder.
