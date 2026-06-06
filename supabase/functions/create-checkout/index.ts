@@ -4,10 +4,10 @@ const corsHeaders = {
 };
 
 const PRICE_IDS: Record<string, string> = {
-  starter: "price_1TfRhkJxWnwbPsVOF2fMqNgn",
-  builder: "price_1TfRhkJxWnwbPsVOwlOt9zxT",
-  pro:     "price_1TfRhlJxWnwbPsVOTPSnIZ2F",
-  monthly: "price_1TfRhlJxWnwbPsVOVKUWnY71",
+  starter: "price_1TfSFoFTSPA2OpANpuBoGyNO",
+  builder: "price_1TfSFpFTSPA2OpANuX78PLBF",
+  pro:     "price_1TfSFpFTSPA2OpANZz2mbUeD",
+  monthly: "price_1TfSFpFTSPA2OpANKrzFOeQz",
 };
 
 const TOKENS: Record<string, number> = {
