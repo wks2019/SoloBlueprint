@@ -140,7 +140,9 @@ const Admin = () => {
           </div>
           <div className="divide-y divide-border">
             {blueprints.slice(0, 50).map(b => (
-              <div key={b.id} className="flex items-center justify-between px-5 py-3.5 gap-4 hover:bg-muted/20 transition">
+              <div key={b.id}
+                onClick={() => navigate(`/blueprint/${b.id}`)}
+                className="flex items-center justify-between px-5 py-3.5 gap-4 hover:bg-muted/20 transition cursor-pointer">
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-foreground truncate mb-1.5">{b.idea_name}</p>
                   <div className="flex flex-wrap gap-1.5">
@@ -157,6 +159,7 @@ const Admin = () => {
                   <p className="text-[10px] text-muted-foreground/50 mt-0.5">
                     {new Date(b.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
                   </p>
+                  <p className="text-[10px] text-primary mt-1">View →</p>
                 </div>
               </div>
             ))}

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Logo } from "@/components/Logo";
 import { ResultsView } from "@/components/ResultsView";
+
+const ADMIN_EMAIL = "mvlasceanu26.vm@gmail.com";
 
 const BlueprintView = () => {
   const { id } = useParams();
@@ -10,8 +11,13 @@ const BlueprintView = () => {
   const [blueprint, setBlueprint] = useState<{ idea_name: string; report: Record<string, unknown>; answers: Record<string, string> } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session?.user?.email === ADMIN_EMAIL) setIsAdmin(true);
+    });
+
     if (!id) { setError(true); setLoading(false); return; }
     supabase
       .from("blueprints")
@@ -19,7 +25,7 @@ const BlueprintView = () => {
       .eq("id", id)
       .single()
       .then(({ data, error: err }) => {
-        if (err || !data) { setError(true); }
+        if (err || !data) setError(true);
         else setBlueprint(data as typeof blueprint);
         setLoading(false);
       });
@@ -45,9 +51,9 @@ const BlueprintView = () => {
       ideaName={blueprint.idea_name}
       answers={blueprint.answers as never}
       report={blueprint.report as never}
-      onStartOver={() => navigate("/")}
+      onStartOver={() => isAdmin ? navigate("/app/admin") : navigate("/")}
       isPaid={true}
-      isShared={true}
+      isShared={!isAdmin}
     />
   );
 };
