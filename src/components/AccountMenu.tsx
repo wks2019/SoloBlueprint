@@ -2,19 +2,23 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
-interface AccountMenuProps {}
+const ADMIN_EMAIL = "mvlasceanu26.vm@gmail.com";
 
-export const AccountMenu = ({}: AccountMenuProps) => {
+export const AccountMenu = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [tokenBalance, setTokenBalance] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
-      setEmail(data.session?.user?.email ?? "");
-      if (data.session?.user?.id) {
+      const userEmail = data.session?.user?.email ?? "";
+      setEmail(userEmail);
+      const admin = userEmail === ADMIN_EMAIL;
+      setIsAdmin(admin);
+      if (!admin && data.session?.user?.id) {
         const { data: bal } = await supabase
           .from("token_balance")
           .select("balance")
@@ -25,7 +29,6 @@ export const AccountMenu = ({}: AccountMenuProps) => {
     });
   }, []);
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -34,37 +37,31 @@ export const AccountMenu = ({}: AccountMenuProps) => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate("/");
-  };
+  const handleLogout = async () => { await supabase.auth.signOut(); navigate("/"); };
 
   const handleChangePassword = async () => {
     if (!email) return;
-    await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth`,
-    });
+    await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/app/auth` });
     setOpen(false);
     alert("Password reset email sent.");
   };
 
   const initial = email ? email[0].toUpperCase() : "?";
-  const plan = tokenBalance === 0 ? "No tokens — top up to continue" : `${tokenBalance} token${tokenBalance !== 1 ? "s" : ""} remaining`;
 
   return (
     <div className="relative" ref={ref}>
       {/* Avatar button */}
       <button
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => setOpen(o => !o)}
         className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground shadow-sm transition hover:brightness-110"
         aria-label="Account menu"
       >
         {initial}
       </button>
 
-      {/* Dropdown */}
       {open && (
         <div className="absolute right-0 top-10 z-50 w-64 rounded-xl border border-border bg-card shadow-xl overflow-hidden">
+
           {/* User info */}
           <div className="border-b border-border bg-muted/30 px-4 py-3">
             <div className="flex items-center gap-3">
@@ -73,24 +70,48 @@ export const AccountMenu = ({}: AccountMenuProps) => {
               </div>
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-foreground">{email}</p>
-                <p className="text-[11px] text-muted-foreground mt-0.5">{plan}</p>
+                <p className={`text-[11px] mt-0.5 font-medium ${isAdmin ? "text-primary" : "text-muted-foreground"}`}>
+                  {isAdmin ? "⚙ Admin · Full access" : `${tokenBalance} token${tokenBalance !== 1 ? "s" : ""} remaining`}
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Usage bar */}
-          <div className="px-4 py-3 border-b border-border">
-            <div className="flex items-center justify-between mb-1.5">
-              <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">🪙 Tokens</p>
-              <p className="text-[11px] font-semibold text-foreground">{tokenBalance} remaining</p>
+          {/* Admin badge OR token section */}
+          {isAdmin ? (
+            <div className="px-4 py-3 border-b border-border">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 border border-indigo-100 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-indigo-600 mb-1.5">
+                ⚙ Admin access
+              </div>
+              <p className="text-[11px] text-muted-foreground">Unlimited blueprints · No payment required</p>
             </div>
-            {tokenBalance === 0 && (
-              <p className="mt-1 text-[11px] text-primary font-medium">Top up to generate more →</p>
-            )}
-          </div>
+          ) : (
+            <div className="px-4 py-3 border-b border-border">
+              <div className="flex items-center justify-between mb-1.5">
+                <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">🪙 Tokens</p>
+                <p className="text-[11px] font-semibold text-foreground">{tokenBalance} remaining</p>
+              </div>
+              {tokenBalance === 0 && (
+                <p className="mt-1 text-[11px] text-primary font-medium">Top up to generate more →</p>
+              )}
+            </div>
+          )}
 
           {/* Actions */}
           <div className="py-1">
+            {/* Admin dashboard link — only for admin */}
+            {isAdmin && (
+              <button
+                onClick={() => { navigate("/app/admin"); setOpen(false); }}
+                className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-muted-foreground transition hover:bg-muted/40 hover:text-foreground"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+                </svg>
+                Admin dashboard
+              </button>
+            )}
+
             <button
               onClick={() => { navigate("/app/history"); setOpen(false); }}
               className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-muted-foreground transition hover:bg-muted/40 hover:text-foreground"
@@ -100,6 +121,7 @@ export const AccountMenu = ({}: AccountMenuProps) => {
               </svg>
               My blueprints
             </button>
+
             <button
               onClick={handleChangePassword}
               className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-muted-foreground transition hover:bg-muted/40 hover:text-foreground"
@@ -109,20 +131,25 @@ export const AccountMenu = ({}: AccountMenuProps) => {
               </svg>
               Change password
             </button>
-            <button
-              onClick={() => {
-                if (window.confirm("Cancel your subscription? You'll keep access until the end of your billing period.")) {
-                  window.location.href = "mailto:support@soloblueprint.co.uk?subject=Cancel%20Subscription&body=Please%20cancel%20my%20subscription.%20Account%20email:%20" + encodeURIComponent(email);
-                }
-                setOpen(false);
-              }}
-              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-red-500/70 transition hover:bg-red-50 hover:text-red-600"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
-              </svg>
-              Cancel subscription
-            </button>
+
+            {/* Cancel subscription — hidden for admin */}
+            {!isAdmin && (
+              <button
+                onClick={() => {
+                  if (window.confirm("Cancel your subscription? You'll keep access until the end of your billing period.")) {
+                    window.location.href = "mailto:support@soloblueprint.co.uk?subject=Cancel%20Subscription&body=Please%20cancel%20my%20subscription.%20Account%20email:%20" + encodeURIComponent(email);
+                  }
+                  setOpen(false);
+                }}
+                className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-red-500/70 transition hover:bg-red-50 hover:text-red-600"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                </svg>
+                Cancel subscription
+              </button>
+            )}
+
             <button
               onClick={handleLogout}
               className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-muted-foreground transition hover:bg-muted/40 hover:text-foreground"
