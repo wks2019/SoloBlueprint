@@ -62,7 +62,7 @@ const Landing = () => {
           </div>
         </div>
         <div className="relative z-10 mt-16 flex flex-wrap justify-center gap-10">
-          {[["14", "Blueprint sections"], ["<60s", "Time to generate"], ["£0", "To get started"], ["AI", "Powered by Claude"]].map(([num, label]) => (
+          {[["14", "Blueprint sections"], ["<60s", "Time to generate"], ["£0", "To get started"], ["AI", "Powered by AI"]].map(([num, label]) => (
             <div key={label} className="text-center">
               <p style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl text-indigo-600">{num}</p>
               <p className="text-xs text-gray-400 mt-1 uppercase tracking-wider">{label}</p>
@@ -80,7 +80,7 @@ const Landing = () => {
           <div className="grid sm:grid-cols-3 gap-6">
             {[
               { num: "01", icon: "✏️", title: "Describe your idea", body: "Type your idea — or pick from 10 popular ones. Tell us your budget, time, and what you want to achieve. Takes 90 seconds." },
-              { num: "02", icon: "⚡", title: "AI builds your plan", body: "Claude AI does the heavy lifting — market research, positioning, pricing, tools, scripts. All of it. Tailored to your exact situation." },
+              { num: "02", icon: "⚡", title: "AI builds your plan", body: "Our AI does the heavy lifting — market research, positioning, pricing, tools, scripts. All of it. Tailored to your exact situation." },
               { num: "03", icon: "🚀", title: "Launch with clarity", body: "You get a full 14-section plan. Download it, share it, pitch it. Or just start building — you finally know what to do." },
             ].map((step) => (
               <div key={step.num} className="rounded-2xl border border-gray-200 bg-white p-6 hover:border-indigo-200 hover:shadow-sm transition">
@@ -175,7 +175,7 @@ const Landing = () => {
               { q: "Do tokens expire?", a: "Never. Buy tokens today, use them in 6 months. Monthly subscription tokens roll over too — unused credits don't disappear." },
               { q: "What if the blueprint isn't good?", a: "You see the first 3 sections before spending a token. If the quality isn't there, don't unlock it. If you paid and you're not happy — email support@soloblueprint.co.uk and we'll make it right." },
               { q: "Can I use it for my business commercially?", a: "It's yours. Every blueprint you generate belongs to you. Pitch it, publish it, build from it, sell it. No restrictions." },
-              { q: "Is this just generic AI output?", a: "No. We built a detailed system that forces Claude to give you specific tools, real UK prices, named competitors, and copy-paste scripts — not vague advice. Every output is shaped around your idea, budget, and goals." },
+              { q: "Is this just generic AI output?", a: "No. We built a detailed system that forces the AI to give you specific tools, real UK prices, named competitors, and copy-paste scripts — not vague advice. Every output is shaped around your idea, budget, and goals." },
               { q: "How is this different from just using ChatGPT?", a: "ChatGPT gives you words. SoloBlueprint gives you a structured 14-section plan with actual tool names, £ prices, outreach scripts ready to send, and a day-by-day action plan. One click. Done." },
             ].map((faq, i) => (
               <details key={i} className="group rounded-2xl border border-gray-100 bg-gray-50 px-6 py-4 cursor-pointer">
@@ -228,7 +228,7 @@ const Landing = () => {
           </div>
           <div className="border-t border-gray-100 pt-6 flex flex-wrap items-center justify-between gap-4">
             <p className="text-xs text-gray-400">© 2026 SoloBlueprint · AI outputs are for informational purposes only.</p>
-            <p className="text-xs text-gray-300">Powered by Claude AI</p>
+            <p className="text-xs text-gray-300"></p>
           </div>
         </div>
       </footer>
