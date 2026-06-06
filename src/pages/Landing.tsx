@@ -25,7 +25,7 @@ const Landing = () => {
             {isLoggedIn ? "My account" : "Sign in"}
           </button>
           <button onClick={handleCTA} className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700">
-            {isLoggedIn ? "Open app →" : "Get started free"}
+            {isLoggedIn ? "Open app →" : "Start free"}
           </button>
         </div>
       </nav>
@@ -36,7 +36,7 @@ const Landing = () => {
         <div className="relative z-10 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 border border-indigo-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-8">
             <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse" />
-            AI-Powered · Built for Solo Founders
+            Built for solo founders who are done overthinking
           </div>
           <h1 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-5xl sm:text-6xl md:text-7xl leading-[1.05] tracking-tight text-gray-900 mb-6">
             Turn your idea into a{" "}
@@ -44,14 +44,14 @@ const Landing = () => {
             in minutes
           </h1>
           <p className="text-lg sm:text-xl text-gray-500 max-w-xl mx-auto mb-10 leading-relaxed font-light">
-            Answer 5 questions. Get a 14-section launch plan with real tools, pricing in £, outreach scripts, and a 7-day action plan. Powered by Claude AI.
+            You have an idea. You don't have a plan. SoloBlueprint fixes that — in under 60 seconds. Real tools, real pricing in £, copy-paste scripts, and a 7-day action plan. No fluff.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
             <button onClick={handleCTA} className="rounded-xl bg-indigo-600 px-8 py-4 text-base font-semibold text-white shadow-[0_8px_30px_rgba(79,70,229,0.35)] transition hover:bg-indigo-700 hover:-translate-y-0.5">
               Build my blueprint →
             </button>
             <button onClick={() => document.getElementById("how")?.scrollIntoView({ behavior: "smooth" })} className="rounded-xl border border-gray-200 px-8 py-4 text-base font-medium text-gray-600 transition hover:border-indigo-200 hover:text-indigo-600">
-              See how it works
+              How does it work?
             </button>
           </div>
           {/* Fixed proof pills — consistent indigo style */}
@@ -76,12 +76,12 @@ const Landing = () => {
         <div className="max-w-4xl mx-auto">
           <p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">How it works</p>
           <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-4">From idea to blueprint in three steps</h2>
-          <p className="text-gray-500 text-center max-w-md mx-auto mb-14 font-light">No consultants. No templates. Just your idea and 60 seconds.</p>
+          <p className="text-gray-500 text-center max-w-md mx-auto mb-14 font-light">Stop planning to plan. Here's how it actually works.</p>
           <div className="grid sm:grid-cols-3 gap-6">
             {[
-              { num: "01", icon: "✏️", title: "Describe your idea", body: "Pick from popular ideas or describe your own. Tell us your budget, hours per week, experience level, and 90-day goal." },
-              { num: "02", icon: "⚡", title: "AI builds your plan", body: "Claude AI researches your market and generates a complete 14-section blueprint tailored to your exact situation." },
-              { num: "03", icon: "🚀", title: "Launch with clarity", body: "Download your blueprint, share it with co-founders, or use it to validate before you build anything." },
+              { num: "01", icon: "✏️", title: "Describe your idea", body: "Type your idea — or pick from 10 popular ones. Tell us your budget, time, and what you want to achieve. Takes 90 seconds." },
+              { num: "02", icon: "⚡", title: "AI builds your plan", body: "Claude AI does the heavy lifting — market research, positioning, pricing, tools, scripts. All of it. Tailored to your exact situation." },
+              { num: "03", icon: "🚀", title: "Launch with clarity", body: "You get a full 14-section plan. Download it, share it, pitch it. Or just start building — you finally know what to do." },
             ].map((step) => (
               <div key={step.num} className="rounded-2xl border border-gray-200 bg-white p-6 hover:border-indigo-200 hover:shadow-sm transition">
                 <div className="flex items-center gap-3 mb-4">
@@ -108,7 +108,7 @@ const Landing = () => {
       <section className="px-6 py-20 sm:px-10 bg-white">
         <div className="max-w-4xl mx-auto">
           <p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">Early users</p>
-          <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-14">What solo founders say</h2>
+          <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-14">Real results from real founders</h2>
           <div className="grid sm:grid-cols-3 gap-6">
             {[
               { quote: "I've been sitting on my idea for 6 months. SoloBlueprint gave me a clear plan in under a minute. I launched my first product the following week.", name: "James M.", role: "Freelance consultant, London" },
@@ -137,7 +137,7 @@ const Landing = () => {
         <div className="max-w-4xl mx-auto">
           <p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">Pricing</p>
           <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-4">Simple token pricing</h2>
-          <p className="text-gray-500 text-center max-w-md mx-auto mb-14 font-light">1 token = 1 complete blueprint. Buy what you need. Tokens never expire.</p>
+          <p className="text-gray-500 text-center max-w-md mx-auto mb-14 font-light">One token. One blueprint. No subscriptions forced on you. Buy what you need — tokens never expire.</p>
           {/* Fixed: 2 cols on mobile, 4 on lg */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
@@ -160,7 +160,7 @@ const Landing = () => {
               </div>
             ))}
           </div>
-          <p className="text-center text-sm text-gray-400 mt-6">First blueprint always free · No credit card to sign up · Tokens never expire</p>
+          <p className="text-center text-sm text-gray-400 mt-6">First blueprint free · No card needed · Tokens never expire · Cancel anytime</p>
         </div>
       </section>
 
@@ -168,15 +168,15 @@ const Landing = () => {
       <section className="px-6 py-20 sm:px-10 bg-white">
         <div className="max-w-2xl mx-auto">
           <p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">FAQ</p>
-          <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-14">Common questions</h2>
+          <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-14">Questions you're probably thinking</h2>
           <div className="space-y-4">
             {[
-              { q: "Is my first blueprint really free?", a: "Yes. Every new account gets 1 free token on signup. No credit card required. Generate your first blueprint completely free." },
-              { q: "Do tokens expire?", a: "Never. Tokens you purchase are yours forever. Monthly subscription tokens roll over unused — we won't take them back." },
-              { q: "What if I don't like my blueprint?", a: "We show you sections 1-3 before you use a token so you can see the quality first. If you're not happy with a paid blueprint, email us at support@soloblueprint.co.uk and we'll sort it." },
-              { q: "Can I use the blueprint commercially?", a: "Yes. Every blueprint you generate is yours. Use it however you like — share it, pitch it, build from it, sell it." },
-              { q: "Is this real advice or generic AI content?", a: "Every blueprint is tailored to your specific idea, budget, experience, and goals. We use Claude AI with a highly detailed prompt that forces specific, actionable output — not generic advice." },
-              { q: "How is SoloBlueprint different from ChatGPT?", a: "ChatGPT gives you generic text. SoloBlueprint gives you a structured 14-section business plan with real UK-based tool recommendations, real pricing in £, and copy-paste outreach scripts — all in one click." },
+              { q: "Is the first blueprint actually free?", a: "Yes. Sign up, get 1 free token, generate your full blueprint. No card, no trial period, no catch. If it's not useful, you've lost nothing." },
+              { q: "Do tokens expire?", a: "Never. Buy tokens today, use them in 6 months. Monthly subscription tokens roll over too — unused credits don't disappear." },
+              { q: "What if the blueprint isn't good?", a: "You see the first 3 sections before spending a token. If the quality isn't there, don't unlock it. If you paid and you're not happy — email support@soloblueprint.co.uk and we'll make it right." },
+              { q: "Can I use it for my business commercially?", a: "It's yours. Every blueprint you generate belongs to you. Pitch it, publish it, build from it, sell it. No restrictions." },
+              { q: "Is this just generic AI output?", a: "No. We built a detailed system that forces Claude to give you specific tools, real UK prices, named competitors, and copy-paste scripts — not vague advice. Every output is shaped around your idea, budget, and goals." },
+              { q: "How is this different from just using ChatGPT?", a: "ChatGPT gives you words. SoloBlueprint gives you a structured 14-section plan with actual tool names, £ prices, outreach scripts ready to send, and a day-by-day action plan. One click. Done." },
             ].map((faq, i) => (
               <details key={i} className="group rounded-2xl border border-gray-100 bg-gray-50 px-6 py-4 cursor-pointer">
                 <summary className="flex items-center justify-between text-sm font-semibold text-gray-900 list-none">
@@ -192,10 +192,10 @@ const Landing = () => {
 
       {/* FINAL CTA */}
       <section className="bg-indigo-600 px-6 py-20 text-center sm:px-10">
-        <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-white mb-4">Your blueprint is waiting.</h2>
-        <p className="text-indigo-200 mb-8 font-light max-w-md mx-auto">No credit card required. Your first blueprint is completely free.</p>
+        <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-white mb-4">Stop sitting on your idea.</h2>
+        <p className="text-indigo-200 mb-8 font-light max-w-md mx-auto">Your first blueprint is free. No card needed. You're 60 seconds away from knowing exactly what to do.</p>
         <button onClick={handleCTA} className="rounded-xl bg-white px-8 py-4 text-base font-semibold text-indigo-600 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
-          Build my blueprint free →
+          I want my blueprint →
         </button>
       </section>
 
@@ -205,7 +205,7 @@ const Landing = () => {
           <div className="flex flex-wrap items-start justify-between gap-8 mb-8">
             <div>
               <span style={{ fontFamily: "'DM Serif Display', serif" }} className="text-xl text-gray-900">SoloBlueprint</span>
-              <p className="text-sm text-gray-400 mt-2 max-w-xs leading-relaxed">AI-generated business blueprints for solo founders. Go from idea to launch plan in under 60 seconds.</p>
+              <p className="text-sm text-gray-400 mt-2 max-w-xs leading-relaxed">Most solo founders never launch because they don't have a clear plan. We fix that.</p>
             </div>
             <div className="flex gap-12">
               <div>
