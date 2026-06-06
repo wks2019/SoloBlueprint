@@ -7,6 +7,7 @@ type Mode = "signin" | "signup" | "forgot" | "reset" | "admin";
 
 const ADMIN_EMAIL = "mvlasceanu26.vm@gmail.com";
 
+
 const Auth = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState<Mode>("signin");
@@ -19,14 +20,20 @@ const Auth = () => {
     const hash = window.location.hash;
     if (hash && hash.includes("type=recovery")) { setMode("reset"); return; }
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate("/app");
+      if (data.session) {
+        if (data.session.user.email === ADMIN_EMAIL) navigate("/app/admin");
+        else navigate("/app");
+      }
     });
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") setMode("reset");
-      else if (session) navigate("/app");
+      else if (session) {
+        if (session.user.email === ADMIN_EMAIL && mode === "admin") navigate("/app/admin");
+        else if (session.user.email !== ADMIN_EMAIL) navigate("/app");
+      }
     });
     return () => sub.subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, mode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

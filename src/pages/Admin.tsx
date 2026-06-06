@@ -28,6 +28,11 @@ const Admin = () => {
       if (data.session.user.email !== ADMIN_EMAIL) { navigate("/app"); return; }
       await loadData();
     });
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      if (!session) navigate("/app/auth");
+    });
+    return () => sub.subscription.unsubscribe();
   }, [navigate]);
 
   const loadData = async () => {
