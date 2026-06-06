@@ -20,6 +20,34 @@ const Terms = () => {
         <h1 className="font-display text-3xl text-foreground mb-2">Terms & Conditions</h1>
         <p className="text-sm text-muted-foreground mb-10">Last updated: June 2026 · Governing law: England & Wales</p>
 
+        {/* Plain English Summary */}
+        <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6 mb-10">
+          <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-4">Plain English Summary</p>
+          <p className="text-sm text-muted-foreground mb-4">We know nobody reads T&Cs. So here's what actually matters:</p>
+          <div className="space-y-3">
+            {[
+              { icon: "🤖", title: "AI is not a professional", desc: "SoloBlueprint gives you AI-generated ideas and plans. It is not a business consultant, lawyer, or financial adviser. Always check with a real professional before spending money or making big decisions." },
+              { icon: "🪙", title: "Tokens don't expire", desc: "Once you buy tokens, they're yours forever. Monthly subscription tokens roll over unused. We won't take them back." },
+              { icon: "🚫", title: "Illegal ideas get refused", desc: "We won't generate blueprints for illegal businesses, scams, or anything designed to harm people. The AI filters these automatically." },
+              { icon: "🔒", title: "Your data stays in Europe", desc: "Your data is stored on AWS servers in London (eu-west-2). We don't sell your data. We don't use it for ads. Your blueprint inputs are processed by Anthropic's Claude API but not used to train AI models (API accounts are exempt)." },
+              { icon: "💳", title: "Cancellations are clean", desc: "Cancel any time via your account menu. You keep access and tokens until the end of your billing period. No awkward phone calls." },
+              { icon: "📋", title: "You own your blueprints", desc: "Every blueprint you generate belongs to you. Use it however you like — share it, pitch it, build from it." },
+              { icon: "⚖️", title: "UK law applies", desc: "This is a UK product governed by English law. If something goes wrong, English courts handle it." },
+            ].map((item) => (
+              <div key={item.title} className="flex gap-3">
+                <span className="text-lg shrink-0">{item.icon}</span>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">{item.title}</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground mt-5 pt-4 border-t border-primary/10">
+            The full legal terms follow below. They say the same things in more detail.
+          </p>
+        </div>
+
         <div className="prose prose-sm max-w-none space-y-8 text-muted-foreground leading-relaxed">
 
           <section>
