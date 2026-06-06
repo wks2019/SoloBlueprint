@@ -193,26 +193,145 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* SOCIAL PROOF */}
+      {/* BLUEPRINT PREVIEW */}
       <section className="px-4 py-16 sm:px-10 sm:py-20 bg-white">
         <div className="max-w-4xl mx-auto">
-          <FadeUp><p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">Early users</p></FadeUp>
-          <FadeUp delay={100}><h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-14">Real results from real founders</h2></FadeUp>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {[
-              { q: "I've been sitting on my idea for 6 months. SoloBlueprint gave me a clear plan in under a minute. I launched my first product the following week.", name: "James M.", role: "Freelance consultant, London" },
-              { q: "The outreach scripts alone were worth it. Sent 12 DMs using the template, got 4 replies and 2 paying customers in the first week.", name: "Sarah R.", role: "Digital product creator" },
-              { q: "Finally something that doesn't give generic advice. It knew my budget, my hours, and gave me a realistic plan. No fluff.", name: "David K.", role: "First-time founder" },
-            ].map((t, i) => (
-              <FadeUp key={t.name} delay={i * 100}>
-                <div className="rounded-2xl border border-gray-100 bg-gray-50 p-6 h-full">
-                  <p className="text-sm text-gray-600 leading-relaxed mb-5 italic">"{t.q}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-bold text-indigo-600 flex-shrink-0">
-                      {t.name.split(" ").map(n => n[0]).join("")}
-                    </div>
-                    <div><p className="text-sm font-semibold text-gray-900">{t.name}</p><p className="text-xs text-gray-400">{t.role}</p></div>
+          <FadeUp><p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">See it in action</p></FadeUp>
+          <FadeUp delay={100}><h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-4">This is what you get</h2></FadeUp>
+          <FadeUp delay={200}><p className="text-gray-500 text-center max-w-md mx-auto mb-12 font-light">A real blueprint — generated from a real idea. This is what lands in your dashboard in under 60 seconds.</p></FadeUp>
+
+          <FadeUp delay={100}>
+            {/* Browser mockup */}
+            <div className="rounded-2xl border border-gray-200 shadow-[0_24px_80px_rgba(0,0,0,0.10),0_4px_16px_rgba(0,0,0,0.05)] overflow-hidden">
+
+              {/* Browser chrome */}
+              <div className="bg-gray-100 px-4 py-2.5 flex items-center gap-3 border-b border-gray-200">
+                <div className="flex gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+                </div>
+                <div className="flex-1 bg-white border border-gray-200 rounded-md px-3 py-1 flex items-center gap-1.5">
+                  <span className="text-green-500 text-[10px]">🔒</span>
+                  <span className="text-[10px] text-gray-400">soloblueprint.co.uk/app</span>
+                </div>
+              </div>
+
+              {/* App header */}
+              <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-100 bg-white">
+                <span style={{ fontFamily: "'DM Serif Display', serif" }} className="text-sm text-gray-900">SoloBlueprint<span className="inline-block w-1.5 h-1.5 rounded-full bg-indigo-600 ml-1 mb-0.5" /></span>
+                <div className="flex gap-1.5">
+                  {["↓ PDF", "Share", "Start Over"].map(a => (
+                    <span key={a} className="text-[10px] border border-gray-200 rounded-full px-2.5 py-1 text-gray-500">{a}</span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Blueprint content */}
+              <div className="bg-gray-50 p-4 sm:p-5">
+                {/* Hero */}
+                <div className="mb-4">
+                  <p className="text-[9px] font-bold uppercase tracking-widest text-indigo-600 mb-1">Your SoloBlueprint for:</p>
+                  <p style={{ fontFamily: "'DM Serif Display', serif" }} className="text-lg sm:text-2xl text-gray-900 mb-2">AI Content Repurposing Service</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {["£0–£50", "1–5 hours/week", "Complete beginner", "First £500 in 90 days"].map(t => (
+                      <span key={t} className="rounded-full bg-indigo-50 border border-indigo-100 px-2 py-0.5 text-[10px] text-indigo-600 font-medium">{t}</span>
+                    ))}
                   </div>
+                </div>
+
+                {/* Legend */}
+                <div className="hidden sm:flex gap-4 mb-3">
+                  {[["#4f46e5","Strategy"],["#16a34a","Market"],["#ea580c","Build"],["#9333ea","Growth"]].map(([c,l]) => (
+                    <div key={l} className="flex items-center gap-1.5">
+                      <div className="w-2 h-1.5 rounded-full" style={{ background: c }} />
+                      <span className="text-[10px] text-gray-500">{l}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Unlocked sections */}
+                <div className="space-y-2">
+                  {[
+                    { num: "01", title: "Business Idea Diagnosis", cat: "strategy", color: "#4f46e5", bg: "#eef2ff", body: "You're entering a high-demand, low-competition niche. Creators produce 10x more content than they can repurpose — most have no system. Your edge: you don't need a big audience to start, just 3–5 clients paying £150–300/mo. At £200/client you need just 3 to hit your £500 target in month one." },
+                    { num: "02", title: "Real Problem & Demand", cat: "market", color: "#16a34a", bg: "#f0fdf4", body: "r/podcasting, r/youtubers, and r/entrepreneur are full of creators asking 'how do I repurpose my content?' LinkedIn creators with 5k+ followers regularly post about this pain. The demand is proven — you're solving a real, recurring problem that creators can't easily automate themselves yet." },
+                    { num: "03", title: "Target Audience", cat: "market", color: "#16a34a", bg: "#f0fdf4", body: "Solo podcasters (100–5k listeners), LinkedIn creators (2k–20k followers), and course creators who publish weekly. They earn £500–3k/mo from content but spend 3–6 hours per piece. They'll pay £150–300/mo to get that time back. Find them on Twitter/X, LinkedIn, and in Skool communities." },
+                  ].map(s => (
+                    <div key={s.num} className="bg-white rounded-xl border border-gray-100 overflow-hidden" style={{ borderTop: `2px solid ${s.color}` }}>
+                      <div className="flex items-center gap-2 px-3.5 pt-3">
+                        <div className="w-5 h-5 rounded-md flex items-center justify-center text-[9px] font-bold flex-shrink-0" style={{ background: s.bg, color: s.color }}>{s.num}</div>
+                        <span style={{ fontFamily: "'DM Serif Display', serif" }} className="text-sm text-gray-900">{s.title}</span>
+                      </div>
+                      <p className="px-3.5 pt-1.5 pb-3 pl-10 text-[11px] text-gray-500 leading-relaxed">{s.body}</p>
+                    </div>
+                  ))}
+
+                  {/* Blurred locked sections */}
+                  <div className="relative">
+                    <div className="space-y-2 opacity-30 blur-[2px] pointer-events-none select-none">
+                      {[
+                        { num: "04", title: "Your Clear Offer", color: "#ea580c", bg: "#fff7ed", body: 'The "Content Multiplier" package: take one long-form piece per week and turn it into 5 LinkedIn posts, 3 tweet threads, 1 email newsletter draft...' },
+                        { num: "05", title: "Tools You Need", color: "#9333ea", bg: "#fdf4ff", body: "Notion (free), Castmagic (£23/mo), Taplio (£39/mo), Claude AI (£16/mo)..." },
+                      ].map(s => (
+                        <div key={s.num} className="bg-white rounded-xl border border-gray-100 overflow-hidden" style={{ borderTop: `2px solid ${s.color}` }}>
+                          <div className="flex items-center gap-2 px-3.5 pt-3">
+                            <div className="w-5 h-5 rounded-md flex items-center justify-center text-[9px] font-bold flex-shrink-0" style={{ background: s.bg, color: s.color }}>{s.num}</div>
+                            <span style={{ fontFamily: "'DM Serif Display', serif" }} className="text-sm text-gray-900">{s.title}</span>
+                          </div>
+                          <p className="px-3.5 pt-1.5 pb-3 pl-10 text-[11px] text-gray-500 leading-relaxed">{s.body}</p>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Gradient fade */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-50/60 to-gray-50 pointer-events-none" />
+                  </div>
+
+                  {/* Paywall card */}
+                  <div className="bg-white border border-indigo-100 rounded-2xl p-5 text-center shadow-[0_-4px_24px_rgba(79,70,229,0.08)]">
+                    <div className="text-xl mb-2">🔓</div>
+                    <p style={{ fontFamily: "'DM Serif Display', serif" }} className="text-base text-gray-900 mb-1">Unlock your full blueprint</p>
+                    <p className="text-[11px] text-gray-500 mb-4">11 more sections — clear offer, tools, pricing, outreach scripts, 7-day plan.</p>
+                    <div className="space-y-2 mb-4">
+                      {[
+                        { name: "One blueprint", desc: "This blueprint only", price: "£9", period: "one-off", selected: false },
+                        { name: "10 tokens", desc: "10 blueprints · £1.90/token", price: "£19", period: "one-off", selected: true },
+                        { name: "Monthly", desc: "20 tokens/mo · Rollover", price: "£19", period: "per month", selected: false },
+                      ].map(p => (
+                        <div key={p.name} className={`flex items-center justify-between rounded-xl border px-3 py-2.5 text-left ${p.selected ? "border-indigo-500 bg-indigo-50" : "border-gray-200"}`}>
+                          <div>
+                            <span className="text-xs font-semibold text-gray-900">{p.name}</span>
+                            {p.selected && <span className="ml-1.5 rounded-full bg-indigo-600 px-1.5 py-0.5 text-[9px] font-bold text-white">Popular</span>}
+                            <p className="text-[10px] text-gray-400">{p.desc}</p>
+                          </div>
+                          <div className="text-right">
+                            <span style={{ fontFamily: "'DM Serif Display', serif" }} className="text-base text-gray-900">{p.price}</span>
+                            <p className="text-[9px] text-gray-400">{p.period}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <button onClick={handleCTA} className="w-full rounded-xl bg-indigo-600 py-2.5 text-xs font-semibold text-white shadow-[0_4px_16px_rgba(79,70,229,0.3)]">
+                      Continue to payment →
+                    </button>
+                    <p className="mt-2 text-[10px] text-gray-400">Secure payment via Stripe · Tokens never expire</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </FadeUp>
+
+          {/* Callout points */}
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              { icon: "🎯", title: "Tailored to your idea", desc: "Every section is generated around your specific business, budget, and goals — not a template." },
+              { icon: "🇬🇧", title: "Real UK tools & prices", desc: "Every tool recommendation comes with a real name, real URL, and real £ price. No vague advice." },
+              { icon: "📋", title: "Copy-paste ready", desc: "Outreach scripts, DM templates, and email copy you can use today. No rewriting needed." },
+            ].map((c, i) => (
+              <FadeUp key={c.title} delay={i * 100}>
+                <div className="rounded-2xl border border-gray-100 bg-gray-50 p-5 text-center h-full">
+                  <div className="text-2xl mb-3">{c.icon}</div>
+                  <p className="font-semibold text-gray-900 mb-2 text-sm">{c.title}</p>
+                  <p className="text-xs text-gray-500 leading-relaxed">{c.desc}</p>
                 </div>
               </FadeUp>
             ))}
