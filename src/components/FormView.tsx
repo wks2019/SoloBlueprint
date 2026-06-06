@@ -56,7 +56,7 @@ const Pill = ({
     className={`rounded-full border px-4 py-2.5 text-sm font-medium transition ${
       active
         ? "border-primary bg-primary text-primary-foreground shadow-[0_8px_24px_-12px_hsl(var(--primary)/0.7)]"
-        : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"
+        : "border-indigo-100 bg-indigo-50 text-indigo-600 hover:border-indigo-300 hover:bg-indigo-100"
     }`}
   >
     {children}

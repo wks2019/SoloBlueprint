@@ -66,7 +66,7 @@ const History = () => {
                   <h3 className="font-display text-lg text-foreground truncate">{b.idea_name}</h3>
                   <div className="mt-1 flex flex-wrap gap-1.5">
                     {[b.answers?.budget, b.answers?.hours, b.answers?.experience].filter(Boolean).map((tag) => (
-                      <span key={tag} className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">{tag}</span>
+                      <span key={tag} className="rounded-full bg-indigo-50 border border-indigo-100 px-2 py-0.5 text-[11px] text-indigo-600 font-medium">{tag}</span>
                     ))}
                   </div>
                 </div>

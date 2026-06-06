@@ -196,7 +196,7 @@ const LaunchPlanSection = ({ num, title, plan }: { num: string; title: string; p
     return (
       <article className="animate-fade-in rounded-xl border border-border border-l-2 border-l-primary bg-card p-5 sm:p-6">
         <div className="mb-3 flex items-baseline gap-3">
-          <span className="font-mono-num text-xs text-muted-foreground">{num}</span>
+          <span className="text-xs font-semibold text-indigo-500 bg-indigo-50 border border-indigo-100 rounded-full px-2 py-0.5">{num}</span>
           <h2 className="text-base font-semibold text-foreground sm:text-lg">{title}</h2>
         </div>
         <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground sm:text-[15px] sm:leading-[1.7]">
@@ -208,7 +208,7 @@ const LaunchPlanSection = ({ num, title, plan }: { num: string; title: string; p
   return (
     <article className="animate-fade-in rounded-xl border border-border border-l-2 border-l-primary bg-card p-5 sm:p-6">
       <div className="mb-4 flex items-baseline gap-3">
-        <span className="font-mono-num text-xs text-muted-foreground">{num}</span>
+        <span className="text-xs font-semibold text-indigo-500 bg-indigo-50 border border-indigo-100 rounded-full px-2 py-0.5">{num}</span>
         <h2 className="text-base font-semibold text-foreground sm:text-lg">{title}</h2>
       </div>
       <p className="mb-4 text-xs text-muted-foreground sm:text-sm">Five sequential phases covering the first 14 days.</p>
@@ -231,7 +231,7 @@ const PaywallGate = ({ ideaName }: { ideaName: string }) => {
       {/* Blurred locked sections preview */}
       <div className="pointer-events-none select-none space-y-4 opacity-40 blur-sm">
         {SECTIONS.slice(FREE_SECTIONS).slice(0, 3).map((s) => (
-          <div key={s.num} className="rounded-xl border border-border bg-card p-5">
+          <div key={s.num} className="rounded-2xl border border-indigo-100 bg-indigo-50/30 p-5">
             <div className="mb-2 flex items-baseline gap-3">
               <span className="text-xs text-muted-foreground">{s.num}</span>
               <span className="text-base font-semibold">{s.title}</span>
@@ -359,7 +359,7 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
           {freeSections.map((section) => (
             <article key={section.num} className="animate-fade-in rounded-xl border border-border border-l-2 border-l-primary bg-card p-5 sm:p-6">
               <div className="mb-3 flex items-baseline gap-3">
-                <span className="font-mono-num text-xs text-muted-foreground">{section.num}</span>
+                <span className="text-xs font-semibold text-indigo-500 bg-indigo-50 border border-indigo-100 rounded-full px-2 py-0.5">{section.num}</span>
                 <h2 className="text-base font-semibold text-foreground sm:text-lg">{section.title}</h2>
               </div>
               <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground sm:text-[15px] sm:leading-[1.7]">
@@ -379,7 +379,7 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
               return (
                 <article key={section.num} className="animate-fade-in rounded-xl border border-border border-l-2 border-l-primary bg-card p-5 sm:p-6">
                   <div className="mb-3 flex items-baseline gap-3">
-                    <span className="font-mono-num text-xs text-muted-foreground">{section.num}</span>
+                    <span className="text-xs font-semibold text-indigo-500 bg-indigo-50 border border-indigo-100 rounded-full px-2 py-0.5">{section.num}</span>
                     <h2 className="text-base font-semibold text-foreground sm:text-lg">{section.title}</h2>
                   </div>
                   <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground sm:text-[15px] sm:leading-[1.7]">

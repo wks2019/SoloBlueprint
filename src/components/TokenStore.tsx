@@ -41,7 +41,7 @@ export const TokenStore = ({ onClose, inline = false }: TokenStoreProps) => {
                   {pack.id === "monthly" ? "20 tokens/mo" : `${pack.tokens} tokens`}
                 </span>
                 {pack.popular && (
-                  <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-white">Best value</span>
+                  <span className="rounded-full bg-indigo-600 border border-indigo-600 px-2 py-0.5 text-[10px] font-semibold text-white">Best value</span>
                 )}
               </div>
               <p className="text-xs text-muted-foreground mt-0.5">{pack.desc} · {pack.per}</p>

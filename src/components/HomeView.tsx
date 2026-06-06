@@ -82,7 +82,7 @@ export const HomeView = ({ onStart, tokenBalance = null }: HomeViewProps) => {
           ].map((pill) => (
             <span
               key={pill}
-              className="rounded-full border border-border bg-card px-4 py-2 text-xs text-muted-foreground sm:text-sm"
+              className="rounded-full border border-indigo-100 bg-indigo-50 px-4 py-2 text-xs text-indigo-600 font-medium sm:text-sm"
             >
               {pill}
             </span>
