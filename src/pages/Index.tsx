@@ -34,6 +34,14 @@ const Index = () => {
       setIsAdmin(admin);
       if (!admin) await refreshTokenBalance(data.session.user.id);
       setChecking(false);
+
+      // Handle Stripe checkout success
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("checkout") === "success") {
+        window.history.replaceState({}, "", "/app");
+        toast({ title: "Payment successful! 🎉", description: "Your tokens have been credited." });
+        if (!admin) await refreshTokenBalance(data.session.user.id);
+      }
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       if (!session) navigate("/app/auth");

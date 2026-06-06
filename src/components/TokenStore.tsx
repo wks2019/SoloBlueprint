@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 const PACKS = [
-  { id: "starter", tokens: 3, price: "£9", per: "£3/token", desc: "Try a few ideas", popular: false },
-  { id: "builder", tokens: 10, price: "£19", per: "£1.90/token", desc: "Validate seriously", popular: true },
-  { id: "pro", tokens: 30, price: "£39", per: "£1.30/token", desc: "Full research mode", popular: false },
+  { id: "starter", tokens: 3,  price: "£9",     per: "£3.00/token",  desc: "Try a few ideas",    popular: false },
+  { id: "builder", tokens: 10, price: "£19",    per: "£1.90/token",  desc: "Validate seriously", popular: true  },
+  { id: "pro",     tokens: 30, price: "£39",    per: "£1.30/token",  desc: "Full research mode", popular: false },
   { id: "monthly", tokens: 20, price: "£19/mo", per: "Rollover unused", desc: "Best for regulars", popular: false },
 ];
 
@@ -15,7 +16,30 @@ interface TokenStoreProps {
 
 export const TokenStore = ({ onClose, inline = false }: TokenStoreProps) => {
   const [selected, setSelected] = useState("builder");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: { pack: selected },
+      });
+      if (error) throw error;
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("No checkout URL returned");
+      }
+    } catch (e) {
+      toast({
+        title: "Checkout failed",
+        description: e instanceof Error ? e.message : "Please try again",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const content = (
     <div className={inline ? "" : "p-6 sm:p-8"}>
@@ -27,21 +51,15 @@ export const TokenStore = ({ onClose, inline = false }: TokenStoreProps) => {
 
       <div className="space-y-2.5 mb-5">
         {PACKS.map((pack) => (
-          <button
-            key={pack.id}
-            type="button"
-            onClick={() => setSelected(pack.id)}
-            className={`w-full flex items-center justify-between rounded-xl border px-4 py-3 text-left transition ${
-              selected === pack.id ? "border-primary bg-primary/5" : "border-border hover:border-primary/40"
-            }`}
-          >
+          <button key={pack.id} type="button" onClick={() => setSelected(pack.id)}
+            className={`w-full flex items-center justify-between rounded-xl border px-4 py-3 text-left transition ${selected === pack.id ? "border-primary bg-primary/5" : "border-border hover:border-primary/40"}`}>
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-semibold text-foreground">
                   {pack.id === "monthly" ? "20 tokens/mo" : `${pack.tokens} tokens`}
                 </span>
                 {pack.popular && (
-                  <span className="rounded-full bg-indigo-600 border border-indigo-600 px-2 py-0.5 text-[10px] font-semibold text-white">Best value</span>
+                  <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-white">Best value</span>
                 )}
               </div>
               <p className="text-xs text-muted-foreground mt-0.5">{pack.desc} · {pack.per}</p>
@@ -53,12 +71,9 @@ export const TokenStore = ({ onClose, inline = false }: TokenStoreProps) => {
         ))}
       </div>
 
-      <button
-        type="button"
-        onClick={() => navigate("/app/checkout?pack=" + selected)}
-        className="w-full rounded-xl bg-primary py-3 text-sm font-semibold text-white shadow-[0_4px_20px_rgba(79,70,229,0.35)] transition hover:brightness-110"
-      >
-        Continue to payment →
+      <button type="button" onClick={handleCheckout} disabled={loading}
+        className="w-full rounded-xl bg-primary py-3 text-sm font-semibold text-white shadow-[0_4px_20px_rgba(79,70,229,0.35)] transition hover:brightness-110 disabled:opacity-60">
+        {loading ? "Loading…" : "Continue to payment →"}
       </button>
       <p className="mt-3 text-center text-[11px] text-muted-foreground">
         Secure payment via Stripe · Tokens never expire
