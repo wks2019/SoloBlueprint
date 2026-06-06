@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 interface LogoProps {
   size?: "sm" | "md" | "lg";
 }
@@ -15,8 +17,13 @@ const dotSizes = {
 };
 
 export const Logo = ({ size = "md" }: LogoProps) => {
+  const navigate = useNavigate();
   return (
-    <div className="inline-flex items-baseline">
+    <button
+      onClick={() => navigate("/")}
+      className="inline-flex items-baseline transition hover:opacity-70"
+      aria-label="Back to home"
+    >
       <span className={`font-display text-foreground ${sizes[size]}`}>
         SoloBlueprint
       </span>
@@ -24,6 +31,6 @@ export const Logo = ({ size = "md" }: LogoProps) => {
         className={`inline-block rounded-full bg-primary ${dotSizes[size]}`}
         aria-hidden="true"
       />
-    </div>
+    </button>
   );
 };
