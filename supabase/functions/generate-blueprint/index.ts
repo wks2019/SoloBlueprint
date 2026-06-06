@@ -229,6 +229,27 @@ Fill in all 14 sections of the blueprint tool. Be specific to this exact idea â€
     });
 
     if (!response.ok) {
+      // Refund token if generation failed
+      if (userId && !isAdmin && SUPABASE_URL && SERVICE_ROLE) {
+        try {
+          const balRes = await fetch(
+            `${SUPABASE_URL}/rest/v1/token_balance?user_id=eq.${userId}&select=balance,total_used`,
+            { headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` } }
+          );
+          const balData = await balRes.json();
+          await fetch(`${SUPABASE_URL}/rest/v1/token_balance?user_id=eq.${userId}`, {
+            method: "PATCH",
+            headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+            body: JSON.stringify({ balance: (balData?.[0]?.balance ?? 0) + 1, total_used: Math.max(0, (balData?.[0]?.total_used ?? 0) - 1), updated_at: new Date().toISOString() }),
+          });
+          await fetch(`${SUPABASE_URL}/rest/v1/token_transactions`, {
+            method: "POST",
+            headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+            body: JSON.stringify({ user_id: userId, amount: 1, reason: "refund_failed_generation" }),
+          });
+        } catch (_) { /* refund failed silently */ }
+      }
+
       if (response.status === 429) {
         return new Response(
           JSON.stringify({ error: "Rate limit reached. Please try again in a moment." }),
@@ -237,7 +258,16 @@ Fill in all 14 sections of the blueprint tool. Be specific to this exact idea â€
       }
       const errText = await response.text();
       console.error("Claude API error:", response.status, errText);
-      return new Response(JSON.stringify({ error: "Failed to generate plan" }), {
+
+      // Check for credit exhaustion
+      if (response.status === 529 || errText.includes("credit") || errText.includes("balance")) {
+        return new Response(JSON.stringify({ error: "Service temporarily unavailable. Your token has been refunded." }), {
+          status: 503,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      return new Response(JSON.stringify({ error: "Failed to generate plan. Your token has been refunded." }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
