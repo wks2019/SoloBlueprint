@@ -146,7 +146,7 @@ const Landing = () => {
               { name: "Pro Pack", tokens: "30 tokens", price: "£39", per: "£1.30/token", desc: "Full research mode", featured: false },
               { name: "Monthly", tokens: "20/mo", price: "£19/mo", per: "Rollover unused", desc: "Best for regulars", featured: false },
             ].map((plan) => (
-              <div key={plan.name} className={`rounded-2xl border p-5 relative ${plan.featured ? "border-indigo-500 bg-indigo-50/50 shadow-[0_0_0_1px_rgb(99,102,241)]" : "border-gray-200 bg-white"}`}>
+              <div key={plan.name} className={`rounded-2xl border p-5 relative transition-all duration-200 ${plan.featured ? "border-indigo-500 bg-indigo-50/50 shadow-[0_0_0_1px_rgb(99,102,241)]" : "border-gray-200 bg-white hover:border-indigo-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(79,70,229,0.12)]"}`}>
                 {plan.featured && (
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-indigo-600 px-3 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider whitespace-nowrap">Best value</span>
                 )}
