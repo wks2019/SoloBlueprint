@@ -45,6 +45,148 @@ const statusColor = (s: string) => {
   return "";
 };
 
+const AMOUNTS = [1, 3, 5, 10];
+const REASONS = [
+  { value: "refund_failed_generation", label: "Failed generation" },
+  { value: "goodwill", label: "Goodwill" },
+  { value: "beta_tester", label: "Beta tester" },
+  { value: "referral", label: "Referral reward" },
+  { value: "support", label: "Support issue" },
+  { value: "promo", label: "Promo" },
+];
+
+interface GiftLog { email: string; amount: number; reason: string; time: string; }
+
+const GiftTokens = () => {
+  const [email, setEmail] = useState("");
+  const [amount, setAmount] = useState(1);
+  const [reason, setReason] = useState("refund_failed_generation");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [log, setLog] = useState<GiftLog[]>([]);
+
+  const handleGift = async () => {
+    if (!email.trim()) return;
+    setLoading(true);
+    setSuccess("");
+    try {
+      const SERVICE_ROLE = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5scGdid2h4ZHJ4c2RkaGtrY3djIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjQyOTgyMywiZXhwIjoyMDkyMDA1ODIzfQ.dyeu2RT8FoAc_YwEOFxC9sA7ZfA_JvRw8hKR_zs216A";
+      const SUPABASE_URL = "https://nlpgbwhxdrxsddhkkcwc.supabase.co";
+
+      // Find user by email
+      const userRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users?email=${encodeURIComponent(email.trim())}`, {
+        headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` },
+      });
+      const userData = await userRes.json();
+      const userId = userData?.users?.[0]?.id;
+      if (!userId) throw new Error("User not found");
+
+      // Get current balance
+      const balRes = await fetch(`${SUPABASE_URL}/rest/v1/token_balance?user_id=eq.${userId}&select=balance,total_purchased`, {
+        headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` },
+      });
+      const balData = await balRes.json();
+      const currentBalance = balData?.[0]?.balance ?? 0;
+      const totalPurchased = balData?.[0]?.total_purchased ?? 0;
+
+      // Credit tokens
+      await fetch(`${SUPABASE_URL}/rest/v1/token_balance?user_id=eq.${userId}`, {
+        method: "PATCH",
+        headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+        body: JSON.stringify({ balance: currentBalance + amount, total_purchased: totalPurchased + amount, updated_at: new Date().toISOString() }),
+      });
+
+      // Log transaction
+      await fetch(`${SUPABASE_URL}/rest/v1/token_transactions`, {
+        method: "POST",
+        headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+        body: JSON.stringify({ user_id: userId, amount, reason: `gift_${reason}` }),
+      });
+
+      setSuccess(`✅ ${amount} token${amount > 1 ? "s" : ""} gifted to ${email.trim()}`);
+      setLog(prev => [{ email: email.trim(), amount, reason, time: "Just now" }, ...prev.slice(0, 9)]);
+      setEmail("");
+    } catch (e) {
+      setSuccess(`❌ ${e instanceof Error ? e.message : "Failed"}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="rounded-2xl border border-border bg-card overflow-hidden mb-6">
+      <div className="px-5 py-3 border-b border-border">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">🎁 Gift tokens to user</p>
+      </div>
+      <div className="p-5 space-y-4">
+        {/* Email */}
+        <div>
+          <label className="text-xs font-semibold text-foreground block mb-1.5">User email</label>
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+            placeholder="user@example.com"
+            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-primary transition" />
+        </div>
+
+        {/* Amount */}
+        <div>
+          <label className="text-xs font-semibold text-foreground block mb-1.5">Tokens to gift</label>
+          <div className="grid grid-cols-4 gap-2">
+            {AMOUNTS.map(a => (
+              <button key={a} onClick={() => setAmount(a)}
+                className={`rounded-lg border py-2 text-sm font-semibold transition ${amount === a ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}>
+                {a}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Reason */}
+        <div>
+          <label className="text-xs font-semibold text-foreground block mb-1.5">Reason</label>
+          <div className="flex flex-wrap gap-1.5">
+            {REASONS.map(r => (
+              <button key={r.value} onClick={() => setReason(r.value)}
+                className={`rounded-full border px-3 py-1 text-[11px] font-medium transition ${reason === r.value ? "bg-indigo-50 border-indigo-200 text-indigo-600" : "border-border text-muted-foreground hover:border-indigo-200"}`}>
+                {r.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Success message */}
+        {success && (
+          <div className={`rounded-lg px-4 py-2.5 text-sm font-medium ${success.startsWith("✅") ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-600 border border-red-200"}`}>
+            {success}
+          </div>
+        )}
+
+        <button onClick={handleGift} disabled={loading || !email}
+          className="w-full rounded-xl bg-primary py-2.5 text-sm font-semibold text-white shadow-[0_4px_16px_rgba(79,70,229,0.3)] transition hover:brightness-110 disabled:opacity-50">
+          {loading ? "Gifting…" : `Gift ${amount} token${amount > 1 ? "s" : ""} →`}
+        </button>
+
+        {/* Gift log */}
+        {log.length > 0 && (
+          <div className="border-t border-border pt-4">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3">Recent gifts</p>
+            <div className="space-y-2">
+              {log.map((g, i) => (
+                <div key={i} className="flex items-center justify-between text-xs">
+                  <div>
+                    <span className="font-medium text-foreground">{g.email}</span>
+                    <span className="text-muted-foreground ml-2">{g.reason.replace(/_/g, " ")}</span>
+                  </div>
+                  <span className="font-bold text-primary">+{g.amount}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const Admin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -209,6 +351,9 @@ const Admin = () => {
             </button>
           ))}
         </div>
+
+        {/* Gift Tokens */}
+        <GiftTokens />
 
         {/* Blueprint catalogue */}
         <div className="rounded-2xl border border-border bg-card overflow-hidden">
