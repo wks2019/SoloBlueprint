@@ -59,7 +59,7 @@ const Privacy = () => {
               <li>To send transactional emails (account confirmation, password reset)</li>
               <li>To analyse usage patterns and improve the product</li>
             </ul>
-            <p className="mt-3">As the platform operator, SoloBlueprint may access generated blueprints for the purposes of customer support, quality assurance, fraud prevention, and platform improvement. This access is strictly internal and your data is never shared with third parties for this purpose.</p>
+            <p className="mt-3">As the platform operator, SoloBlueprint may access generated blueprints for the purposes of customer support, quality assurance, fraud prevention, and platform improvement. Blueprints may be manually reviewed and categorised by platform staff for quality assurance and product improvement purposes. This access is strictly internal and your data is never shared with third parties for this purpose.</p>
             <p className="mt-3">We do not sell your personal data to third parties. We do not use your data for advertising.</p>
           </section>
 
