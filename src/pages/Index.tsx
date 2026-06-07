@@ -23,6 +23,8 @@ const Index = () => {
   const [view, setView] = useState<View>("home");
   const [answers, setAnswers] = useState<FormAnswers>(initialAnswers);
   const [report, setReport] = useState<Report | null>(null);
+  const [blueprintId, setBlueprintId] = useState<string | null>(null);
+  const [roadmapLoading, setRoadmapLoading] = useState(false);
   const [checking, setChecking] = useState(true);
   const [tokenBalance, setTokenBalance] = useState<number | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -69,6 +71,7 @@ const Index = () => {
     setView("loading");
 
     try {
+      // Step 1: Generate blueprint (fast — 14 sections only)
       const { data, error } = await supabase.functions.invoke("generate-blueprint", { body: { answers } });
       if (error) throw error;
       if (data?.error === "NO_TOKENS" && !isAdmin) { setView("store"); return; }
@@ -76,11 +79,28 @@ const Index = () => {
       if (!data?.report) throw new Error("No plan returned");
 
       setReport(data.report as Report);
+      setBlueprintId(data.blueprintId ?? null);
       if (!isAdmin) {
         const { data: session } = await supabase.auth.getSession();
         if (session.session) await refreshTokenBalance(session.session.user.id);
       }
       setView("results");
+
+      // Step 2: Generate roadmap in background (non-blocking)
+      setRoadmapLoading(true);
+      try {
+        const country = answers.country?.trim() || "United Kingdom";
+        const businessType = answers.businessType || "online";
+        const ideaForRoadmap = answers.selectedIdea ?? answers.customIdea.trim();
+        const { data: rmData } = await supabase.functions.invoke("generate-roadmap", {
+          body: { ideaName: ideaForRoadmap, country, businessType, tone: answers.tone, blueprintId: data.blueprintId },
+        });
+        if (rmData?.roadmap) {
+          setReport(prev => prev ? { ...prev, roadmap: rmData.roadmap } : prev);
+        }
+      } catch (_) {}
+      finally { setRoadmapLoading(false); }
+
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Something went wrong";
       toast({ title: "Could not generate your blueprint", description: msg, variant: "destructive" });
@@ -88,7 +108,7 @@ const Index = () => {
     }
   };
 
-  const handleStartOver = () => { setAnswers(initialAnswers); setReport(null); setView("home"); };
+  const handleStartOver = () => { setAnswers(initialAnswers); setReport(null); setBlueprintId(null); setRoadmapLoading(false); setView("home"); };
 
   if (!isAdmin && view === "store") return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-background">
@@ -100,7 +120,7 @@ const Index = () => {
   if (view === "form") return <FormView answers={answers} setAnswers={setAnswers} onBack={() => setView("home")} onSubmit={handleSubmit} />;
   if (view === "loading") return <LoadingView />;
   if (view === "results" && report) return (
-    <ResultsView ideaName={ideaName} answers={answers} report={report} onStartOver={handleStartOver} isPaid={true} />
+    <ResultsView ideaName={ideaName} answers={answers} report={report} onStartOver={handleStartOver} isPaid={true} roadmapLoading={roadmapLoading} />
   );
 
   return <HomeView onStart={() => setView("form")} tokenBalance={isAdmin ? null : tokenBalance} isAdmin={isAdmin} />;

@@ -59,6 +59,7 @@ interface ResultsViewProps {
   onStartOver: () => void;
   isPaid?: boolean;
   isShared?: boolean;
+  roadmapLoading?: boolean;
 }
 
 const FREE_SECTIONS = 3;
@@ -320,7 +321,7 @@ const PaywallGate = () => {
   );
 };
 
-export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = false, isShared = false }: ResultsViewProps) => {
+export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = false, isShared = false, roadmapLoading = false }: ResultsViewProps) => {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
@@ -388,7 +389,7 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
             onClick={() => setActiveTab("roadmap")}
             className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold border-b-2 transition ${activeTab === "roadmap" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
           >
-            🗺️ Roadmap
+{roadmapLoading ? "🗺️ Roadmap ..." : "🗺️ Roadmap"}
           </button>
         </div>
       </div>
@@ -442,7 +443,15 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
               </p>
             </div>
 
-            {roadmapWeeks.length === 0 ? (
+            {roadmapLoading ? (
+              <div className="rounded-2xl border border-border bg-card p-8 text-center">
+                <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+                  <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+                  Building your roadmap...
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">This takes about 15 seconds</p>
+              </div>
+            ) : roadmapWeeks.length === 0 ? (
               <div className="rounded-2xl border border-border bg-card p-8 text-center">
                 <p className="text-sm text-muted-foreground">Roadmap not available for this blueprint. Generate a new one to get your weekly plan.</p>
               </div>
