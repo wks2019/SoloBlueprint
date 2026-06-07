@@ -62,7 +62,6 @@ const Index = () => {
   const ideaName = answers.selectedIdea ?? answers.customIdea.trim();
 
   const saveBlueprint = async (fullReport: Record<string, unknown>) => {
-    const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
     try {
       const { data: session } = await supabase.auth.getSession();
       const userId = session.session?.user?.id;
@@ -144,9 +143,10 @@ const Index = () => {
 
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Something went wrong";
+      console.error("Generation error:", e);
       toast({ title: "Could not generate your blueprint", description: msg, variant: "destructive" });
       setGenerating(false);
-      setView("home");
+      setView("form");
     }
   };
 
