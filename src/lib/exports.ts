@@ -12,6 +12,16 @@ interface LaunchPhase {
 
 type LaunchPlan = string | { phases: LaunchPhase[] };
 
+interface RoadmapWeek {
+  week: number;
+  phase: string;
+  title: string;
+  hours: string;
+  task: string;
+  why: string;
+  resource: { type: string; title: string; description: string };
+}
+
 interface ReportData {
   diagnosis: string;
   problem_and_demand: string;
@@ -27,6 +37,7 @@ interface ReportData {
   honest_risks: string;
   seven_day_plan: string;
   how_to_scale: string;
+  roadmap?: { weeks: RoadmapWeek[] };
 }
 
 export const flattenLaunchPlan = (lp: LaunchPlan): string => {
@@ -228,6 +239,93 @@ export const downloadBlueprintPdf = (
     doc.text(bodyLines, MARGIN + 6, y + 16);
 
     y += cardH + 6;
+  }
+
+  // ---------- ROADMAP PAGES ----------
+  if (report.roadmap?.weeks?.length) {
+    startNewPage();
+
+    // Roadmap header
+    doc.setFillColor(PRIMARY[0], PRIMARY[1], PRIMARY[2]);
+    doc.rect(MARGIN, y, 14, 2, "F");
+    y += 8;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(TEXT[0], TEXT[1], TEXT[2]);
+    doc.text("Your Personal Roadmap", MARGIN, y);
+    y += 6;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]);
+    doc.text("Week by week. No noise. One resource per step.", MARGIN, y);
+    y += 10;
+
+    const PHASE_COLOURS_PDF: Record<string, [number, number, number]> = {
+      FOUNDATION: [99, 102, 241],
+      VALIDATION: [234, 88, 12],
+      LAUNCH:     [22, 163, 74],
+    };
+
+    for (const week of report.roadmap.weeks) {
+      const phaseColour = PHASE_COLOURS_PDF[week.phase] ?? PHASE_COLOURS_PDF.FOUNDATION;
+      const taskLines = doc.splitTextToSize(week.task, CONTENT_W - 16);
+      const whyLines = doc.splitTextToSize(`Why: ${week.why}`, CONTENT_W - 16);
+      const resLines = doc.splitTextToSize(`${week.resource.type}: ${week.resource.title} — ${week.resource.description}`, CONTENT_W - 16);
+      const cardH = 10 + taskLines.length * 5.2 + whyLines.length * 5.2 + resLines.length * 5.2 + 14;
+
+      if (y + cardH > PAGE_H - 18) startNewPage();
+
+      doc.setFillColor(CARD[0], CARD[1], CARD[2]);
+      doc.setDrawColor(BORDER[0], BORDER[1], BORDER[2]);
+      doc.roundedRect(MARGIN, y, CONTENT_W, cardH, 3, 3, "FD");
+
+      // Phase colour stripe
+      doc.setFillColor(phaseColour[0], phaseColour[1], phaseColour[2]);
+      doc.rect(MARGIN, y, 1.2, cardH, "F");
+
+      // Week + phase badge
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(phaseColour[0], phaseColour[1], phaseColour[2]);
+      doc.text(`WEEK ${week.week} — ${week.phase}`, MARGIN + 6, y + 7);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]);
+      doc.text(week.hours, PAGE_W - MARGIN - 2, y + 7, { align: "right" });
+
+      // Title
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      doc.setTextColor(TEXT[0], TEXT[1], TEXT[2]);
+      doc.text(week.title, MARGIN + 6, y + 14);
+
+      let wy = y + 20;
+
+      // Task
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(220, 226, 240);
+      doc.text(taskLines, MARGIN + 6, wy);
+      wy += taskLines.length * 5.2 + 3;
+
+      // Why
+      doc.setFont("helvetica", "italic");
+      doc.setFontSize(9);
+      doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]);
+      doc.text(whyLines, MARGIN + 6, wy);
+      wy += whyLines.length * 5.2 + 3;
+
+      // Resource
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(phaseColour[0], phaseColour[1], phaseColour[2]);
+      doc.text(resLines, MARGIN + 6, wy);
+
+      y += cardH + 5;
+    }
   }
 
   // ---------- FOOTERS ----------
