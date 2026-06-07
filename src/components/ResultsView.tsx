@@ -60,6 +60,7 @@ interface ResultsViewProps {
   isPaid?: boolean;
   isShared?: boolean;
   roadmapLoading?: boolean;
+  onFetchRoadmap?: () => void;
 }
 
 const FREE_SECTIONS = 3;
@@ -321,7 +322,7 @@ const PaywallGate = () => {
   );
 };
 
-export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = false, isShared = false, roadmapLoading = false }: ResultsViewProps) => {
+export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = false, isShared = false, roadmapLoading = false, onFetchRoadmap }: ResultsViewProps) => {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
@@ -386,7 +387,12 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab("roadmap")}
+            onClick={() => {
+              setActiveTab("roadmap");
+              if (!report.roadmap?.weeks?.length && !roadmapLoading && onFetchRoadmap) {
+                onFetchRoadmap();
+              }
+            }}
             className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold border-b-2 transition ${activeTab === "roadmap" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
           >
 {roadmapLoading ? "🗺️ Roadmap ..." : "🗺️ Roadmap"}
@@ -453,7 +459,18 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
               </div>
             ) : roadmapWeeks.length === 0 ? (
               <div className="rounded-2xl border border-border bg-card p-8 text-center">
-                <p className="text-sm text-muted-foreground">Roadmap not available for this blueprint. Generate a new one to get your weekly plan.</p>
+                <p className="text-lg mb-2">🗺️</p>
+                <p className="text-sm font-semibold text-foreground mb-1">Your roadmap is ready to build</p>
+                <p className="text-xs text-muted-foreground mb-4">6 weeks. One task per week. Curated resources for your idea.</p>
+                {onFetchRoadmap && (
+                  <button
+                    type="button"
+                    onClick={onFetchRoadmap}
+                    className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[0_2px_12px_rgba(79,70,229,0.25)] hover:brightness-110 transition"
+                  >
+                    Generate my roadmap →
+                  </button>
+                )}
               </div>
             ) : (
               <>

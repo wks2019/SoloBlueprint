@@ -87,25 +87,30 @@ const Index = () => {
       setView("results");
 
       // Step 2: Generate roadmap in background (non-blocking)
-      setRoadmapLoading(true);
-      try {
-        const country = answers.country?.trim() || "United Kingdom";
-        const businessType = answers.businessType || "online";
-        const ideaForRoadmap = answers.selectedIdea ?? answers.customIdea.trim();
-        const { data: rmData } = await supabase.functions.invoke("generate-roadmap", {
-          body: { ideaName: ideaForRoadmap, country, businessType, tone: answers.tone, blueprintId: data.blueprintId },
-        });
-        if (rmData?.roadmap) {
-          setReport(prev => prev ? { ...prev, roadmap: rmData.roadmap } : prev);
-        }
-      } catch (_) {}
-      finally { setRoadmapLoading(false); }
+      fetchRoadmap();
 
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Something went wrong";
       toast({ title: "Could not generate your blueprint", description: msg, variant: "destructive" });
       setView("home");
     }
+  };
+
+  const fetchRoadmap = async () => {
+    if (roadmapLoading) return;
+    setRoadmapLoading(true);
+    try {
+      const country = answers.country?.trim() || "United Kingdom";
+      const businessType = answers.businessType || "online";
+      const idea = answers.selectedIdea ?? answers.customIdea.trim();
+      const { data: rmData } = await supabase.functions.invoke("generate-roadmap", {
+        body: { ideaName: idea, country, businessType, tone: answers.tone, blueprintId },
+      });
+      if (rmData?.roadmap) {
+        setReport(prev => prev ? { ...prev, roadmap: rmData.roadmap } : prev);
+      }
+    } catch (_) {}
+    finally { setRoadmapLoading(false); }
   };
 
   const handleStartOver = () => { setAnswers(initialAnswers); setReport(null); setBlueprintId(null); setRoadmapLoading(false); setView("home"); };
@@ -120,7 +125,7 @@ const Index = () => {
   if (view === "form") return <FormView answers={answers} setAnswers={setAnswers} onBack={() => setView("home")} onSubmit={handleSubmit} />;
   if (view === "loading") return <LoadingView />;
   if (view === "results" && report) return (
-    <ResultsView ideaName={ideaName} answers={answers} report={report} onStartOver={handleStartOver} isPaid={true} roadmapLoading={roadmapLoading} />
+    <ResultsView ideaName={ideaName} answers={answers} report={report} onStartOver={handleStartOver} isPaid={true} roadmapLoading={roadmapLoading} onFetchRoadmap={fetchRoadmap} />
   );
 
   return <HomeView onStart={() => setView("form")} tokenBalance={isAdmin ? null : tokenBalance} isAdmin={isAdmin} />;
