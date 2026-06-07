@@ -4,6 +4,10 @@ export interface FormAnswers {
   selectedIdea: string | null;
   customIdea: string;
   ideaDescription: string;
+  country: string;
+  businessType: string | null;
+  tone: string | null;
+  background: string;
   budget: string | null;
   hours: string | null;
   experience: string | null;
@@ -34,6 +38,18 @@ const BUDGETS = [
 const HOURS = ["1 – 5 hours", "5 – 15 hours", "15+ hours"];
 const EXPERIENCE = ["Complete beginner", "Some experience", "Technical background"];
 const GOALS = ["Earn my first £500", "Replace my income", "Build a product"];
+const TONES = [
+  { value: "direct", emoji: "🎯", label: "Straight talker", desc: "Short, blunt, no hand-holding" },
+  { value: "detailed", emoji: "📖", label: "Step by step", desc: "Explain the why behind everything" },
+  { value: "aggressive", emoji: "🚀", label: "Push me hard", desc: "Bold moves, fast timelines, high targets" },
+];
+
+const BUSINESS_TYPES = [
+  { value: "online", label: "Online", emoji: "💻", desc: "Fully digital : website, app, SaaS" },
+  { value: "remote", label: "Remote service", emoji: "🌍", desc: "You deliver a service from anywhere" },
+  { value: "physical", label: "Physical", emoji: "🏪", desc: "Requires a location, stock, or in-person" },
+  { value: "hybrid", label: "Hybrid", emoji: "⚡", desc: "Mix of online and physical" },
+];
 
 interface FormViewProps {
   answers: FormAnswers;
@@ -81,6 +97,9 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
   const isComplete = useMemo(
     () =>
       ideaSelected &&
+      answers.country.trim().length > 0 &&
+      !!answers.businessType &&
+      !!answers.tone &&
       !!answers.budget &&
       !!answers.hours &&
       !!answers.experience &&
@@ -189,7 +208,74 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
 
         {/* Q2 */}
         <section className="mb-10">
-          <QuestionLabel index={2} label="What is your available starting budget?" />
+          <QuestionLabel index={2} label="Where will this business operate?" />
+
+          {/* Country input */}
+          <div className="mb-5">
+            <input
+              type="text"
+              value={answers.country}
+              onChange={(e) => update({ country: e.target.value })}
+              placeholder="Your country : e.g. United Kingdom, Nigeria, Canada..."
+              className="w-full rounded-xl border border-border bg-card py-3.5 px-4 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 sm:text-base"
+            />
+          </div>
+
+          {/* Business type */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            {BUSINESS_TYPES.map((bt) => {
+              const active = answers.businessType === bt.value;
+              return (
+                <button
+                  key={bt.value}
+                  type="button"
+                  onClick={() => update({ businessType: active ? null : bt.value })}
+                  className={`relative rounded-xl border bg-card p-3 text-left transition ${
+                    active ? "border-primary" : "border-border hover:border-primary/40"
+                  }`}
+                >
+                  {active && (
+                    <span className="absolute right-2 top-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">✓</span>
+                  )}
+                  <div className="mb-1 text-2xl">{bt.emoji}</div>
+                  <div className="text-xs font-semibold text-foreground sm:text-sm">{bt.label}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{bt.desc}</div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Q3 */}
+        <section className="mb-10">
+          <QuestionLabel index={3} label="How do you want your blueprint written?" />
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            {TONES.map((t) => {
+              const active = answers.tone === t.value;
+              return (
+                <button
+                  key={t.value}
+                  type="button"
+                  onClick={() => update({ tone: active ? null : t.value })}
+                  className={`relative rounded-xl border bg-card p-3 text-left transition ${
+                    active ? "border-primary" : "border-border hover:border-primary/40"
+                  }`}
+                >
+                  {active && (
+                    <span className="absolute right-2 top-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">✓</span>
+                  )}
+                  <div className="mb-1 text-2xl">{t.emoji}</div>
+                  <div className="text-xs font-semibold text-foreground sm:text-sm">{t.label}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{t.desc}</div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Q4 */}
+        <section className="mb-10">
+          <QuestionLabel index={4} label="What is your available starting budget?" />
           <div className="flex flex-wrap gap-2.5">
             {BUDGETS.map((b) => (
               <Pill key={b} active={answers.budget === b} onClick={() => update({ budget: b })}>
@@ -199,9 +285,9 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
           </div>
         </section>
 
-        {/* Q3 */}
+        {/* Q5 */}
         <section className="mb-10">
-          <QuestionLabel index={3} label="How many hours per week can you commit?" />
+          <QuestionLabel index={5} label="How many hours per week can you commit?" />
           <div className="flex flex-wrap gap-2.5">
             {HOURS.map((h) => (
               <Pill key={h} active={answers.hours === h} onClick={() => update({ hours: h })}>
@@ -211,9 +297,9 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
           </div>
         </section>
 
-        {/* Q4 */}
+        {/* Q6 */}
         <section className="mb-10">
-          <QuestionLabel index={4} label="What is your experience level?" />
+          <QuestionLabel index={6} label="What is your experience level?" />
           <div className="flex flex-wrap gap-2.5">
             {EXPERIENCE.map((e) => (
               <Pill key={e} active={answers.experience === e} onClick={() => update({ experience: e })}>
@@ -223,9 +309,9 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
           </div>
         </section>
 
-        {/* Q5 */}
+        {/* Q7 */}
         <section className="mb-12">
-          <QuestionLabel index={5} label="What is your main goal in the next 90 days?" />
+          <QuestionLabel index={7} label="What is your main goal in the next 90 days?" />
           <div className="flex flex-wrap gap-2.5">
             {GOALS.map((g) => (
               <Pill key={g} active={answers.goal === g} onClick={() => update({ goal: g })}>
@@ -233,6 +319,19 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
               </Pill>
             ))}
           </div>
+        </section>
+
+        {/* Background context */}
+        <section className="mb-10">
+          <QuestionLabel index={8} label="What is your background? (optional)" />
+          <textarea
+            value={answers.background}
+            onChange={(e) => update({ background: e.target.value })}
+            placeholder="e.g. I am a nurse with 5 years experience. I have tried dropshipping before. I speak Spanish and English."
+            rows={3}
+            className="w-full rounded-xl border border-border bg-card px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none sm:text-base"
+          />
+          <p className="mt-1.5 text-xs text-muted-foreground">Used only to spot transferable advantages for your idea. Never used to change or limit it.</p>
         </section>
 
         <button

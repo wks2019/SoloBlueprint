@@ -33,7 +33,7 @@ const Privacy = () => {
             <p className="font-medium text-foreground">Account data:</p>
             <ul className="mt-1 space-y-1 list-disc list-inside">
               <li>Email address (required for account creation)</li>
-              <li>Encrypted password (stored via Supabase Auth — we never see it in plain text)</li>
+              <li>Encrypted password (stored via Supabase Auth : we never see it in plain text)</li>
             </ul>
             <p className="mt-3 font-medium text-foreground">Usage data:</p>
             <ul className="mt-1 space-y-1 list-disc list-inside">
@@ -44,7 +44,7 @@ const Privacy = () => {
             </ul>
             <p className="mt-3 font-medium text-foreground">Payment data:</p>
             <ul className="mt-1 space-y-1 list-disc list-inside">
-              <li>Payment processing is handled entirely by Stripe — we do not store card details</li>
+              <li>Payment processing is handled entirely by Stripe : we do not store card details</li>
               <li>We store your Stripe customer ID and subscription status</li>
             </ul>
           </section>
@@ -79,19 +79,19 @@ const Privacy = () => {
             <h2 className="font-display text-xl text-foreground mb-3">6. Your Rights (UK GDPR)</h2>
             <p>Under UK GDPR, you have the right to:</p>
             <ul className="mt-2 space-y-1.5 list-disc list-inside">
-              <li><strong className="text-foreground">Access</strong> — request a copy of your personal data</li>
-              <li><strong className="text-foreground">Rectification</strong> — correct inaccurate data</li>
-              <li><strong className="text-foreground">Erasure</strong> — request deletion of your account and data</li>
-              <li><strong className="text-foreground">Portability</strong> — receive your data in a portable format</li>
-              <li><strong className="text-foreground">Restriction</strong> — restrict how we process your data</li>
-              <li><strong className="text-foreground">Object</strong> — object to processing based on legitimate interests</li>
+              <li><strong className="text-foreground">Access</strong> : request a copy of your personal data</li>
+              <li><strong className="text-foreground">Rectification</strong> : correct inaccurate data</li>
+              <li><strong className="text-foreground">Erasure</strong> : request deletion of your account and data</li>
+              <li><strong className="text-foreground">Portability</strong> : receive your data in a portable format</li>
+              <li><strong className="text-foreground">Restriction</strong> : restrict how we process your data</li>
+              <li><strong className="text-foreground">Object</strong> : object to processing based on legitimate interests</li>
             </ul>
             <p className="mt-3">To exercise any of these rights, email <a href="mailto:support@soloblueprint.co.uk" className="text-primary hover:underline">support@soloblueprint.co.uk</a>. We will respond within 30 days.</p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-foreground mb-3">7. Cookies</h2>
-            <p>SoloBlueprint uses minimal cookies — only those necessary for authentication (Supabase session token). We do not use tracking or advertising cookies.</p>
+            <p>SoloBlueprint uses minimal cookies : only those necessary for authentication (Supabase session token). We do not use tracking or advertising cookies.</p>
           </section>
 
           <section>
@@ -102,10 +102,10 @@ const Privacy = () => {
           <section>
             <h2 className="font-display text-xl text-foreground mb-3">9. Third-Party Services</h2>
             <ul className="space-y-1.5 list-disc list-inside">
-              <li><strong className="text-foreground">Supabase</strong> — database and authentication</li>
-              <li><strong className="text-foreground">Anthropic (Claude API)</strong> — AI generation</li>
-              <li><strong className="text-foreground">Stripe</strong> — payment processing</li>
-              <li><strong className="text-foreground">Netlify</strong> — hosting and deployment</li>
+              <li><strong className="text-foreground">Supabase</strong> : database and authentication</li>
+              <li><strong className="text-foreground">Anthropic (Claude API)</strong> : AI generation</li>
+              <li><strong className="text-foreground">Stripe</strong> : payment processing</li>
+              <li><strong className="text-foreground">Netlify</strong> : hosting and deployment</li>
             </ul>
           </section>
 

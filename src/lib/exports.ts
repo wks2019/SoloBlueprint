@@ -47,7 +47,7 @@ export const flattenLaunchPlan = (lp: LaunchPlan): string => {
     .map((p, i) => {
       const steps = p.exact_steps.map((s, j) => `  ${j + 1}. ${s}`).join("\n");
       const tools = p.tools.map((t) => `  • ${t}`).join("\n");
-      return `PHASE ${i + 1} — ${p.timeframe}: ${p.title}
+      return `PHASE ${i + 1} : ${p.timeframe}: ${p.title}
 
 What to do:
 ${p.what_to_do}
@@ -91,7 +91,7 @@ const SECTIONS: { num: string; title: string; key: keyof ReportData }[] = [
   { num: "14", title: "How to Scale Later", key: "how_to_scale" },
 ];
 
-// Brand palette (RGB) — matches the dark SoloBlueprint theme
+// Brand palette (RGB) : matches the dark SoloBlueprint theme
 const BG = [10, 15, 30] as const;          // #0a0f1e
 const CARD = [13, 21, 38] as const;        // #0d1526
 const BORDER = [30, 45, 74] as const;      // #1e2d4a
@@ -135,7 +135,7 @@ export const downloadBlueprintPdf = (
   doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]);
   doc.text("YOUR SOLOBLUEPRINT FOR", MARGIN, 50);
 
-  // Title (idea name) — wrap if long
+  // Title (idea name) : wrap if long
   doc.setFont("helvetica", "bold");
   doc.setFontSize(28);
   doc.setTextColor(TEXT[0], TEXT[1], TEXT[2]);
@@ -272,7 +272,7 @@ export const downloadBlueprintPdf = (
       const phaseColour = PHASE_COLOURS_PDF[week.phase] ?? PHASE_COLOURS_PDF.FOUNDATION;
       const taskLines = doc.splitTextToSize(week.task, CONTENT_W - 16);
       const whyLines = doc.splitTextToSize(`Why: ${week.why}`, CONTENT_W - 16);
-      const resLines = doc.splitTextToSize(`${week.resource.type}: ${week.resource.title} — ${week.resource.description}`, CONTENT_W - 16);
+      const resLines = doc.splitTextToSize(`${week.resource.type}: ${week.resource.title} : ${week.resource.description}`, CONTENT_W - 16);
       const cardH = 10 + taskLines.length * 5.2 + whyLines.length * 5.2 + resLines.length * 5.2 + 14;
 
       if (y + cardH > PAGE_H - 18) startNewPage();
@@ -289,7 +289,7 @@ export const downloadBlueprintPdf = (
       doc.setFont("helvetica", "bold");
       doc.setFontSize(9);
       doc.setTextColor(phaseColour[0], phaseColour[1], phaseColour[2]);
-      doc.text(`WEEK ${week.week} — ${week.phase}`, MARGIN + 6, y + 7);
+      doc.text(`WEEK ${week.week} : ${week.phase}`, MARGIN + 6, y + 7);
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(8);
@@ -340,7 +340,7 @@ export const downloadBlueprintPdf = (
 };
 
 // ============================================================
-// Marketing AI mega-prompt — paste into ChatGPT / Claude / Gemini
+// Marketing AI mega-prompt : paste into ChatGPT / Claude / Gemini
 // ============================================================
 export const buildMarketingPrompt = (
   ideaName: string,
@@ -409,10 +409,10 @@ ${report.how_to_scale}
 ═══════════════════════════════════════════
 HOW I WANT YOU TO WORK
 ═══════════════════════════════════════════
-1. Always speak directly to my exact target audience (section 03) — never to "everyone".
+1. Always speak directly to my exact target audience (section 03) : never to "everyone".
 2. Lead every piece of copy with the real pain from section 02, then bridge to my offer (section 04).
 3. Tone: clear, plain English, confident, zero hype, zero emojis unless I ask. UK spelling, £ for prices.
-4. Every output must be copy-paste ready — no placeholders like [your name], no "insert here" gaps. Use the data above to fill everything.
+4. Every output must be copy-paste ready : no placeholders like [your name], no "insert here" gaps. Use the data above to fill everything.
 5. Match the channel: short and scroll-stopping for X/IG, value-led for LinkedIn, conversational for cold DMs and emails.
 6. When relevant, build in a soft CTA tied to my 90-day goal (${answers.goal ?? "growth"}).
 7. If I ask for a campaign or sequence, give me a numbered plan with channel, format, hook, body and CTA for each asset.
@@ -427,5 +427,5 @@ B) A menu of 6 marketing assets you can produce for me right now (e.g. LinkedIn 
 
 Then wait for me to pick.
 
-— End of brief —`;
+: End of brief :`;
 };

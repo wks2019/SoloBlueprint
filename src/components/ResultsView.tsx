@@ -196,7 +196,7 @@ const WeekCard = ({ week, locked = false }: { week: RoadmapWeek; locked?: boolea
           </span>
           <span className="text-[10px] text-muted-foreground font-medium">{week.hours}</span>
         </div>
-        <p className="font-display text-base text-foreground mb-1">Week {week.week} — {week.title}</p>
+        <p className="font-display text-base text-foreground mb-1">Week {week.week} : {week.title}</p>
         <div className="h-2 w-3/4 rounded bg-muted/50 mb-2 mt-3" />
         <div className="h-2 w-1/2 rounded bg-muted/50" />
       </div>
@@ -215,7 +215,7 @@ const WeekCard = ({ week, locked = false }: { week: RoadmapWeek; locked?: boolea
           </div>
           {completed && <span className="text-[10px] font-semibold text-green-600">✓ Complete</span>}
         </div>
-        <p className="font-display text-base text-foreground mb-3">Week {week.week} — {week.title}</p>
+        <p className="font-display text-base text-foreground mb-3">Week {week.week} : {week.title}</p>
         <p className="text-sm text-muted-foreground leading-relaxed mb-2">{week.task}</p>
         <p className="text-xs text-muted-foreground/70 italic leading-relaxed mb-4">{week.why}</p>
 
@@ -290,7 +290,7 @@ const PaywallGate = () => {
         <div className="text-center mb-5">
           <div className="text-2xl mb-2">🔓</div>
           <h2 className="font-display text-xl text-foreground mb-1">Unlock your full blueprint</h2>
-          <p className="text-sm text-muted-foreground">11 more sections — tools, pricing, outreach scripts, 7-day action plan.</p>
+          <p className="text-sm text-muted-foreground">11 more sections : tools, pricing, outreach scripts, 7-day action plan.</p>
         </div>
         <div className="space-y-2.5 mb-5">
           {PLANS.map(plan => (
@@ -438,7 +438,7 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
           <>
             <div className="mb-5">
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Week by week. No noise. One resource per step — curated for your idea.
+                Week by week. No noise. One resource per step : curated for your idea.
               </p>
             </div>
 

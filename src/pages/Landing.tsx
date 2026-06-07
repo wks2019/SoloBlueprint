@@ -106,7 +106,7 @@ const Landing = () => {
           </h1>
 
           <p className="text-lg sm:text-xl text-gray-500 max-w-xl mx-auto mb-8 leading-relaxed font-light">
-            You have an idea. You don't have a plan. SoloBlueprint fixes that — in under 60 seconds.
+            You have an idea. You don't have a plan. SoloBlueprint fixes that : in under 60 seconds.
           </p>
 
           {/* INTERACTIVE IDEA SELECTOR */}
@@ -165,7 +165,7 @@ const Landing = () => {
           <div className="grid sm:grid-cols-3 gap-6">
             {[
               { num: "01", icon: "✏️", title: "Describe your idea", body: "Pick your idea type or describe your own. Tell us your budget, time, and goal. 90 seconds max." },
-              { num: "02", icon: "⚡", title: "AI builds your plan", body: "Our AI does the heavy lifting — market research, pricing, tools, scripts. All tailored to your situation." },
+              { num: "02", icon: "⚡", title: "AI builds your plan", body: "Our AI does the heavy lifting : market research, pricing, tools, scripts. All tailored to your situation." },
               { num: "03", icon: "🚀", title: "Launch with clarity", body: "You get a full 14-section plan. Download it, share it, pitch it. You finally know what to do." },
             ].map((step, i) => (
               <FadeUp key={step.num} delay={i * 100}>
@@ -198,7 +198,7 @@ const Landing = () => {
         <div className="max-w-4xl mx-auto">
           <FadeUp><p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">See it in action</p></FadeUp>
           <FadeUp delay={100}><h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-4">This is what you get</h2></FadeUp>
-          <FadeUp delay={200}><p className="text-gray-500 text-center max-w-md mx-auto mb-12 font-light">A real blueprint — generated from a real idea. This is what lands in your dashboard in under 60 seconds.</p></FadeUp>
+          <FadeUp delay={200}><p className="text-gray-500 text-center max-w-md mx-auto mb-12 font-light">A real blueprint : generated from a real idea. This is what lands in your dashboard in under 60 seconds.</p></FadeUp>
 
           <FadeUp delay={100}>
             {/* Browser mockup */}
@@ -253,8 +253,8 @@ const Landing = () => {
                 {/* Unlocked sections */}
                 <div className="space-y-2">
                   {[
-                    { num: "01", title: "Business Idea Diagnosis", cat: "strategy", color: "#4f46e5", bg: "#eef2ff", body: "You're entering a high-demand, low-competition niche. Creators produce 10x more content than they can repurpose — most have no system. Your edge: you don't need a big audience to start, just 3–5 clients paying £150–300/mo. At £200/client you need just 3 to hit your £500 target in month one." },
-                    { num: "02", title: "Real Problem & Demand", cat: "market", color: "#16a34a", bg: "#f0fdf4", body: "r/podcasting, r/youtubers, and r/entrepreneur are full of creators asking 'how do I repurpose my content?' LinkedIn creators with 5k+ followers regularly post about this pain. The demand is proven — you're solving a real, recurring problem that creators can't easily automate themselves yet." },
+                    { num: "01", title: "Business Idea Diagnosis", cat: "strategy", color: "#4f46e5", bg: "#eef2ff", body: "You're entering a high-demand, low-competition niche. Creators produce 10x more content than they can repurpose : most have no system. Your edge: you don't need a big audience to start, just 3–5 clients paying £150–300/mo. At £200/client you need just 3 to hit your £500 target in month one." },
+                    { num: "02", title: "Real Problem & Demand", cat: "market", color: "#16a34a", bg: "#f0fdf4", body: "r/podcasting, r/youtubers, and r/entrepreneur are full of creators asking 'how do I repurpose my content?' LinkedIn creators with 5k+ followers regularly post about this pain. The demand is proven : you're solving a real, recurring problem that creators can't easily automate themselves yet." },
                     { num: "03", title: "Target Audience", cat: "market", color: "#16a34a", bg: "#f0fdf4", body: "Solo podcasters (100–5k listeners), LinkedIn creators (2k–20k followers), and course creators who publish weekly. They earn £500–3k/mo from content but spend 3–6 hours per piece. They'll pay £150–300/mo to get that time back. Find them on Twitter/X, LinkedIn, and in Skool communities." },
                   ].map(s => (
                     <div key={s.num} className="bg-white rounded-xl border border-gray-100 overflow-hidden" style={{ borderTop: `2px solid ${s.color}` }}>
@@ -290,7 +290,7 @@ const Landing = () => {
                   <div className="bg-white border border-indigo-100 rounded-2xl p-5 text-center shadow-[0_-4px_24px_rgba(79,70,229,0.08)]">
                     <div className="text-xl mb-2">🔓</div>
                     <p style={{ fontFamily: "'DM Serif Display', serif" }} className="text-base text-gray-900 mb-1">Unlock your full blueprint</p>
-                    <p className="text-[11px] text-gray-500 mb-4">11 more sections — clear offer, tools, pricing, outreach scripts, 7-day plan.</p>
+                    <p className="text-[11px] text-gray-500 mb-4">11 more sections : clear offer, tools, pricing, outreach scripts, 7-day plan.</p>
                     <div className="space-y-2 mb-4">
                       {[
                         { name: "One blueprint", desc: "This blueprint only", price: "£9", period: "one-off", selected: false },
@@ -323,7 +323,7 @@ const Landing = () => {
           {/* Callout points */}
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { icon: "🎯", title: "Tailored to your idea", desc: "Every section is generated around your specific business, budget, and goals — not a template." },
+              { icon: "🎯", title: "Tailored to your idea", desc: "Every section is generated around your specific business, budget, and goals : not a template." },
               { icon: "🇬🇧", title: "Real UK tools & prices", desc: "Every tool recommendation comes with a real name, real URL, and real £ price. No vague advice." },
               { icon: "📋", title: "Copy-paste ready", desc: "Outreach scripts, DM templates, and email copy you can use today. No rewriting needed." },
             ].map((c, i) => (
@@ -378,10 +378,10 @@ const Landing = () => {
             <div className="space-y-3">
               {[
                 { q: "Is the first blueprint actually free?", a: "Yes. Sign up, get 1 free token, generate your full blueprint. No card, no trial period, no catch. If it's not useful, you've lost nothing." },
-                { q: "Do tokens expire?", a: "Never. Buy tokens today, use them in 6 months. Monthly subscription tokens roll over too — unused credits don't disappear." },
-                { q: "What if the blueprint isn't good?", a: "You see the first 3 sections before spending a token. If the quality isn't there, don't unlock it. If you paid and you're not happy — email support@soloblueprint.co.uk and we'll make it right." },
+                { q: "Do tokens expire?", a: "Never. Buy tokens today, use them in 6 months. Monthly subscription tokens roll over too : unused credits don't disappear." },
+                { q: "What if the blueprint isn't good?", a: "You see the first 3 sections before spending a token. If the quality isn't there, don't unlock it. If you paid and you're not happy : email support@soloblueprint.co.uk and we'll make it right." },
                 { q: "Can I use it commercially?", a: "It's yours. Every blueprint you generate belongs to you. Pitch it, publish it, build from it, sell it. No restrictions." },
-                { q: "Is this just generic AI output?", a: "No. We built a detailed system that forces the AI to give you specific tools, real UK prices, and copy-paste scripts — not vague advice. Every output is shaped around your idea, budget, and goals." },
+                { q: "Is this just generic AI output?", a: "No. We built a detailed system that forces the AI to give you specific tools, real UK prices, and copy-paste scripts : not vague advice. Every output is shaped around your idea, budget, and goals." },
                 { q: "How is this different from ChatGPT?", a: "ChatGPT gives you words. SoloBlueprint gives you a structured 14-section plan with actual tool names, £ prices, outreach scripts ready to send, and a day-by-day action plan. One click. Done." },
               ].map((faq, i) => (
                 <details key={i} className="group rounded-2xl border border-gray-100 bg-gray-50 px-4 sm:px-6 py-4 cursor-pointer open:bg-white open:border-indigo-100 transition-colors">

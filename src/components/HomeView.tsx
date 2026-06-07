@@ -12,7 +12,7 @@ export const HomeView = ({ onStart, tokenBalance = null, isAdmin = false }: Home
   const navigate = useNavigate();
 
   const hasTokens = isAdmin || tokenBalance === null || tokenBalance > 0;
-  const tokenLabel = isAdmin ? "" : tokenBalance === null ? "" : tokenBalance === 0 ? "0 tokens — top up to continue" : `${tokenBalance} token${tokenBalance !== 1 ? "s" : ""} remaining`;
+  const tokenLabel = isAdmin ? "" : tokenBalance === null ? "" : tokenBalance === 0 ? "0 tokens : top up to continue" : `${tokenBalance} token${tokenBalance !== 1 ? "s" : ""} remaining`;
 
   return (
     <div className="hero-glow relative flex min-h-screen flex-col">

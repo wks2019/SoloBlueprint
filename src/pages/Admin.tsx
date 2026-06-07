@@ -374,7 +374,7 @@ const Admin = () => {
         {/* Chart */}
         {dayStats.length > 0 && (
           <div className="rounded-2xl border border-border bg-card p-5 mb-6">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-5">Blueprints generated — last 14 days</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-5">Blueprints generated : last 14 days</p>
             <div className="flex items-end gap-1.5 h-28 pb-6 relative">
               {dayStats.map(d => (
                 <div key={d.date} className="flex flex-1 flex-col items-center gap-1 relative">
