@@ -94,7 +94,6 @@ Deno.serve(async (req) => {
     const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY is not configured");
 
-    const { answers } = (await req.json()) as { answers: FormAnswers };
     const { answers, tokenOnly } = (await req.json()) as { answers: FormAnswers; tokenOnly?: boolean };
     const ideaName = (answers.selectedIdea ?? answers.customIdea ?? "").trim();
     if (!ideaName) {
