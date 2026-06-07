@@ -11,24 +11,24 @@ Deno.serve(async (req) => {
     const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
     const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-    if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY is not configured");
+    if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY not configured");
 
     const { ideaName, country, businessType, tone, blueprintId } = await req.json();
 
-    const systemPrompt = `You are SoloBlueprint. Generate a personal 6-week action roadmap for a solo founder.
-The founder's country is: ${country || "United Kingdom"}.
-The business type is: ${businessType || "online"}.
-Write in plain, direct English. No em dashes. No filler words. No corporate language.
-Be specific to the idea. Every week must feel like it was written for this exact business.
+    const c = country || "United Kingdom";
+    const bt = businessType || "online";
 
-Return a JSON object with one key: "weeks" — an array of exactly 6 week objects.
-Each week object must have exactly these keys:
-{ "week": number, "phase": string, "title": string, "hours": string, "task": string, "why": string, "resource": { "type": "BOOK" or "VIDEO" or "TOOL", "title": string, "description": string } }
+    const systemPrompt = `You are SoloBlueprint. Return a 6-week action roadmap as JSON.
+Country: ${c}. Business type: ${bt}.
+No em dashes. Plain English. Be specific to the idea.
 
-Phase names: "FOUNDATION" for weeks 1-2, "VALIDATION" for weeks 3-4, "LAUNCH" for weeks 5-6.
-Each task: specific, actionable, completable by one person in that week.
-Each resource: a real named book, YouTube video, or tool — relevant to this exact idea.
-Return ONLY valid JSON. No markdown. No explanation.`;
+Return ONLY a JSON object with one key "weeks" containing an array of exactly 6 objects.
+Each object: { "week": number, "phase": string, "title": string, "hours": string, "task": string, "why": string, "resource": { "type": "BOOK" or "VIDEO" or "TOOL", "title": string, "description": string } }
+Phases: FOUNDATION (weeks 1-2), VALIDATION (weeks 3-4), LAUNCH (weeks 5-6).
+Return ONLY valid JSON. No markdown.`;
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 90000);
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -38,15 +38,20 @@ Return ONLY valid JSON. No markdown. No explanation.`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-5",
-        max_tokens: 2000,
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 2500,
         system: systemPrompt,
-        messages: [{ role: "user", content: `Business idea: ${ideaName}\nCountry: ${country || "United Kingdom"}\nBusiness type: ${businessType || "online"}\n\nGenerate the 6-week roadmap.` }],
+        messages: [{ role: "user", content: `Business idea: ${ideaName}\nCountry: ${c}\nBusiness type: ${bt}\nGenerate the 6-week roadmap now.` }],
       }),
+      signal: controller.signal,
     });
 
+    clearTimeout(timeout);
+
     if (!response.ok) {
-      return new Response(JSON.stringify({ error: "Roadmap generation failed." }), {
+      const err = await response.text();
+      console.error("Claude error:", response.status, err);
+      return new Response(JSON.stringify({ error: "Roadmap generation failed" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -63,16 +68,21 @@ Return ONLY valid JSON. No markdown. No explanation.`;
       if (match) { try { roadmap = JSON.parse(match[0]); } catch (_) {} }
     }
 
-    // Update blueprint record with roadmap if we have an ID
-    if (blueprintId && SUPABASE_URL && SERVICE_ROLE && roadmap?.weeks) {
+    if (!roadmap?.weeks) {
+      console.error("No weeks in roadmap:", text.slice(0, 200));
+      return new Response(JSON.stringify({ error: "Roadmap parse failed" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Save roadmap to blueprint if we have an ID
+    if (blueprintId && SUPABASE_URL && SERVICE_ROLE) {
       try {
-        // Get current report
         const bpRes = await fetch(`${SUPABASE_URL}/rest/v1/blueprints?id=eq.${blueprintId}&select=report`, {
           headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` },
         });
         const bpData = await bpRes.json();
         const currentReport = bpData?.[0]?.report ?? {};
-        // Merge roadmap into report
         await fetch(`${SUPABASE_URL}/rest/v1/blueprints?id=eq.${blueprintId}`, {
           method: "PATCH",
           headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, "Content-Type": "application/json", Prefer: "return=minimal" },
