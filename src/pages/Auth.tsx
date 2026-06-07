@@ -28,8 +28,8 @@ const Auth = () => {
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") setMode("reset");
       else if (session) {
-        if (session.user.email === ADMIN_EMAIL && mode === "admin") navigate("/app/admin");
-        else if (session.user.email !== ADMIN_EMAIL) navigate("/app");
+        if (session.user.email === ADMIN_EMAIL) navigate("/app/admin");
+        else navigate("/app");
       }
     });
     return () => sub.subscription.unsubscribe();
