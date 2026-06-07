@@ -12,6 +12,7 @@ const BlueprintView = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [roadmapLoading, setRoadmapLoading] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -31,9 +32,26 @@ const BlueprintView = () => {
       });
   }, [id]);
 
+  const fetchRoadmap = async () => {
+    if (!blueprint || !id || roadmapLoading) return;
+    setRoadmapLoading(true);
+    try {
+      const answers = blueprint.answers as Record<string, string>;
+      const country = answers?.country || "United Kingdom";
+      const businessType = answers?.businessType || "online";
+      const { data: rmData } = await supabase.functions.invoke("generate-roadmap", {
+        body: { ideaName: blueprint.idea_name, country, businessType, tone: answers?.tone, blueprintId: id },
+      });
+      if (rmData?.roadmap) {
+        setBlueprint(prev => prev ? { ...prev, report: { ...prev.report, roadmap: rmData.roadmap } } : prev);
+      }
+    } catch (_) {}
+    finally { setRoadmapLoading(false); }
+  };
+
   if (loading) return (
     <div className="flex min-h-screen items-center justify-center">
-      <p className="text-sm text-muted-foreground">Loading blueprint…</p>
+      <p className="text-sm text-muted-foreground">Loading blueprint...</p>
     </div>
   );
 
@@ -54,6 +72,8 @@ const BlueprintView = () => {
       onStartOver={() => isAdmin ? navigate("/app/admin") : navigate("/")}
       isPaid={true}
       isShared={!isAdmin}
+      roadmapLoading={roadmapLoading}
+      onFetchRoadmap={fetchRoadmap}
     />
   );
 };
