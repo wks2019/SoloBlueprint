@@ -7,6 +7,7 @@ const corsHeaders = {
 interface FormAnswers {
   selectedIdea: string | null;
   customIdea: string;
+  ideaDescription: string;
   budget: string | null;
   hours: string | null;
   experience: string | null;
@@ -99,8 +100,9 @@ Deno.serve(async (req) => {
       });
     }
 
+    const ideaDescription = answers.ideaDescription?.trim() ?? "";
     const userPrompt = `Business idea: ${ideaName}
-Budget: ${answers.budget ?? "flexible"}
+${ideaDescription ? `Founder's description: ${ideaDescription}\n` : ""}Budget: ${answers.budget ?? "flexible"}
 Hours/week: ${answers.hours ?? "flexible"}
 Experience: ${answers.experience ?? "beginner"}
 Goal: ${answers.goal ?? "make money"}

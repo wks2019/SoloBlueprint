@@ -3,6 +3,7 @@ import { useMemo } from "react";
 export interface FormAnswers {
   selectedIdea: string | null;
   customIdea: string;
+  ideaDescription: string;
   budget: string | null;
   hours: string | null;
   experience: string | null;
@@ -110,23 +111,21 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
         <section className="mb-12">
           <QuestionLabel index={1} label="What business do you want to launch?" />
 
-          {/* Custom idea — prominent search-style input */}
-          <div className="relative mb-5">
-            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg text-muted-foreground">
-              🔍
-            </span>
-            <input
-              type="text"
-              value={answers.customIdea}
-              onChange={(e) =>
-                update({
-                  customIdea: e.target.value,
-                  selectedIdea: e.target.value ? null : answers.selectedIdea,
-                })
-              }
-              placeholder="Describe your own idea..."
-              className="w-full rounded-xl border border-border bg-card py-3.5 pl-12 pr-4 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 sm:text-base"
+          {/* Idea description textarea */}
+          <div className="mb-5">
+            <textarea
+              value={answers.ideaDescription}
+              onChange={(e) => {
+                const words = e.target.value.trim().split(/\s+/).filter(Boolean);
+                if (words.length <= 200) update({ ideaDescription: e.target.value });
+              }}
+              placeholder="Describe your idea in up to 200 words. What problem does it solve? Who is it for? What makes it different?"
+              rows={5}
+              className="w-full rounded-xl border border-border bg-card px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none sm:text-base"
             />
+            <p className="mt-1.5 text-right text-[11px] text-muted-foreground">
+              {answers.ideaDescription.trim() ? answers.ideaDescription.trim().split(/\s+/).filter(Boolean).length : 0} / 200 words
+            </p>
           </div>
 
           {/* OR divider */}
@@ -169,6 +168,22 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
                 </button>
               );
             })}
+          </div>
+
+          {/* Custom idea fallback */}
+          <div className="mt-4">
+            <input
+              type="text"
+              value={answers.customIdea}
+              onChange={(e) =>
+                update({
+                  customIdea: e.target.value,
+                  selectedIdea: e.target.value ? null : answers.selectedIdea,
+                })
+              }
+              placeholder="None of the above? Type your own idea name here..."
+              className="w-full rounded-xl border border-border bg-card py-3.5 px-4 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 sm:text-base"
+            />
           </div>
         </section>
 

@@ -15,7 +15,7 @@ type Report = ReturnType<typeof getMockReport>;
 const ADMIN_EMAIL = "mvlasceanu26.vm@gmail.com";
 
 const initialAnswers: FormAnswers = {
-  selectedIdea: null, customIdea: "", budget: null, hours: null, experience: null, goal: null,
+  selectedIdea: null, customIdea: "", ideaDescription: "", budget: null, hours: null, experience: null, goal: null,
 };
 
 const Index = () => {
