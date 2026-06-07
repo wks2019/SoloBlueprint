@@ -87,7 +87,7 @@ const Index = () => {
       setView("results");
 
       // Step 2: Generate roadmap in background (non-blocking)
-      fetchRoadmap();
+      fetchRoadmap(data.blueprintId ?? null);
 
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Something went wrong";
@@ -96,15 +96,16 @@ const Index = () => {
     }
   };
 
-  const fetchRoadmap = async () => {
+  const fetchRoadmap = async (overrideBlueprintId?: string | null) => {
     if (roadmapLoading) return;
     setRoadmapLoading(true);
     try {
       const country = answers.country?.trim() || "United Kingdom";
       const businessType = answers.businessType || "online";
       const idea = answers.selectedIdea ?? answers.customIdea.trim();
+      const bpId = overrideBlueprintId !== undefined ? overrideBlueprintId : blueprintId;
       const { data: rmData } = await supabase.functions.invoke("generate-roadmap", {
-        body: { ideaName: idea, country, businessType, tone: answers.tone, blueprintId },
+        body: { ideaName: idea, country, businessType, tone: answers.tone, blueprintId: bpId },
       });
       if (rmData?.roadmap) {
         setReport(prev => prev ? { ...prev, roadmap: rmData.roadmap } : prev);
