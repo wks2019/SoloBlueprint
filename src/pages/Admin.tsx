@@ -23,6 +23,16 @@ interface BlueprintTag {
 
 interface DayStat { date: string; count: number; }
 
+interface UserRow {
+  id: string;
+  email: string;
+  created_at: string;
+  last_sign_in_at: string | null;
+  balance: number;
+  total_purchased: number;
+  blueprint_count: number;
+}
+
 const INDUSTRIES = ["Digital Product", "SaaS", "Service", "Creator", "Physical", "Marketplace", "Other"];
 const QUALITIES  = ["⭐ Excellent", "✓ Good", "~ Average", "✗ Poor"];
 const STATUSES   = ["New", "Reviewed", "Featured", "Flagged"];
@@ -194,6 +204,7 @@ const Admin = () => {
   const [tags, setTags] = useState<Record<string, BlueprintTag>>({});
   const [dayStats, setDayStats] = useState<DayStat[]>([]);
   const [totalUsers, setTotalUsers] = useState(0);
+  const [users, setUsers] = useState<UserRow[]>([]);
   const [openPanel, setOpenPanel] = useState<string | null>(null);
   const [editTags, setEditTags] = useState<Record<string, Partial<BlueprintTag>>>({});
   const [saving, setSaving] = useState<string | null>(null);
@@ -240,6 +251,40 @@ const Admin = () => {
         }
       }
     }
+
+    // Load users
+    const SERVICE_ROLE = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5scGdid2h4ZHJ4c2RkaGtrY3djIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjQyOTgyMywiZXhwIjoyMDkyMDA1ODIzfQ.dyeu2RT8FoAc_YwEOFxC9sA7ZfA_JvRw8hKR_zs216A";
+    const SUPABASE_URL = "https://nlpgbwhxdrxsddhkkcwc.supabase.co";
+    const usersRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users?per_page=200`, {
+      headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` },
+    });
+    const usersData = await usersRes.json();
+    const authUsers = usersData?.users ?? [];
+
+    const balRes = await fetch(`${SUPABASE_URL}/rest/v1/token_balance?select=user_id,balance,total_purchased`, {
+      headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` },
+    });
+    const balData: { user_id: string; balance: number; total_purchased: number }[] = await balRes.json();
+    const balMap: Record<string, { balance: number; total_purchased: number }> = {};
+    balData.forEach(b => { balMap[b.user_id] = { balance: b.balance, total_purchased: b.total_purchased }; });
+
+    const bpCountMap: Record<string, number> = {};
+    (bps ?? []).forEach(b => { if (b.user_id) bpCountMap[b.user_id] = (bpCountMap[b.user_id] || 0) + 1; });
+
+    const mappedUsers: UserRow[] = authUsers
+      .filter((u: { email?: string }) => u.email !== "mvlasceanu26.vm@gmail.com")
+      .map((u: { id: string; email: string; created_at: string; last_sign_in_at: string | null }) => ({
+        id: u.id,
+        email: u.email,
+        created_at: u.created_at,
+        last_sign_in_at: u.last_sign_in_at,
+        balance: balMap[u.id]?.balance ?? 0,
+        total_purchased: balMap[u.id]?.total_purchased ?? 0,
+        blueprint_count: bpCountMap[u.id] ?? 0,
+      }))
+      .sort((a: UserRow, b: UserRow) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+    setUsers(mappedUsers);
     setLoading(false);
   };
 
@@ -350,6 +395,49 @@ const Admin = () => {
               {f} {f === "All" ? `(${blueprints.length})` : ""}
             </button>
           ))}
+        </div>
+
+        {/* Users */}
+        <div className="rounded-2xl border border-border bg-card overflow-hidden mb-6">
+          <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">👥 Users ({users.length})</p>
+            <p className="text-xs text-muted-foreground">{users.filter(u => u.total_purchased > 0).length} paid</p>
+          </div>
+          <div className="divide-y divide-border">
+            {users.length === 0 && (
+              <p className="px-5 py-8 text-center text-sm text-muted-foreground">No users yet.</p>
+            )}
+            {users.map(u => (
+              <div key={u.id} className="flex items-center justify-between px-5 py-3.5 gap-4 hover:bg-muted/20 transition">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">{u.email}</p>
+                  <div className="flex flex-wrap gap-1.5 mt-1">
+                    <span className="rounded-full bg-muted border border-border px-2 py-0.5 text-[10px] text-muted-foreground font-medium">
+                      Joined {new Date(u.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                    </span>
+                    {u.last_sign_in_at && (
+                      <span className="rounded-full bg-muted border border-border px-2 py-0.5 text-[10px] text-muted-foreground font-medium">
+                        Last seen {new Date(u.last_sign_in_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                      </span>
+                    )}
+                    {u.blueprint_count > 0 && (
+                      <span className="rounded-full bg-indigo-50 border border-indigo-100 px-2 py-0.5 text-[10px] text-indigo-600 font-medium">
+                        {u.blueprint_count} blueprint{u.blueprint_count !== 1 ? "s" : ""}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 shrink-0 text-right">
+                  <div>
+                    <p className={`text-sm font-bold ${u.total_purchased > 0 ? "text-green-600" : "text-muted-foreground"}`}>
+                      {u.total_purchased > 0 ? `£${(u.total_purchased / 10 * 1.9).toFixed(0)} est.` : "Free"}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground">{u.balance} token{u.balance !== 1 ? "s" : ""} left</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Gift Tokens */}
