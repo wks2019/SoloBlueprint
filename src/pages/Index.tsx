@@ -65,15 +65,17 @@ const Index = () => {
     try {
       const { data: session } = await supabase.auth.getSession();
       const userId = session.session?.user?.id;
-      if (!userId) return null;
-      const { data: saved } = await supabase.from("blueprints").insert({
+      if (!userId) { console.warn("No userId for save"); return null; }
+      const idea = answers.selectedIdea ?? answers.customIdea.trim();
+      const { data: saved, error: saveErr } = await supabase.from("blueprints").insert({
         user_id: userId,
-        idea_name: ideaName,
+        idea_name: idea,
         answers,
         report: fullReport,
       }).select("id").single();
+      if (saveErr) console.error("Blueprint save error:", saveErr);
       return saved?.id ?? null;
-    } catch (_) { return null; }
+    } catch (e) { console.error("Blueprint save exception:", e); return null; }
   };
 
   const fetchRoadmap = async (bpId?: string | null) => {
@@ -82,15 +84,18 @@ const Index = () => {
     try {
       const country = answers.country?.trim() || "United Kingdom";
       const businessType = answers.businessType || "online";
-      const idea = answers.selectedIdea ?? answers.customIdea.trim();
+      const idea = (answers.selectedIdea ?? answers.customIdea ?? "").trim();
       const useBpId = bpId !== undefined ? bpId : blueprintIdRef.current;
-      const { data: rmData } = await supabase.functions.invoke("generate-roadmap", {
+      console.log("Fetching roadmap for:", idea, "bpId:", useBpId);
+      const { data: rmData, error: rmErr } = await supabase.functions.invoke("generate-roadmap", {
         body: { ideaName: idea, country, businessType, tone: answers.tone, blueprintId: useBpId },
       });
+      if (rmErr) { console.error("Roadmap invoke error:", rmErr); return; }
+      console.log("Roadmap result:", rmData?.roadmap ? "SUCCESS" : "NO ROADMAP", rmData);
       if (rmData?.roadmap) {
         setReport(prev => ({ ...prev, roadmap: rmData.roadmap }));
       }
-    } catch (_) {}
+    } catch (e) { console.error("Roadmap fetch error:", e); }
     finally { setRoadmapLoading(false); }
   };
 
@@ -138,8 +143,8 @@ const Index = () => {
         blueprintIdRef.current = bpId;
       }
 
-      // Generate roadmap in background
-      fetchRoadmap(bpId);
+      // Generate roadmap in background — always fire, bpId may be null
+      fetchRoadmap(bpId ?? null);
 
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Something went wrong";
