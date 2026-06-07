@@ -1,15 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { HomeView } from "@/components/HomeView";
 import { FormView, type FormAnswers } from "@/components/FormView";
-import { LoadingView } from "@/components/LoadingView";
 import { ResultsView } from "@/components/ResultsView";
 import { TokenStore } from "@/components/TokenStore";
 import { getMockReport } from "@/mockData";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
-type View = "home" | "form" | "loading" | "results" | "store";
+type View = "home" | "form" | "results" | "store";
 type Report = ReturnType<typeof getMockReport>;
 
 const ADMIN_EMAIL = "mvlasceanu26.vm@gmail.com";
@@ -22,12 +21,15 @@ const Index = () => {
   const navigate = useNavigate();
   const [view, setView] = useState<View>("home");
   const [answers, setAnswers] = useState<FormAnswers>(initialAnswers);
-  const [report, setReport] = useState<Report | null>(null);
+  const [report, setReport] = useState<Partial<Report>>({});
+  const [generating, setGenerating] = useState(false);
+  const [chunksComplete, setChunksComplete] = useState(0);
   const [blueprintId, setBlueprintId] = useState<string | null>(null);
   const [roadmapLoading, setRoadmapLoading] = useState(false);
   const [checking, setChecking] = useState(true);
   const [tokenBalance, setTokenBalance] = useState<number | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const blueprintIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
@@ -37,7 +39,6 @@ const Index = () => {
       if (!admin) await refreshTokenBalance(data.session.user.id);
       setChecking(false);
 
-      // Handle Stripe checkout success
       const params = new URLSearchParams(window.location.search);
       if (params.get("checkout") === "success") {
         window.history.replaceState({}, "", "/app");
@@ -60,61 +61,110 @@ const Index = () => {
 
   const ideaName = answers.selectedIdea ?? answers.customIdea.trim();
 
-  const handleSubmit = async () => {
-    if (!ideaName) return;
-
-    // Admin bypasses token check entirely
-    if (!isAdmin && tokenBalance !== null && tokenBalance <= 0) {
-      setView("store"); return;
-    }
-
-    setView("loading");
-
+  const saveBlueprint = async (fullReport: Record<string, unknown>) => {
+    const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
     try {
-      // Step 1: Generate blueprint (fast — 14 sections only)
-      const { data, error } = await supabase.functions.invoke("generate-blueprint", { body: { answers } });
-      if (error) throw error;
-      if (data?.error === "NO_TOKENS" && !isAdmin) { setView("store"); return; }
-      if (data?.error) throw new Error(data.error);
-      if (!data?.report) throw new Error("No plan returned");
-
-      setReport(data.report as Report);
-      setBlueprintId(data.blueprintId ?? null);
-      if (!isAdmin) {
-        const { data: session } = await supabase.auth.getSession();
-        if (session.session) await refreshTokenBalance(session.session.user.id);
-      }
-      setView("results");
-
-      // Step 2: Generate roadmap in background (non-blocking)
-      fetchRoadmap(data.blueprintId ?? null);
-
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : "Something went wrong";
-      toast({ title: "Could not generate your blueprint", description: msg, variant: "destructive" });
-      setView("home");
-    }
+      const { data: session } = await supabase.auth.getSession();
+      const userId = session.session?.user?.id;
+      if (!userId) return null;
+      const { data: saved } = await supabase.from("blueprints").insert({
+        user_id: userId,
+        idea_name: ideaName,
+        answers,
+        report: fullReport,
+      }).select("id").single();
+      return saved?.id ?? null;
+    } catch (_) { return null; }
   };
 
-  const fetchRoadmap = async (overrideBlueprintId?: string | null) => {
+  const fetchRoadmap = async (bpId?: string | null) => {
     if (roadmapLoading) return;
     setRoadmapLoading(true);
     try {
       const country = answers.country?.trim() || "United Kingdom";
       const businessType = answers.businessType || "online";
       const idea = answers.selectedIdea ?? answers.customIdea.trim();
-      const bpId = overrideBlueprintId !== undefined ? overrideBlueprintId : blueprintId;
+      const useBpId = bpId !== undefined ? bpId : blueprintIdRef.current;
       const { data: rmData } = await supabase.functions.invoke("generate-roadmap", {
-        body: { ideaName: idea, country, businessType, tone: answers.tone, blueprintId: bpId },
+        body: { ideaName: idea, country, businessType, tone: answers.tone, blueprintId: useBpId },
       });
       if (rmData?.roadmap) {
-        setReport(prev => prev ? { ...prev, roadmap: rmData.roadmap } : prev);
+        setReport(prev => ({ ...prev, roadmap: rmData.roadmap }));
       }
     } catch (_) {}
     finally { setRoadmapLoading(false); }
   };
 
-  const handleStartOver = () => { setAnswers(initialAnswers); setReport(null); setBlueprintId(null); setRoadmapLoading(false); setView("home"); };
+  const handleSubmit = async () => {
+    if (!ideaName) return;
+    if (!isAdmin && tokenBalance !== null && tokenBalance <= 0) { setView("store"); return; }
+
+    // Deduct token + reset state
+    setReport({});
+    setChunksComplete(0);
+    setBlueprintId(null);
+    blueprintIdRef.current = null;
+    setGenerating(true);
+    setView("results");
+
+    try {
+      // Deduct token via generate-blueprint (token logic only, no generation)
+      const { data: tokenData, error: tokenError } = await supabase.functions.invoke("generate-blueprint", {
+        body: { answers, tokenOnly: true },
+      });
+      if (tokenError) throw tokenError;
+      if (tokenData?.error === "NO_TOKENS" && !isAdmin) { setView("store"); setGenerating(false); return; }
+      if (tokenData?.error) throw new Error(tokenData.error);
+
+      if (!isAdmin) {
+        const { data: session } = await supabase.auth.getSession();
+        if (session.session) await refreshTokenBalance(session.session.user.id);
+      }
+
+      // Fire all 4 chunks sequentially — each resolves fast (~8s)
+      let mergedReport: Record<string, unknown> = {};
+
+      for (let i = 0; i < 4; i++) {
+        const { data: chunkData } = await supabase.functions.invoke("generate-blueprint-chunk", {
+          body: { answers, chunkIndex: i },
+        });
+        if (chunkData?.sections) {
+          mergedReport = { ...mergedReport, ...chunkData.sections };
+          setReport(prev => ({ ...prev, ...chunkData.sections }));
+          setChunksComplete(i + 1);
+        }
+      }
+
+      setGenerating(false);
+
+      // Save full blueprint
+      const bpId = await saveBlueprint(mergedReport);
+      if (bpId) {
+        setBlueprintId(bpId);
+        blueprintIdRef.current = bpId;
+      }
+
+      // Generate roadmap in background
+      fetchRoadmap(bpId);
+
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Something went wrong";
+      toast({ title: "Could not generate your blueprint", description: msg, variant: "destructive" });
+      setGenerating(false);
+      setView("home");
+    }
+  };
+
+  const handleStartOver = () => {
+    setAnswers(initialAnswers);
+    setReport({});
+    setBlueprintId(null);
+    blueprintIdRef.current = null;
+    setChunksComplete(0);
+    setGenerating(false);
+    setRoadmapLoading(false);
+    setView("home");
+  };
 
   if (!isAdmin && view === "store") return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-background">
@@ -124,9 +174,19 @@ const Index = () => {
 
   if (view === "home") return <HomeView onStart={() => setView("form")} tokenBalance={isAdmin ? null : tokenBalance} isAdmin={isAdmin} />;
   if (view === "form") return <FormView answers={answers} setAnswers={setAnswers} onBack={() => setView("home")} onSubmit={handleSubmit} />;
-  if (view === "loading") return <LoadingView />;
-  if (view === "results" && report) return (
-    <ResultsView ideaName={ideaName} answers={answers} report={report} onStartOver={handleStartOver} isPaid={true} roadmapLoading={roadmapLoading} onFetchRoadmap={fetchRoadmap} />
+
+  if (view === "results") return (
+    <ResultsView
+      ideaName={ideaName}
+      answers={answers}
+      report={report as Report}
+      onStartOver={handleStartOver}
+      isPaid={true}
+      generating={generating}
+      chunksComplete={chunksComplete}
+      roadmapLoading={roadmapLoading}
+      onFetchRoadmap={() => fetchRoadmap()}
+    />
   );
 
   return <HomeView onStart={() => setView("form")} tokenBalance={isAdmin ? null : tokenBalance} isAdmin={isAdmin} />;

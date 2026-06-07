@@ -95,6 +95,7 @@ Deno.serve(async (req) => {
     if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY is not configured");
 
     const { answers } = (await req.json()) as { answers: FormAnswers };
+    const { answers, tokenOnly } = (await req.json()) as { answers: FormAnswers; tokenOnly?: boolean };
     const ideaName = (answers.selectedIdea ?? answers.customIdea ?? "").trim();
     if (!ideaName) {
       return new Response(JSON.stringify({ error: "Idea is required" }), {
@@ -141,6 +142,13 @@ Deno.serve(async (req) => {
         method: "POST",
         headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, "Content-Type": "application/json", Prefer: "return=minimal" },
         body: JSON.stringify({ user_id: userId, amount: -1, reason: "blueprint_generated" }),
+      });
+    }
+
+    // tokenOnly mode: just deduct token, return success (chunked generation handles the rest)
+    if (tokenOnly) {
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 

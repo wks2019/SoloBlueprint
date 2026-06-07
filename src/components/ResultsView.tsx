@@ -61,6 +61,8 @@ interface ResultsViewProps {
   isShared?: boolean;
   roadmapLoading?: boolean;
   onFetchRoadmap?: () => void;
+  generating?: boolean;
+  chunksComplete?: number;
 }
 
 const FREE_SECTIONS = 3;
@@ -322,7 +324,22 @@ const PaywallGate = () => {
   );
 };
 
-export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = false, isShared = false, roadmapLoading = false, onFetchRoadmap }: ResultsViewProps) => {
+
+const SkeletonCard = ({ num, title }: { num: string; title: string }) => (
+  <div className="bg-card rounded-2xl border border-border border-t-2 border-t-muted mb-3 overflow-hidden animate-pulse">
+    <div className="flex items-center gap-3 px-5 pt-5 pb-2">
+      <div className="w-7 h-7 rounded-lg bg-muted flex-shrink-0" />
+      <div className="h-4 w-48 rounded bg-muted" />
+    </div>
+    <div className="px-5 pb-5 pl-[60px] space-y-2">
+      <div className="h-3 w-full rounded bg-muted/60" />
+      <div className="h-3 w-5/6 rounded bg-muted/60" />
+      <div className="h-3 w-4/6 rounded bg-muted/60" />
+    </div>
+  </div>
+);
+
+export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = false, isShared = false, roadmapLoading = false, onFetchRoadmap, generating = false, chunksComplete = 0 }: ResultsViewProps) => {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
@@ -417,26 +434,46 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
         {/* Blueprint tab */}
         {activeTab === "blueprint" && (
           <>
-            <div className="flex flex-wrap gap-3 mb-5">
-              {(Object.entries(CATEGORY_STYLES) as [SectionCategory, typeof CATEGORY_STYLES[SectionCategory]][]).map(([cat, styles]) => (
-                <div key={cat} className="flex items-center gap-1.5">
-                  <div className={`w-2 h-2 rounded-sm ${styles.badge}`} />
-                  <span className={`text-[11px] font-medium capitalize ${styles.text}`}>{cat}</span>
-                </div>
-              ))}
-            </div>
-
-            {freeSections.map(section => (
-              <SectionCard key={section.num} section={section} content={report[section.key] as string | LaunchPlan} />
-            ))}
-
-            {isPaid ? (
-              lockedSections.map(section => (
-                <SectionCard key={section.num} section={section} content={report[section.key] as string | LaunchPlan} />
-              ))
-            ) : (
-              <PaywallGate />
+            {!generating && (
+              <div className="flex flex-wrap gap-3 mb-5">
+                {(Object.entries(CATEGORY_STYLES) as [SectionCategory, typeof CATEGORY_STYLES[SectionCategory]][]).map(([cat, styles]) => (
+                  <div key={cat} className="flex items-center gap-1.5">
+                    <div className={`w-2 h-2 rounded-sm ${styles.badge}`} />
+                    <span className={`text-[11px] font-medium capitalize ${styles.text}`}>{cat}</span>
+                  </div>
+                ))}
+              </div>
             )}
+
+            {generating && chunksComplete === 0 && (
+              <div className="flex items-center gap-2 mb-5 text-sm text-muted-foreground">
+                <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+                Analysing your idea...
+              </div>
+            )}
+
+            {SECTIONS.map((section, idx) => {
+              const hasContent = !!report[section.key];
+              const isLocked = !isPaid && idx >= FREE_SECTIONS;
+
+              if (hasContent) {
+                return (
+                  <div key={section.num} className="animate-fade-in">
+                    <SectionCard section={section} content={report[section.key] as string | LaunchPlan} locked={isLocked} />
+                  </div>
+                );
+              }
+
+              if (generating) {
+                return <SkeletonCard key={section.num} num={section.num} title={section.title} />;
+              }
+
+              if (isLocked) {
+                return idx === FREE_SECTIONS ? <PaywallGate key="paywall" /> : null;
+              }
+
+              return null;
+            })}
           </>
         )}
 
