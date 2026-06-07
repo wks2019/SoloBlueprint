@@ -108,31 +108,26 @@ const Index = () => {
     setView("results");
 
     try {
-      // Deduct token via generate-blueprint (token logic only, no generation)
-      const { data: tokenData, error: tokenError } = await supabase.functions.invoke("generate-blueprint", {
-        body: { answers, tokenOnly: true },
-      });
-      if (tokenError) throw tokenError;
-      if (tokenData?.error === "NO_TOKENS" && !isAdmin) { setView("store"); setGenerating(false); return; }
-      if (tokenData?.error) throw new Error(tokenData.error);
-
-      if (!isAdmin) {
-        const { data: session } = await supabase.auth.getSession();
-        if (session.session) await refreshTokenBalance(session.session.user.id);
-      }
-
-      // Fire all 4 chunks sequentially — each resolves fast (~8s)
+      // Fire all 4 chunks sequentially — chunk 0 handles token deduction
       let mergedReport: Record<string, unknown> = {};
 
       for (let i = 0; i < 4; i++) {
-        const { data: chunkData } = await supabase.functions.invoke("generate-blueprint-chunk", {
-          body: { answers, chunkIndex: i },
+        const { data: chunkData, error: chunkError } = await supabase.functions.invoke("generate-blueprint-chunk", {
+          body: { answers, chunkIndex: i, deductToken: i === 0 },
         });
+        if (chunkError) throw chunkError;
+        if (chunkData?.error === "NO_TOKENS" && !isAdmin) { setView("store"); setGenerating(false); return; }
+        if (chunkData?.error) throw new Error(chunkData.error);
         if (chunkData?.sections) {
           mergedReport = { ...mergedReport, ...chunkData.sections };
           setReport(prev => ({ ...prev, ...chunkData.sections }));
           setChunksComplete(i + 1);
         }
+      }
+
+      if (!isAdmin) {
+        const { data: session } = await supabase.auth.getSession();
+        if (session.session) await refreshTokenBalance(session.session.user.id);
       }
 
       setGenerating(false);

@@ -79,14 +79,59 @@ Deno.serve(async (req) => {
 
   try {
     const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+    const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY not configured");
 
-    const { answers, chunkIndex } = await req.json() as { answers: FormAnswers; chunkIndex: number };
+    const { answers, chunkIndex, deductToken } = await req.json() as { answers: FormAnswers; chunkIndex: number; deductToken?: boolean };
 
     if (chunkIndex === undefined || !CHUNKS[chunkIndex]) {
       return new Response(JSON.stringify({ error: "Invalid chunkIndex" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // Token check + deduction on chunk 0 only
+    let userId: string | null = null;
+    let isAdmin = false;
+    if (deductToken && SUPABASE_URL && SERVICE_ROLE) {
+      const authHeader = req.headers.get("Authorization");
+      if (authHeader?.startsWith("Bearer ")) {
+        try {
+          const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+            headers: { Authorization: authHeader, apikey: SERVICE_ROLE },
+          });
+          if (userRes.ok) {
+            const u = await userRes.json();
+            userId = u?.id ?? null;
+            isAdmin = u?.email === "mvlasceanu26.vm@gmail.com";
+          }
+        } catch (_) {}
+      }
+
+      if (userId && !isAdmin) {
+        const balRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/token_balance?user_id=eq.${userId}&select=balance,total_used`,
+          { headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` } }
+        );
+        const balData = await balRes.json();
+        const balance = balData?.[0]?.balance ?? 0;
+        if (balance <= 0) {
+          return new Response(JSON.stringify({ error: "NO_TOKENS" }), {
+            status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        await fetch(`${SUPABASE_URL}/rest/v1/token_balance?user_id=eq.${userId}`, {
+          method: "PATCH",
+          headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+          body: JSON.stringify({ balance: balance - 1, total_used: (balData?.[0]?.total_used ?? 0) + 1, updated_at: new Date().toISOString() }),
+        });
+        await fetch(`${SUPABASE_URL}/rest/v1/token_transactions`, {
+          method: "POST",
+          headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+          body: JSON.stringify({ user_id: userId, amount: -1, reason: "blueprint_generated" }),
+        });
+      }
     }
 
     const ideaName = (answers.selectedIdea ?? answers.customIdea ?? "").trim();
