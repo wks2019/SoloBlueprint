@@ -61,22 +61,7 @@ const Index = () => {
 
   const ideaName = answers.selectedIdea ?? answers.customIdea.trim();
 
-  const saveBlueprint = async (fullReport: Record<string, unknown>) => {
-    try {
-      const { data: session } = await supabase.auth.getSession();
-      const userId = session.session?.user?.id;
-      if (!userId) { console.warn("No userId for save"); return null; }
-      const idea = answers.selectedIdea ?? answers.customIdea.trim();
-      const { data: saved, error: saveErr } = await supabase.from("blueprints").insert({
-        user_id: userId,
-        idea_name: idea,
-        answers,
-        report: fullReport,
-      }).select("id").single();
-      if (saveErr) console.error("Blueprint save error:", saveErr);
-      return saved?.id ?? null;
-    } catch (e) { console.error("Blueprint save exception:", e); return null; }
-  };
+
 
   const fetchRoadmap = async (bpId?: string | null) => {
     if (roadmapLoading) return;
@@ -100,10 +85,12 @@ const Index = () => {
   };
 
   const handleSubmit = async () => {
-    if (!ideaName) return;
+    // Snapshot answers at submit time to avoid stale closure issues
+    const snapAnswers = { ...answers };
+    const snapIdea = (snapAnswers.selectedIdea ?? snapAnswers.customIdea ?? "").trim();
+    if (!snapIdea) return;
     if (!isAdmin && tokenBalance !== null && tokenBalance <= 0) { setView("store"); return; }
 
-    // Deduct token + reset state
     setReport({});
     setChunksComplete(0);
     setBlueprintId(null);
@@ -112,12 +99,11 @@ const Index = () => {
     setView("results");
 
     try {
-      // Fire all 4 chunks sequentially — chunk 0 handles token deduction
       let mergedReport: Record<string, unknown> = {};
 
       for (let i = 0; i < 4; i++) {
         const { data: chunkData, error: chunkError } = await supabase.functions.invoke("generate-blueprint-chunk", {
-          body: { answers, chunkIndex: i, deductToken: i === 0 },
+          body: { answers: snapAnswers, chunkIndex: i, deductToken: i === 0 },
         });
         if (chunkError) throw chunkError;
         if (chunkData?.error === "NO_TOKENS" && !isAdmin) { setView("store"); setGenerating(false); return; }
@@ -136,15 +122,37 @@ const Index = () => {
 
       setGenerating(false);
 
-      // Save full blueprint
-      const bpId = await saveBlueprint(mergedReport);
-      if (bpId) {
-        setBlueprintId(bpId);
-        blueprintIdRef.current = bpId;
+      // Save blueprint with snapshot data
+      const { data: session } = await supabase.auth.getSession();
+      const userId = session.session?.user?.id;
+      let bpId: string | null = null;
+      if (userId) {
+        const { data: saved, error: saveErr } = await supabase.from("blueprints").insert({
+          user_id: userId,
+          idea_name: snapIdea,
+          answers: snapAnswers,
+          report: mergedReport,
+        }).select("id").single();
+        if (saveErr) console.error("Save error:", saveErr);
+        bpId = saved?.id ?? null;
+        if (bpId) { setBlueprintId(bpId); blueprintIdRef.current = bpId; }
       }
 
-      // Generate roadmap in background — always fire, bpId may be null
-      fetchRoadmap(bpId ?? null);
+      // Generate roadmap in background with snapshot data
+      setRoadmapLoading(true);
+      supabase.functions.invoke("generate-roadmap", {
+        body: {
+          ideaName: snapIdea,
+          country: snapAnswers.country?.trim() || "United Kingdom",
+          businessType: snapAnswers.businessType || "online",
+          tone: snapAnswers.tone,
+          blueprintId: bpId,
+        },
+      }).then(({ data: rmData, error: rmErr }) => {
+        if (rmErr) { console.error("Roadmap error:", rmErr); }
+        else if (rmData?.roadmap) { setReport(prev => ({ ...prev, roadmap: rmData.roadmap })); }
+      }).catch(e => console.error("Roadmap catch:", e))
+        .finally(() => setRoadmapLoading(false));
 
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Something went wrong";
