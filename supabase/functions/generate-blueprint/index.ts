@@ -17,21 +17,24 @@ const SECTION_KEYS = [
   "diagnosis","problem_and_demand","target_audience","clear_offer",
   "tools_needed","ai_nocode_stack","launch_plan","pricing_strategy",
   "distribution_channels","outreach_scripts","proof_needed",
-  "honest_risks","seven_day_plan","how_to_scale",
+  "honest_risks","seven_day_plan","how_to_scale","roadmap",
 ];
 
 const SYSTEM_PROMPT = `You are SoloBlueprint, a business coach for solo founders in the UK.
-Return a JSON object with exactly these 14 keys:
-diagnosis, problem_and_demand, target_audience, clear_offer, tools_needed, ai_nocode_stack, launch_plan, pricing_strategy, distribution_channels, outreach_scripts, proof_needed, honest_risks, seven_day_plan, how_to_scale
+Return a JSON object with exactly these 15 keys:
+diagnosis, problem_and_demand, target_audience, clear_offer, tools_needed, ai_nocode_stack, launch_plan, pricing_strategy, distribution_channels, outreach_scripts, proof_needed, honest_risks, seven_day_plan, how_to_scale, roadmap
 
 Rules:
-- British English, £ for all prices
+- British English, pound sign for all prices
 - Each value: 2-4 sentences, specific and actionable
-- Real tool names with £ prices (Notion free, Carrd £15/yr, Stripe 1.5%+20p, Tally free)
+- Real tool names with prices (Notion free, Carrd 15/yr, Stripe 1.5%+20p, Tally free)
 - No hype or filler
 - seven_day_plan: label each day "Day 1: action (time)"
 - outreach_scripts: ready to copy-paste with [VARIABLES]
 - launch_plan: write as a plain string describing 5 phases over 14 days
+- roadmap: an object with key "weeks" — an array of 6 week objects. Each week object has:
+  { "week": number, "phase": string, "title": string, "hours": string, "task": string, "why": string, "resource": { "type": "BOOK" or "VIDEO" or "TOOL", "title": string, "description": string } }
+  Phase names: "FOUNDATION" (weeks 1-2), "VALIDATION" (weeks 3-4), "LAUNCH" (weeks 5-6)
 - Return ONLY valid JSON, no markdown, no explanation`;
 
 Deno.serve(async (req) => {
@@ -113,7 +116,7 @@ Return the JSON blueprint for this exact idea.`;
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-5",
-        max_tokens: 4000,
+        max_tokens: 6000,
         system: SYSTEM_PROMPT,
         messages: [{ role: "user", content: userPrompt }],
       }),
@@ -156,7 +159,6 @@ Return the JSON blueprint for this exact idea.`;
       const clean = text.replace(/```json|```/g, "").trim();
       report = JSON.parse(clean);
     } catch (_) {
-      // Try to extract JSON from response
       const match = text.match(/\{[\s\S]*\}/);
       if (match) {
         try { report = JSON.parse(match[0]); } catch (_) {}
@@ -165,7 +167,6 @@ Return the JSON blueprint for this exact idea.`;
 
     if (!report || Object.keys(report).length < 6) {
       console.error("Invalid report structure:", text.slice(0, 500));
-      // Refund token
       if (userId && !isAdmin && SUPABASE_URL && SERVICE_ROLE) {
         try {
           const balRes = await fetch(`${SUPABASE_URL}/rest/v1/token_balance?user_id=eq.${userId}&select=balance,total_used`, { headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}` } });
