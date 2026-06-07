@@ -96,17 +96,17 @@ const Landing = () => {
         <div ref={heroRef} className="relative z-10 w-full max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 border border-indigo-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-8">
             <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse" />
-            Built for solo founders who are done overthinking
+            No consultants. No fluff. Just your plan.
           </div>
 
           <h1 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-4xl sm:text-6xl md:text-7xl leading-[1.05] tracking-tight text-gray-900 mb-6">
-            Turn your idea into a{" "}
-            <em className="text-indigo-600 not-italic">complete business blueprint</em>{" "}
-            in minutes
+            Your idea deserves a{" "}
+            <em className="text-indigo-600 not-italic">real plan, not another tab</em>{" "}
+            left open
           </h1>
 
           <p className="text-lg sm:text-xl text-gray-500 max-w-xl mx-auto mb-8 leading-relaxed font-light">
-            You have an idea. You don't have a plan. SoloBlueprint fixes that : in under 60 seconds.
+            Most founders spend weeks researching and still don't know where to start. SoloBlueprint gives you a complete, specific plan in under 60 seconds.
           </p>
 
           {/* INTERACTIVE IDEA SELECTOR */}
@@ -161,12 +161,12 @@ const Landing = () => {
         <div className="max-w-4xl mx-auto">
           <FadeUp><p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">How it works</p></FadeUp>
           <FadeUp delay={100}><h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-4">From idea to blueprint in three steps</h2></FadeUp>
-          <FadeUp delay={200}><p className="text-gray-500 text-center max-w-md mx-auto mb-14 font-light">Stop planning to plan. Here's how it actually works.</p></FadeUp>
+          <FadeUp delay={200}><p className="text-gray-500 text-center max-w-md mx-auto mb-14 font-light">Three steps. No fluff.</p></FadeUp>
           <div className="grid sm:grid-cols-3 gap-6">
             {[
-              { num: "01", icon: "✏️", title: "Describe your idea", body: "Pick your idea type or describe your own. Tell us your budget, time, and goal. 90 seconds max." },
-              { num: "02", icon: "⚡", title: "AI builds your plan", body: "Our AI does the heavy lifting : market research, pricing, tools, scripts. All tailored to your situation." },
-              { num: "03", icon: "🚀", title: "Launch with clarity", body: "You get a full 14-section plan. Download it, share it, pitch it. You finally know what to do." },
+              { num: "01", icon: "✏️", title: "Describe your idea", body: "Tell us what you want to build, where, and how much time you have. 90 seconds." },
+              { num: "02", icon: "⚡", title: "We build your plan", body: "Real tools. Real prices. Real outreach scripts. A full 14-section blueprint built around your specific idea." },
+              { num: "03", icon: "🚀", title: "Know exactly what to do", body: "Download your blueprint, share it, or start executing today. No more guessing. No more wasted weeks." },
             ].map((step, i) => (
               <FadeUp key={step.num} delay={i * 100}>
                 <div className="rounded-2xl border border-gray-200 bg-white p-6 hover:border-indigo-200 hover:shadow-sm hover:-translate-y-1 transition-all duration-200 h-full">
@@ -198,7 +198,7 @@ const Landing = () => {
         <div className="max-w-4xl mx-auto">
           <FadeUp><p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">See it in action</p></FadeUp>
           <FadeUp delay={100}><h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-4">This is what you get</h2></FadeUp>
-          <FadeUp delay={200}><p className="text-gray-500 text-center max-w-md mx-auto mb-12 font-light">A real blueprint : generated from a real idea. This is what lands in your dashboard in under 60 seconds.</p></FadeUp>
+          <FadeUp delay={200}><p className="text-gray-500 text-center max-w-md mx-auto mb-12 font-light">This is a real blueprint for a real idea. Generated in under 60 seconds. Yours looks exactly like this.</p></FadeUp>
 
           <FadeUp delay={100}>
             {/* Browser mockup */}
@@ -323,9 +323,9 @@ const Landing = () => {
           {/* Callout points */}
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { icon: "🎯", title: "Tailored to your idea", desc: "Every section is generated around your specific business, budget, and goals : not a template." },
-              { icon: "🇬🇧", title: "Real UK tools & prices", desc: "Every tool recommendation comes with a real name, real URL, and real £ price. No vague advice." },
-              { icon: "📋", title: "Copy-paste ready", desc: "Outreach scripts, DM templates, and email copy you can use today. No rewriting needed." },
+              { icon: "🎯", title: "Built around your idea", desc: "Every section is generated for your specific business. Not a template. Not a generic answer." },
+              { icon: "🇬🇧", title: "Real tools. Real prices.", desc: "Every recommendation comes with a name, a price, and a reason. No vague advice. No "just Google it"." },
+              { icon: "📋", title: "Ready to send", desc: "Outreach scripts and email copy written for your exact idea. Copy it, paste it, send it." },
             ].map((c, i) => (
               <FadeUp key={c.title} delay={i * 100}>
                 <div className="rounded-2xl border border-gray-100 bg-gray-50 p-5 text-center h-full">
@@ -344,7 +344,7 @@ const Landing = () => {
         <div className="max-w-4xl mx-auto">
           <FadeUp><p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">Pricing</p></FadeUp>
           <FadeUp delay={100}><h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-4">Simple token pricing</h2></FadeUp>
-          <FadeUp delay={200}><p className="text-gray-500 text-center max-w-md mx-auto mb-14 font-light">One token. One blueprint. No subscriptions forced on you. Tokens never expire.</p></FadeUp>
+          <FadeUp delay={200}><p className="text-gray-500 text-center max-w-md mx-auto mb-14 font-light">Pay for what you use. No subscriptions forced on you. Tokens never expire.</p></FadeUp>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { name: "Starter",  tokens: "3 tokens",    price: "£9",     per: "£3/token",      featured: false },
@@ -377,12 +377,12 @@ const Landing = () => {
           <FadeUp delay={200}>
             <div className="space-y-3">
               {[
-                { q: "Is the first blueprint actually free?", a: "Yes. Sign up, get 1 free token, generate your full blueprint. No card, no trial period, no catch. If it's not useful, you've lost nothing." },
-                { q: "Do tokens expire?", a: "Never. Buy tokens today, use them in 6 months. Monthly subscription tokens roll over too : unused credits don't disappear." },
-                { q: "What if the blueprint isn't good?", a: "You see the first 3 sections before spending a token. If the quality isn't there, don't unlock it. If you paid and you're not happy : email support@soloblueprint.co.uk and we'll make it right." },
+                { q: "Is the first blueprint actually free?", a: "Yes. Sign up, get 1 free token, generate your full blueprint. No card required. If it is not useful, you have lost nothing." },
+                { q: "Do tokens expire?", a: "Never. Buy tokens today, use them whenever. Monthly tokens roll over. Nothing disappears." },
+                { q: "What if the blueprint isn't good?", a: "You see the first 3 sections before spending a token. If it is not what you expected, do not unlock it. If you paid and are not happy, email support@soloblueprint.co.uk and we will sort it." },
                 { q: "Can I use it commercially?", a: "It's yours. Every blueprint you generate belongs to you. Pitch it, publish it, build from it, sell it. No restrictions." },
-                { q: "Is this just generic AI output?", a: "No. We built a detailed system that forces the AI to give you specific tools, real UK prices, and copy-paste scripts : not vague advice. Every output is shaped around your idea, budget, and goals." },
-                { q: "How is this different from ChatGPT?", a: "ChatGPT gives you words. SoloBlueprint gives you a structured 14-section plan with actual tool names, £ prices, outreach scripts ready to send, and a day-by-day action plan. One click. Done." },
+                { q: "Is this just generic AI output?", a: "No. The system forces specific tools, real prices, and ready-to-send scripts for your exact idea. Not generic AI output. Not the same answer every time." },
+                { q: "How is this different from ChatGPT?", a: "ChatGPT gives you words. SoloBlueprint gives you a 14-section plan with tool names, prices, outreach scripts, and a day-by-day action plan. Structured. Specific. Done." },
               ].map((faq, i) => (
                 <details key={i} className="group rounded-2xl border border-gray-100 bg-gray-50 px-4 sm:px-6 py-4 cursor-pointer open:bg-white open:border-indigo-100 transition-colors">
                   <summary className="flex items-center justify-between text-sm font-semibold text-gray-900 list-none">
@@ -400,10 +400,10 @@ const Landing = () => {
       {/* FINAL CTA */}
       <section className="bg-indigo-600 px-4 py-20 text-center sm:px-10">
         <FadeUp>
-          <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-white mb-4">Stop sitting on your idea.</h2>
-          <p className="text-indigo-200 mb-8 font-light max-w-md mx-auto">Your first blueprint is free. No card needed. You're 60 seconds away from knowing exactly what to do.</p>
+          <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-white mb-4">Your plan is 60 seconds away.</h2>
+          <p className="text-indigo-200 mb-8 font-light max-w-md mx-auto">Free to start. No card needed. Know exactly what to do by the time you finish your coffee.</p>
           <button onClick={handleCTA} className="w-full sm:w-auto rounded-xl bg-white px-8 py-4 text-base font-semibold text-indigo-600 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
-            I want my blueprint →
+            Build my blueprint, it is free →
           </button>
         </FadeUp>
       </section>
@@ -414,7 +414,7 @@ const Landing = () => {
           <div className="flex flex-wrap items-start justify-between gap-8 mb-8">
             <div>
               <span style={{ fontFamily: "'DM Serif Display', serif" }} className="text-xl text-gray-900">SoloBlueprint</span>
-              <p className="text-sm text-gray-400 mt-2 max-w-xs leading-relaxed">Most solo founders never launch because they don't have a clear plan. We fix that.</p>
+              <p className="text-sm text-gray-400 mt-2 max-w-xs leading-relaxed">You have the idea. We build the plan. You launch.</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-6 sm:gap-12">
               <div>
