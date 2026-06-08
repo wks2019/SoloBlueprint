@@ -111,7 +111,7 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
         <header className="mb-10">
           <h2 className="font-display text-3xl text-foreground sm:text-4xl">Tell us about your idea</h2>
           <p className="mt-3 text-sm text-muted-foreground sm:text-base">
-            Answer a few questions and we'll build your personalised blueprint.
+            Describe your idea or pick one below. That's it — we'll handle the rest.
           </p>
         </header>
 
@@ -128,7 +128,7 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
                 update({ ideaDescription: e.target.value, ideaName: deriveNameFromDescription(e.target.value) });
               }
             }}
-            placeholder="Describe your idea in up to 200 words. What problem does it solve? Who is it for? What makes it different?"
+            placeholder="Describe your idea here — this is all you need. What is it? Who is it for? What problem does it solve? The more detail you give, the better your blueprint."
             rows={4}
             className="w-full rounded-xl border border-border bg-card px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none sm:text-base"
           />
