@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 export interface FormAnswers {
-  ideaName: string;          // unified idea name — from grid or derived from description
+  ideaName: string;          // unified idea name: from grid or derived from description
   selectedIdea: string | null; // grid pick (for display)
   ideaDescription: string;   // free-text description (context)
   country: string;
@@ -83,7 +83,7 @@ const QuestionLabel = ({ index, label, optional }: { index: number; label: strin
 export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProps) => {
   const update = (patch: Partial<FormAnswers>) => setAnswers({ ...answers, ...patch });
 
-  // Unified idea name — grid pick takes priority, else derive from description
+  // Unified idea name: grid pick takes priority, else derive from description
   const displayIdeaName = answers.selectedIdea || deriveNameFromDescription(answers.ideaDescription);
 
   const isComplete = useMemo(() =>
@@ -111,11 +111,11 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
         <header className="mb-10">
           <h2 className="font-display text-3xl text-foreground sm:text-4xl">Tell us about your idea</h2>
           <p className="mt-3 text-sm text-muted-foreground sm:text-base">
-            Describe your idea or pick one below. That's it — we'll handle the rest.
+            Describe your idea or pick one below. That's it. We'll handle the rest.
           </p>
         </header>
 
-        {/* Q1 — UNIFIED IDEA INPUT */}
+        {/* Q1: UNIFIED IDEA INPUT */}
         <section className="mb-12">
           <QuestionLabel index={1} label="What business do you want to launch?" />
 
@@ -128,7 +128,7 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
                 update({ ideaDescription: e.target.value, ideaName: deriveNameFromDescription(e.target.value) });
               }
             }}
-            placeholder="Describe your idea here — this is all you need. What is it? Who is it for? What problem does it solve? The more detail you give, the better your blueprint."
+            placeholder="Describe your idea here: this is all you need. What is it? Who is it for? What problem does it solve? The more detail you give, the better your blueprint."
             rows={4}
             className="w-full rounded-xl border border-border bg-card px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none sm:text-base"
           />
@@ -141,7 +141,7 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
             <div className="h-px flex-1 bg-border" />
           </div>
 
-          <p className="text-xs text-muted-foreground mb-3">These are popular ideas — tap one to use it as your starting point, then add your own details above.</p>
+          <p className="text-xs text-muted-foreground mb-3">These are popular ideas. Tap one to use it as your starting point, then add your own details above.</p>
 
           {/* Idea grid */}
           <div className="grid grid-cols-2 gap-2 sm:gap-3 sm:grid-cols-3">
@@ -167,7 +167,7 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
           </div>
 
           <p className="mt-3 text-xs text-muted-foreground text-center">
-            Don't see your idea? Just describe it in the box above — that's all you need.
+            Don't see your idea? Just describe it in the box above. That's all you need.
           </p>
 
           {/* YOUR IDEA confirmation bar */}
@@ -263,7 +263,7 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
           </div>
         </section>
 
-        {/* Q8 — optional background */}
+        {/* Q8: optional background */}
         <section className="mb-12">
           <QuestionLabel index={8} label="What is your background?" optional />
           <textarea value={answers.background}

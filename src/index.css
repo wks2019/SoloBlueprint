@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* SoloBlueprint design system — dark SaaS aesthetic */
+/* SoloBlueprint design system: dark SaaS aesthetic */
 
 @layer base {
   :root {

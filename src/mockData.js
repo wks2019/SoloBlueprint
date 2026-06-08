@@ -26,7 +26,7 @@ const REPORTS = {
     problem_and_demand:
       "Creators, coaches and B2B founders constantly produce long-form content (YouTube, podcasts, webinars) but lack time to cut clips, write LinkedIn posts and turn transcripts into newsletters. They are already paying VAs £400–£1,500/month for this. Demand is steady on Upwork, LinkedIn and X.",
     target_audience:
-      "Best niches to start: B2B SaaS founders with podcasts, business coaches with YouTube channels, and finance/health creators on Spotify. Sweet spot: 5k–100k followers — big enough to pay, small enough to be reachable.",
+      "Best niches to start: B2B SaaS founders with podcasts, business coaches with YouTube channels, and finance/health creators on Spotify. Sweet spot: 5k–100k followers , big enough to pay, small enough to be reachable.",
     clear_offer:
       "Starter package: From 1 long-form video per week, deliver: 1 LinkedIn carousel, 5 short-form clips with captions, 3 tweets/threads, 1 newsletter draft. Turnaround 48 hours. Position as 'Your podcast in 30 places' rather than 'content repurposing'.",
     tools_needed:
@@ -40,11 +40,11 @@ const REPORTS = {
     distribution_channels:
       "1) LinkedIn outbound DMs to podcast hosts. 2) Reply guy strategy on X to creators in your niche. 3) Post 3x/week showing before/after of public episodes. 4) Upwork as a backup channel for fast cash.",
     outreach_scripts:
-      "DM: 'Hey {name}, loved your episode on {topic}. I cut 5 short clips + a LinkedIn carousel from it as a sample — want me to send it over? No catch, just showing what I do.' Follow-up after 3 days: 'Bumping this — sample is ready whenever.'",
+      "DM: 'Hey {name}, loved your episode on {topic}. I cut 5 short clips + a LinkedIn carousel from it as a sample , want me to send it over? No catch, just showing what I do.' Follow-up after 3 days: 'Bumping this , sample is ready whenever.'",
     proof_needed:
       "Build 2 free portfolio samples from well-known public podcasts in your niche. Record a 2-minute Loom showing your process. Put both on a 1-page Carrd or Notion site. That's enough proof to charge £600/month.",
     honest_risks:
-      "AI tools are commoditising basic clipping — your edge has to be taste, hooks, and reliability. Clients churn fast if quality dips. Don't take more than 4 clients until you have a clear SOP.",
+      "AI tools are commoditising basic clipping , your edge has to be taste, hooks, and reliability. Clients churn fast if quality dips. Don't take more than 4 clients until you have a clear SOP.",
     seven_day_plan:
       "Day 1: Choose niche + 20 target creators. Day 2: Set up tools and templates. Day 3: Build sample #1. Day 4: Build sample #2 + portfolio page. Day 5: Send 15 cold DMs. Day 6: Send 15 more + follow up. Day 7: Get on 1 call, close 1 pilot.",
     how_to_scale:
@@ -71,11 +71,11 @@ const REPORTS = {
     distribution_channels:
       "1) Local BNI / chamber of commerce events. 2) LinkedIn posts showing before/after. 3) Facebook groups for your chosen vertical. 4) Partnerships with local web designers who don't do automation.",
     outreach_scripts:
-      "Email: 'Hi {name}, I help {vertical} stop losing leads from missed calls and slow replies. I built a 60-second AI responder for businesses like yours — happy to show you a 5-min demo if useful. Worth a quick look?'",
+      "Email: 'Hi {name}, I help {vertical} stop losing leads from missed calls and slow replies. I built a 60-second AI responder for businesses like yours , happy to show you a 5-min demo if useful. Worth a quick look?'",
     proof_needed:
       "1 fully-built demo automation you can screen-share. 1 case study (even from a friend's business done at cost). A simple Notion page with 'what you get / timeline / price'. That's enough to close mid-4-figure deals.",
     honest_risks:
-      "Clients will ask for endless tweaks if scope isn't tight. Lock down deliverables in writing. Some automations break when third-party APIs change — charge maintenance to cover that.",
+      "Clients will ask for endless tweaks if scope isn't tight. Lock down deliverables in writing. Some automations break when third-party APIs change , charge maintenance to cover that.",
     seven_day_plan:
       "Day 1: Choose vertical. Day 2–3: Build the demo automation end-to-end. Day 4: Record demo Loom. Day 5: Post in 3 communities + DM 20 owners. Day 6: Follow up + book 3 calls. Day 7: Run calls, close 1 pilot.",
     how_to_scale:
@@ -88,7 +88,7 @@ const REPORTS = {
     problem_and_demand:
       "Coaches, small business owners and content creators need professional-looking visuals but can't design. They will happily pay £8–£40 for a template pack that saves them hours. Steady demand on Etsy, Creative Market and Gumroad.",
     target_audience:
-      "Best buyers: female solopreneurs, coaches, real estate agents, wedding vendors, course creators. Avoid 'designers' as a target — they make their own.",
+      "Best buyers: female solopreneurs, coaches, real estate agents, wedding vendors, course creators. Avoid 'designers' as a target , they make their own.",
     clear_offer:
       "Launch with 1 focused pack of 30 Instagram carousel templates for a specific niche (e.g. 'Mindset coaches'). Sell at £19. Bundle of 3 packs at £39. Always sell to one persona, not 'everyone'.",
     tools_needed:
@@ -98,11 +98,11 @@ const REPORTS = {
     launch_plan:
       "Week 1: Pick 1 buyer persona, design pack #1 (30 templates). Week 2: Set up Etsy + Gumroad listings, write SEO descriptions. Week 3: Pin 30 Pinterest pins, post 5 Reels. Week 4: Launch pack #2, build email list.",
     pricing_strategy:
-      "Single pack: £19. Bundle of 3: £39. Mega bundle (all packs): £79. Run a 7-day launch discount of 20% for each new pack. Never go below £15 — it kills perceived value.",
+      "Single pack: £19. Bundle of 3: £39. Mega bundle (all packs): £79. Run a 7-day launch discount of 20% for each new pack. Never go below £15 , it kills perceived value.",
     distribution_channels:
-      "1) Pinterest is #1 for templates — fresh pins daily. 2) Etsy SEO (long-tail keywords). 3) Instagram Reels showing 'before/after' of using the template. 4) Email list from a free mini-pack lead magnet.",
+      "1) Pinterest is #1 for templates , fresh pins daily. 2) Etsy SEO (long-tail keywords). 3) Instagram Reels showing 'before/after' of using the template. 4) Email list from a free mini-pack lead magnet.",
     outreach_scripts:
-      "No cold outreach needed — this is search + content. Caption hook: 'POV: you spent 4 hours making 1 Instagram post. This pack does 30 in 20 minutes.' Pin title: 'Aesthetic Instagram Templates for Mindset Coaches'.",
+      "No cold outreach needed , this is search + content. Caption hook: 'POV: you spent 4 hours making 1 Instagram post. This pack does 30 in 20 minutes.' Pin title: 'Aesthetic Instagram Templates for Mindset Coaches'.",
     proof_needed:
       "Mockups in real iPhone frames, not flat exports. A 15-second Reel showing how easy editing is. 5 detailed Etsy listing photos per pack. That's the proof that converts cold buyers.",
     honest_risks:
@@ -129,15 +129,15 @@ const REPORTS = {
     launch_plan:
       "Week 1: Build flagship template + record 3-min walkthrough. Week 2: Build landing page, set up Gumroad. Week 3: Soft launch on Twitter/LinkedIn with founder story. Week 4: Pitch on Reddit, IndieHackers, niche newsletters.",
     pricing_strategy:
-      "Flagship: £49. Lite version: £19. Bundle: £69. Lifetime updates included as default — strong sales driver. Offer a 7-day no-questions refund to lower buyer risk.",
+      "Flagship: £49. Lite version: £19. Bundle: £69. Lifetime updates included as default , strong sales driver. Offer a 7-day no-questions refund to lower buyer risk.",
     distribution_channels:
-      "1) X/Twitter is #1 for Notion buyers — build in public + thread launches. 2) YouTube tutorials of your template. 3) Affiliate program at 30% for niche creators. 4) Listings on Notion gallery + UseNotion.com.",
+      "1) X/Twitter is #1 for Notion buyers , build in public + thread launches. 2) YouTube tutorials of your template. 3) Affiliate program at 30% for niche creators. 4) Listings on Notion gallery + UseNotion.com.",
     outreach_scripts:
       "Launch tweet: 'I built {template name}. It's the system I wish I had when I started {niche}. Includes: {3 bullets}. Free duplicate for the first 50 RTs. Link below.'",
     proof_needed:
       "1 polished demo video (Tella, not Loom for sales). 6+ landing page screenshots. 3 testimonials from beta testers (give it free in exchange). A free mini-template as lead magnet.",
     honest_risks:
-      "High refund rate if template is too complex. Notion changes break formulas occasionally. Templates get pirated — accept it and outpace via updates and community.",
+      "High refund rate if template is too complex. Notion changes break formulas occasionally. Templates get pirated , accept it and outpace via updates and community.",
     seven_day_plan:
       "Day 1: Decide niche + outline template. Day 2–4: Build template. Day 5: Record demo + write landing page. Day 6: Set up Gumroad + payment. Day 7: Launch with thread + DM 30 niche creators.",
     how_to_scale:
@@ -146,11 +146,11 @@ const REPORTS = {
 
   "Resume & LinkedIn Profile Writer": {
     diagnosis:
-      "Evergreen service with high willingness to pay. People in job transitions are emotional buyers — they want help fast. Easy to start with zero stack, zero inventory. Reliable £1k–£4k/month within 90 days.",
+      "Evergreen service with high willingness to pay. People in job transitions are emotional buyers , they want help fast. Easy to start with zero stack, zero inventory. Reliable £1k–£4k/month within 90 days.",
     problem_and_demand:
       "Mid-career professionals struggle to articulate impact. Layoffs are constant. AI tools produce generic results that don't get interviews. Buyers will pay £150–£500 for a real human who can position them.",
     target_audience:
-      "Sweet spot: mid-senior professionals (£60k–£150k salary), career-switchers, returning parents, and tech workers post-layoff. Avoid grads — they have no money and need a different product.",
+      "Sweet spot: mid-senior professionals (£60k–£150k salary), career-switchers, returning parents, and tech workers post-layoff. Avoid grads , they have no money and need a different product.",
     clear_offer:
       "'Career Reset Package': 1x 45-min discovery call → fully rewritten CV + LinkedIn About + headline + 5-message outreach scripts. Delivered in 5 working days. £349.",
     tools_needed:
@@ -160,15 +160,15 @@ const REPORTS = {
     launch_plan:
       "Week 1: Build 1 anonymised before/after case study. Week 2: Post on LinkedIn 3x with case study. Week 3: DM 30 connections in transition. Week 4: Close 2 clients at £299 launch price, raise to £349.",
     pricing_strategy:
-      "Entry: £199 (CV only). Standard: £349 (CV + LinkedIn + scripts). Premium: £599 (adds 30-day interview prep). Always offer 3 tiers — most pick the middle.",
+      "Entry: £199 (CV only). Standard: £349 (CV + LinkedIn + scripts). Premium: £599 (adds 30-day interview prep). Always offer 3 tiers , most pick the middle.",
     distribution_channels:
       "1) LinkedIn (your home turf as a CV writer). 2) Niche Slack/Discord communities. 3) Career-pivot Facebook groups. 4) Partnerships with career coaches who don't write CVs.",
     outreach_scripts:
-      "DM: 'Hey {name}, saw you're exploring new roles. I rewrite CVs + LinkedIn profiles for {role type} — last client landed 4 interviews in 10 days after the rewrite. Want me to send a 60-sec audit of your current profile? No charge.'",
+      "DM: 'Hey {name}, saw you're exploring new roles. I rewrite CVs + LinkedIn profiles for {role type} , last client landed 4 interviews in 10 days after the rewrite. Want me to send a 60-sec audit of your current profile? No charge.'",
     proof_needed:
       "1 anonymised before/after PDF. 3 written testimonials with photo. 1 short Loom of you reviewing a real profile. A free 'LinkedIn headline checklist' as lead magnet.",
     honest_risks:
-      "Outcome (interviews/jobs) depends on factors you can't control — set expectations early. Clients ghost mid-process. Use a 50% upfront deposit to filter serious buyers.",
+      "Outcome (interviews/jobs) depends on factors you can't control , set expectations early. Clients ghost mid-process. Use a 50% upfront deposit to filter serious buyers.",
     seven_day_plan:
       "Day 1: Build offer page on Carrd. Day 2: Build 1 case study. Day 3–4: Post on LinkedIn + DM 20 people. Day 5: Run free audits to build interest. Day 6: Convert 2 audits to paid. Day 7: Deliver fast and ask for testimonial.",
     how_to_scale:
@@ -195,11 +195,11 @@ const REPORTS = {
     distribution_channels:
       "1) X/Twitter posts of design breakdowns. 2) Dribbble and Read.cv. 3) IndieHackers + Reddit (r/SaaS, r/EntrepreneurRideAlong). 4) Subcontract via 2 web agencies who don't do Framer.",
     outreach_scripts:
-      "DM: 'Saw you're launching {product}. I noticed your landing page could use a sharper hero + clearer CTA — I built a quick mock for you, want me to send it? Takes 60 secs to look at.'",
+      "DM: 'Saw you're launching {product}. I noticed your landing page could use a sharper hero + clearer CTA , I built a quick mock for you, want me to send it? Takes 60 secs to look at.'",
     proof_needed:
       "3–5 portfolio pages on Framer. 1 case study with real metrics ('CTR went from 1.8% to 4.2%'). A 60-sec Loom walkthrough of one project. That's enough to close £700+ deals.",
     honest_risks:
-      "Scope creep is the #1 killer. Lock deliverables and revision rounds in writing. Clients with no copy will slow you down — charge extra or refuse the project.",
+      "Scope creep is the #1 killer. Lock deliverables and revision rounds in writing. Clients with no copy will slow you down , charge extra or refuse the project.",
     seven_day_plan:
       "Day 1: Pick stack (Framer recommended). Day 2: Build portfolio page #1. Day 3: Build portfolio page #2. Day 4: Set up Carrd offer page. Day 5: Post 2 design breakdowns. Day 6: DM 25 founders. Day 7: Run calls, close 1 build.",
     how_to_scale:
@@ -226,11 +226,11 @@ const REPORTS = {
     distribution_channels:
       "1) Beehiiv Boosts (cross-promos with similar newsletters). 2) X/LinkedIn threads summarising each issue. 3) Guest posts on bigger newsletters. 4) SparkLoop for paid recommendations once you have budget.",
     outreach_scripts:
-      "Cross-promo DM: 'Hey {name}, love {their newsletter}. I write {your newsletter} for {niche} — 800 subs, 45% open. Want to swap a recommendation slot in our next issues? Easy 30-min setup.'",
+      "Cross-promo DM: 'Hey {name}, love {their newsletter}. I write {your newsletter} for {niche} , 800 subs, 45% open. Want to swap a recommendation slot in our next issues? Easy 30-min setup.'",
     proof_needed:
       "A clean landing page with a clear promise + sample issue. 3 strong issues already published before you push for subscribers. Social proof: open rate, sub count, testimonials.",
     honest_risks:
-      "Slow growth — most quit before 6 months. Open rates are dropping industry-wide. You must publish weekly without fail. Treat first 200 subs as a 12-week project, not a 12-day one.",
+      "Slow growth , most quit before 6 months. Open rates are dropping industry-wide. You must publish weekly without fail. Treat first 200 subs as a 12-week project, not a 12-day one.",
     seven_day_plan:
       "Day 1: Pick niche + name. Day 2: Set up Beehiiv + landing page. Day 3–5: Write 4 issues. Day 6: Soft launch to friends + 1st issue out. Day 7: Post 3 social threads + start cross-promo outreach.",
     how_to_scale:
@@ -243,7 +243,7 @@ const REPORTS = {
     problem_and_demand:
       "Lots of solo founders have a product, traffic, and zero idea why nothing converts. They will pay for an outside expert to point at the leak. Demand is steady on X and LinkedIn.",
     target_audience:
-      "Best buyers: course creators with £2k–£20k/month revenue, indie SaaS founders post-MVP, coaches with broken sales pages. Avoid pre-revenue founders — they don't have data to audit.",
+      "Best buyers: course creators with £2k–£20k/month revenue, indie SaaS founders post-MVP, coaches with broken sales pages. Avoid pre-revenue founders , they don't have data to audit.",
     clear_offer:
       "'Funnel Fix Audit': they share landing page + checkout + email flow + 30 days of analytics. You return a 15-page Notion doc + 30-min Loom walkthrough with prioritised fixes. £495, delivered in 5 days.",
     tools_needed:
@@ -257,11 +257,11 @@ const REPORTS = {
     distribution_channels:
       "1) Public teardown threads on X (massive distribution). 2) LinkedIn posts breaking down funnel mistakes. 3) Newsletter sponsorships in creator-economy newsletters. 4) Podcast guesting on indie-founder shows.",
     outreach_scripts:
-      "Teardown tweet: 'I audited 10 course landing pages this week. Here are the 5 mistakes 90% are making. (Bookmark this.)' Then DM offer: 'Want me to do this for your funnel? Free 15-min teardown — first 3 only.'",
+      "Teardown tweet: 'I audited 10 course landing pages this week. Here are the 5 mistakes 90% are making. (Bookmark this.)' Then DM offer: 'Want me to do this for your funnel? Free 15-min teardown , first 3 only.'",
     proof_needed:
       "1 public teardown thread that did well. 1 full anonymised audit PDF as a downloadable sample. 3 testimonials with measurable results ('+22% checkout conversion in 2 weeks').",
     honest_risks:
-      "Clients expect miracles from one audit — set realistic expectations. Without retainer revenue, this can be feast-or-famine. Stack 2–3 audits per month + 1 retainer client for stability.",
+      "Clients expect miracles from one audit , set realistic expectations. Without retainer revenue, this can be feast-or-famine. Stack 2–3 audits per month + 1 retainer client for stability.",
     seven_day_plan:
       "Day 1: Pick niche. Day 2: Build audit framework template in Notion. Day 3: Run 1 public teardown. Day 4: Post it + DM 25 owners. Day 5: Free mini-audits. Day 6: Convert to paid. Day 7: Deliver, ask for testimonial.",
     how_to_scale:
@@ -284,11 +284,11 @@ const REPORTS = {
     launch_plan:
       "Month 1: Interview 15 owners in your niche. Month 2: Build smallest possible MVP. Month 3: Onboard 5 free beta users + collect feedback. Month 4: Launch paid at £29/month.",
     pricing_strategy:
-      "Single tier to start: £29/month flat. Annual: £290 (2 months free). Add a £79/month tier with multi-staff once you have 30+ users. Avoid free plans early — they bring noise.",
+      "Single tier to start: £29/month flat. Annual: £290 (2 months free). Add a £79/month tier with multi-staff once you have 30+ users. Avoid free plans early , they bring noise.",
     distribution_channels:
       "1) Niche Facebook groups (founder-led, give value first). 2) Niche Reddit subs. 3) Cold DMs on Instagram (where most of these owners actually live). 4) Affiliate program with niche influencers.",
     outreach_scripts:
-      "DM: 'Hey {name}, I'm building a booking tool just for {niche}. Saw you're juggling Calendly + Square + WhatsApp — same as everyone in your space. Mind if I show you a 5-min demo? Would love your honest opinion.'",
+      "DM: 'Hey {name}, I'm building a booking tool just for {niche}. Saw you're juggling Calendly + Square + WhatsApp , same as everyone in your space. Mind if I show you a 5-min demo? Would love your honest opinion.'",
     proof_needed:
       "Working MVP that handles 1 full booking end-to-end. 3 case studies from beta users showing time saved or money recovered (no-show fees). A Loom demo on the homepage.",
     honest_risks:
@@ -305,7 +305,7 @@ const REPORTS = {
     problem_and_demand:
       "Agencies, B2B SaaS sales teams and freelancers all need fresh lists every week. Doing it themselves takes 6+ hours. Demand on Upwork, Twitter and LinkedIn is constant.",
     target_audience:
-      "Best buyers: 1–10 person B2B sales teams, marketing agencies doing cold email, recruiters, fractional sales reps. Avoid huge enterprises — sales cycle too long for a solo founder.",
+      "Best buyers: 1–10 person B2B sales teams, marketing agencies doing cold email, recruiters, fractional sales reps. Avoid huge enterprises , sales cycle too long for a solo founder.",
     clear_offer:
       "'500 verified, niche-targeted leads delivered every week'. Each lead includes: name, role, company, verified email, LinkedIn URL, 1 personalisation hook. Delivered Friday. £349/week or £1,200/month.",
     tools_needed:
@@ -319,11 +319,11 @@ const REPORTS = {
     distribution_channels:
       "1) Cold LinkedIn DMs to sales/agency founders. 2) Twitter posts showing your enrichment workflows. 3) Reddit (r/sales, r/coldemail). 4) Partnerships with cold email agencies who don't do sourcing.",
     outreach_scripts:
-      "DM: 'Hey {name}, saw you're scaling outbound at {company}. I deliver 500 verified, hyper-targeted leads every Friday for teams like yours — done in Clay, includes 1 personalisation hook per lead. Want a free sample of 25 leads in your niche? Takes me 30 mins.'",
+      "DM: 'Hey {name}, saw you're scaling outbound at {company}. I deliver 500 verified, hyper-targeted leads every Friday for teams like yours , done in Clay, includes 1 personalisation hook per lead. Want a free sample of 25 leads in your niche? Takes me 30 mins.'",
     proof_needed:
       "1 sample list of 100 leads in a real niche. 1 short Loom showing your Clay/Apollo workflow. 2 testimonials with response-rate numbers. A simple Notion landing page is enough.",
     honest_risks:
-      "Apollo, Clay and email verifier costs add up — track margin per client. List quality varies by niche. Email deliverability laws (GDPR, CAN-SPAM) matter — always recommend opt-in compliance to clients.",
+      "Apollo, Clay and email verifier costs add up , track margin per client. List quality varies by niche. Email deliverability laws (GDPR, CAN-SPAM) matter , always recommend opt-in compliance to clients.",
     seven_day_plan:
       "Day 1: Set up Apollo + Clay accounts. Day 2: Pick buyer niche. Day 3: Build sample list. Day 4: Build Notion offer page. Day 5: Send 25 cold DMs. Day 6: Follow up + run calls. Day 7: Close 1 retainer.",
     how_to_scale:
@@ -343,15 +343,15 @@ const GENERIC_REPORT = {
   tools_needed:
     "Start lean: Notion (operations), Stripe or Wise (payments), Calendly or Cal.com (booking), Loom (sales + delivery), Carrd or Framer (landing page), Gmail (comms). Don't over-tool before you have customers.",
   ai_nocode_stack:
-    "ChatGPT or Claude for copy + research. Make.com or Zapier for automations. Lovable / Cursor / v0 if any product needs building. Use AI to compress 10-hour tasks into 1 — then sell that time-saving to clients.",
+    "ChatGPT or Claude for copy + research. Make.com or Zapier for automations. Lovable / Cursor / v0 if any product needs building. Use AI to compress 10-hour tasks into 1 , then sell that time-saving to clients.",
   launch_plan:
     "Week 1: Define your offer + 1 buyer persona. Week 2: Build 1 portfolio sample or MVP. Week 3: Reach out to 30 ideal buyers. Week 4: Close 1 paying customer at a discount, raise the price, and ask for a testimonial.",
   pricing_strategy:
-    "Offer 3 tiers — most buyers pick the middle one. Price on outcomes, not hours. Always quote a project fee, not 'I charge £X/hr'. Raise prices every 3 customers.",
+    "Offer 3 tiers , most buyers pick the middle one. Price on outcomes, not hours. Always quote a project fee, not 'I charge £X/hr'. Raise prices every 3 customers.",
   distribution_channels:
     "Pick 2 channels max where your buyers actually are. For B2B: LinkedIn + cold email. For consumer products: Pinterest, TikTok, Instagram. For technical products: X/Twitter + niche Reddit. Go deep on 2, not shallow on 6.",
   outreach_scripts:
-    "DM: 'Hey {name}, I help {audience} solve {pain} by {clear method}. Built a quick {sample/audit/demo} for you — happy to send it over with no catch. Worth a 60-second look?'",
+    "DM: 'Hey {name}, I help {audience} solve {pain} by {clear method}. Built a quick {sample/audit/demo} for you , happy to send it over with no catch. Worth a 60-second look?'",
   proof_needed:
     "1 portfolio sample or case study (build it for free if needed). 1 short Loom walkthrough. A 1-page landing page on Carrd or Framer with a clear offer, 3 benefits and 1 CTA. That is enough to start charging.",
   honest_risks:

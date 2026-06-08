@@ -36,7 +36,7 @@ const App = () => (
           <Route path="/app/admin" element={<Admin />} />
           <Route path="/app/history" element={<History />} />
 
-          {/* Legacy redirects — keep old routes working */}
+          {/* Legacy redirects: keep old routes working */}
           <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/history" element={<History />} />

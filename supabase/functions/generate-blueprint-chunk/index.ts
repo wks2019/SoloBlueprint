@@ -28,7 +28,7 @@ const CHUNKS: Record<number, string[]> = {
 const CHUNK_RULES: Record<number, string> = {
   0: `- diagnosis: Assess the idea honestly. Name the real opportunity AND the real obstacle. Reference a comparable business that succeeded.
 - problem_and_demand: Name the exact pain. Cite real evidence of demand (search volume, market size, trend, or named competitor doing well).
-- target_audience: Describe one specific person — their job, age, location, frustration, and where they spend time online.
+- target_audience: Describe one specific person: their job, age, location, frustration, and where they spend time online.
 - clear_offer: Write the exact offer in one sentence. Include price, deliverable, and timeframe. No vagueness.`,
   1: `- tools_needed: List every tool needed. Name, purpose, price. Specific to this idea and country.
 - ai_nocode_stack: List AI and no-code tools that give this founder an unfair advantage. Include exact use case per tool.
@@ -44,7 +44,7 @@ const CHUNK_RULES: Record<number, string> = {
 
 const buildChunkPrompt = (country: string, businessType: string, tone: string, chunkIndex: number) => {
   const keys = CHUNKS[chunkIndex].join(", ");
-  return `You are SoloBlueprint — a specific AI business advisor for solo founders.
+  return `You are SoloBlueprint, a specific AI business advisor for solo founders.
 Generate ONLY these sections for the given business idea: ${keys}
 
 Country: ${country || "United Kingdom"}
@@ -63,7 +63,7 @@ RULES:
 - Use real business names, platforms, tools relevant to this idea and country.
 - Real price ranges, real margins, real timelines.
 - Reference real case studies or companies that built something similar.
-- Never say "consider" or "you could" — say exactly what to do and why.
+- Never say "consider" or "you could": say exactly what to do and why.
 - Never use em dashes. Use a colon, comma, or rewrite instead.
 - No filler words. No "leverage", "synergy", "holistic", "game-changing".
 

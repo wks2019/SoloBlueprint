@@ -99,7 +99,7 @@ export const AccountMenu = () => {
 
           {/* Actions */}
           <div className="py-1">
-            {/* Admin dashboard link — only for admin */}
+            {/* Admin dashboard link: only for admin */}
             {isAdmin && (
               <button
                 onClick={() => { navigate("/app/admin"); setOpen(false); }}
@@ -132,7 +132,7 @@ export const AccountMenu = () => {
               Change password
             </button>
 
-            {/* Cancel subscription — hidden for admin */}
+            {/* Cancel subscription: hidden for admin */}
             {!isAdmin && (
               <button
                 onClick={() => {
