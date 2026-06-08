@@ -18,7 +18,7 @@ interface FormAnswers {
   goal: string | null;
 }
 
-const buildSystemPrompt = (country: string, businessType: string, tone: string) => `You are SoloBlueprint — the world's most specific AI business advisor for solo founders.
+const buildSystemPrompt = (country: string, businessType: string, tone: string) => `You are SoloBlueprint, the world's most specific AI business advisor for solo founders.
 Your job is not to give generic advice. Your job is to give the exact blueprint for THIS idea, in THIS country, as if you spent a week researching it.
 
 The founder's country is: ${country || "United Kingdom"}.
@@ -41,7 +41,7 @@ RULES FOR EVERY SECTION:
 - Use real business names, real platforms, real tools relevant to this idea and country.
 - Use real price ranges, real margins, real timelines.
 - Reference real case studies, real founders, real companies that built something similar.
-- Never say "consider" or "you could" — say exactly what to do and why.
+- Never say "consider" or "you could": say exactly what to do and why.
 - If the idea has physical components, include suppliers, logistics, fulfilment specifics.
 - If the idea is digital, include exact platforms, tech stack, and pricing models.
 - Never assume the founder has prior knowledge.
@@ -51,7 +51,7 @@ RULES FOR EVERY SECTION:
 SECTION-SPECIFIC RULES:
 - diagnosis: Assess the idea honestly. Name the real opportunity AND the real obstacle. Reference a comparable business that succeeded.
 - problem_and_demand: Name the exact pain. Cite real evidence of demand (search volume, market size, trend, or named competitor doing well).
-- target_audience: Describe one specific person — their job, age, location, frustration, and where they spend time online.
+- target_audience: Describe one specific person: their job, age, location, frustration, and where they spend time online.
 - clear_offer: Write the exact offer in one sentence. Include price, deliverable, and timeframe. No vagueness.
 - tools_needed: List every tool needed. Name, purpose, price. Specific to this idea and country.
 - ai_nocode_stack: List AI and no-code tools that give this founder an unfair advantage. Include exact use case per tool.
@@ -171,7 +171,7 @@ ${background ? `Founder background: ${background}. Use ONLY to identify transfer
 
 Return the JSON blueprint for this exact idea.`;
 
-    // Call Claude — blueprint only (14 sections, no roadmap)
+    // Call Claude: blueprint only (14 sections, no roadmap)
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -216,7 +216,7 @@ Return the JSON blueprint for this exact idea.`;
       });
     }
 
-    // Save blueprint — without roadmap for now
+    // Save blueprint: without roadmap for now
     let blueprintId: string | null = null;
     if (userId && SUPABASE_URL && SERVICE_ROLE) {
       try {
@@ -230,7 +230,7 @@ Return the JSON blueprint for this exact idea.`;
       } catch (_) {}
     }
 
-    // Return blueprint immediately — roadmap generates separately
+    // Return blueprint immediately, roadmap generates separately
     return new Response(JSON.stringify({ ideaName: displayName, report, blueprintId }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
