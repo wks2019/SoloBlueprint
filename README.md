@@ -10,7 +10,7 @@ Turn any business idea into a complete 14-section launch plan in under 60 second
 
 ## What It Does
 
-A solo founder enters their business idea and answers 5 questions (budget, hours/week, experience, goal). Claude AI generates a complete 14-section blueprint tailored to their exact situation:
+A solo founder enters their business idea and answers 5 questions (budget, hours/week, experience, goal). AI generates a complete 14-section blueprint tailored to their exact situation:
 
 1. Business Idea Diagnosis
 2. Real Problem & Demand
@@ -36,10 +36,11 @@ A solo founder enters their business idea and answers 5 questions (budget, hours
 | Frontend | React + TypeScript + Vite + Tailwind + shadcn/ui |
 | Auth + Database | Supabase (eu-west-2) |
 | Edge Functions | Supabase Edge Functions (Deno) |
-| AI Engine | Claude API (claude-sonnet-4-20250514) |
+| AI Engine | Claude API (claude-sonnet-4-5) |
 | Hosting | Netlify (auto-deploy from GitHub) |
 | Domain | soloblueprint.co.uk (Spaceship → Netlify DNS) |
-| Payments | Stripe (integration pending) |
+| Payments | Stripe (live mode — active) |
+| Monitoring | UptimeRobot + /healthz endpoint |
 
 ---
 
@@ -49,95 +50,106 @@ A solo founder enters their business idea and answers 5 questions (budget, hours
 User Browser
     ↓
 Netlify (React SPA — auto-deploys from GitHub main branch)
+    + /healthz Netlify Function (monitoring)
     ↓ auth check
 Supabase Auth (email/password)
     ↓ invoke
 Supabase Edge Function: generate-blueprint (Deno)
-    ↓ token check + deduction
-Supabase DB (token_balance, token_transactions, blueprints)
+    ↓ token check + deduction (refund on failure)
+Supabase DB (token_balance, token_transactions, blueprints, blueprint_tags)
     ↓ API call
-Claude API (claude-sonnet-4-20250514)
-    ↓ structured output via tool_use
+Claude API (claude-sonnet-4-5) — plain JSON response
+    ↓ 14-section blueprint
 Blueprint returned to user
-    ↓ payment (Stripe — pending)
-Token store → credit tokens → unlock generation
+    ↓ payment
+Stripe Checkout → webhook → token credited instantly
 ```
 
 ---
 
 ## Repository
 
-**GitHub:** `wks2019/SoloBlueprint`  
-**Branch:** `main` (production)  
+**GitHub:** `wks2019/SoloBlueprint`
+**Branch:** `main` (production)
 **Auto-deploy:** Every push to `main` triggers Netlify build
 
 ---
 
 ## Supabase
 
-**Project ref:** `nlpgbwhxdrxsddhkkcwc`  
-**Region:** AWS eu-west-2  
+**Project ref:** `nlpgbwhxdrxsddhkkcwc`
+**Region:** AWS eu-west-2
 **URL:** `https://nlpgbwhxdrxsddhkkcwc.supabase.co`
 
 ### Database Tables
 
 #### `blueprints`
-Stores every generated blueprint.
 | Column | Type | Description |
 |--------|------|-------------|
 | id | uuid | Primary key |
-| user_id | uuid | Auth user (nullable for anon) |
+| user_id | uuid | Auth user |
 | idea_name | string | Business idea |
 | answers | json | Form answers |
 | report | json | Full 14-section blueprint |
 | created_at | timestamptz | Generation timestamp |
 
 #### `token_balance`
-One row per user — live token balance.
 | Column | Type | Description |
 |--------|------|-------------|
-| user_id | uuid | Primary key (references auth.users) |
+| user_id | uuid | Primary key |
 | balance | int | Current spendable tokens |
 | total_purchased | int | Lifetime purchased |
 | total_used | int | Lifetime used |
 | updated_at | timestamptz | Last updated |
 
 #### `token_transactions`
-Audit log of every token credit/debit.
 | Column | Type | Description |
 |--------|------|-------------|
 | id | uuid | Primary key |
 | user_id | uuid | User reference |
 | amount | int | Positive = credit, negative = debit |
-| reason | text | signup_bonus / blueprint_generated / purchase |
+| reason | text | signup_bonus / blueprint_generated / purchase / gift / refund |
 | stripe_session_id | text | Stripe session (for purchases) |
 | created_at | timestamptz | Timestamp |
 
-#### `profiles`
-User profile data (display name etc.)
+#### `blueprint_tags`
+Admin catalogue tags for each blueprint.
+| Column | Type | Description |
+|--------|------|-------------|
+| id | uuid | Primary key |
+| blueprint_id | uuid | Unique reference to blueprint |
+| industry | text | Digital Product / SaaS / Service / Creator / Physical / Marketplace / Other |
+| quality | text | Excellent / Good / Average / Poor |
+| status | text | New / Reviewed / Featured / Flagged |
+| notes | text | Admin notes |
+| updated_at | timestamptz | Last updated |
 
 ### Triggers
 - `on_auth_user_created_tokens` — fires on new signup, auto-creates `token_balance` row with 1 free token + logs `signup_bonus` transaction.
 
 ### Edge Functions
-- `generate-blueprint` — main AI function. Checks token balance, deducts 1 token, calls Claude API, saves blueprint, returns structured report.
+- `generate-blueprint` — checks token balance, deducts 1 token, calls Claude API, auto-refunds on failure, saves blueprint, returns 14-section JSON report.
+- `create-checkout` — creates Stripe checkout session for token purchase.
+- `stripe-webhook` — receives Stripe events, credits tokens on payment, handles monthly subscription renewal.
 
-### Secrets (set in Supabase dashboard)
-- `ANTHROPIC_API_KEY` — Claude API key
+### Secrets (Supabase dashboard → Edge Functions → Secrets)
+- `ANTHROPIC_API_KEY`
+- `STRIPE_SECRET_KEY` (live)
+- `STRIPE_PUBLISHABLE_KEY` (live)
+- `STRIPE_WEBHOOK_SECRET` (live)
 
 ---
 
 ## Token System
 
-SoloBlueprint uses a token-based monetisation model (inspired by Claude.ai).
-
 **How it works:**
-- Every new user gets **1 free token** on signup
+- Every new user gets **1 free token** on signup (DB trigger)
 - Each blueprint generation costs **1 token**
-- When tokens run out → Token Store modal appears
-- Users buy token packs via Stripe
+- Failed generations automatically refund the token
+- Admin email bypasses all token checks
+- When tokens run out → Token Store modal → Stripe checkout
 
-**Token Packs (pricing):**
+**Token Packs:**
 | Pack | Tokens | Price | Per token |
 |------|--------|-------|-----------|
 | Starter | 3 | £9 | £3.00 |
@@ -145,12 +157,26 @@ SoloBlueprint uses a token-based monetisation model (inspired by Claude.ai).
 | Pro Pack | 30 | £39 | £1.30 |
 | Monthly Sub | 20/mo + rollover | £19/mo | £0.95 |
 
-**Why tokens over fixed plans:**
-- Lower barrier to first purchase (£9 impulse buy)
-- Unused tokens reduce churn — users stay for their balance
-- Flexible for power users and one-time users
-- Natural upsell path ("2 tokens left")
-- Monthly sub = predictable MRR with rollover loyalty hook
+**Admin gifting:**
+Admin can gift tokens to any user from the admin dashboard — no Stripe, no payment. Reasons: Failed generation, Goodwill, Beta tester, Referral, Support, Promo.
+
+---
+
+## Stripe Integration
+
+**Mode:** Live (real payments active)
+**Flow:**
+1. User taps "Continue to payment" in Token Store
+2. `create-checkout` edge function creates Stripe session
+3. User redirected to Stripe hosted checkout
+4. Payment completes → Stripe fires webhook → `stripe-webhook` credits tokens
+5. User redirected to `/app?checkout=success` with success toast
+
+**Live Price IDs:**
+- Starter (3 tokens £9): `price_1TfSFoFTSPA2OpANpuBoGyNO`
+- Builder (10 tokens £19): `price_1TfSFpFTSPA2OpANuX78PLBF`
+- Pro Pack (30 tokens £39): `price_1TfSFpFTSPA2OpANZz2mbUeD`
+- Monthly (20/mo £19): `price_1TfSFpFTSPA2OpANKrzFOeQz`
 
 ---
 
@@ -158,22 +184,23 @@ SoloBlueprint uses a token-based monetisation model (inspired by Claude.ai).
 
 ```
 Landing page (www.soloblueprint.co.uk)
-    ↓ "Build My Blueprint →"
-Sign up / Sign in (/auth)
-    ↓ email + password
-Home screen (token balance shown)
-    ↓ "Build My Blueprint →"
+    ↓ interactive idea selector + dynamic CTA
+Sign up / Sign in (/app/auth)
+    ↓ 1 free token credited on signup
+App home (/app) — token balance shown
+    ↓ "Let's build this →"
 Form (5 questions)
     ↓ Submit
-Loading screen (animated 7-step progress)
-    ↓ ~30 seconds
-Blueprint results
-    ├── All 14 sections (first blueprint free)
+Loading screen (animated progress)
+    ↓ ~30-60 seconds
+Blueprint results (14 colour-coded sections)
+    ├── Sections 1-3 free
+    ├── Sections 4-14 behind paywall
     ├── PDF download
-    ├── Share link (/blueprint/:id)
+    ├── Share link (/blueprint/:id — public)
     ├── Copy full text
     └── Start over
-Token runs out → Token Store modal → Stripe checkout (pending)
+Token runs out → Token Store → Stripe checkout → tokens credited
 ```
 
 ---
@@ -182,11 +209,15 @@ Token runs out → Token Store modal → Stripe checkout (pending)
 
 | Route | Component | Description |
 |-------|-----------|-------------|
-| `/` | Index.tsx | Main app (auth-gated) |
-| `/auth` | Auth.tsx | Sign in / Sign up / Forgot password / Reset password |
-| `/admin` | Admin.tsx | Admin dashboard (mvlasceanu26.vm@gmail.com only) |
-| `/history` | History.tsx | User's past blueprints |
-| `/blueprint/:id` | BlueprintView.tsx | Shared blueprint (public link) |
+| `/` | Landing.tsx | Public marketing site |
+| `/app` | Index.tsx | App home (auth-gated) |
+| `/app/auth` | Auth.tsx | Sign in / Sign up / Forgot / Reset / Admin mode |
+| `/app/admin` | Admin.tsx | Admin dashboard (email-gated) |
+| `/app/history` | History.tsx | User's past blueprints |
+| `/blueprint/:id` | BlueprintView.tsx | Shared blueprint (public) |
+| `/terms` | Terms.tsx | Terms & Conditions (UK law) |
+| `/privacy` | Privacy.tsx | Privacy Policy (UK GDPR) |
+| `/healthz` | Netlify Function | Health check endpoint |
 
 ---
 
@@ -194,43 +225,70 @@ Token runs out → Token Store modal → Stripe checkout (pending)
 
 | Component | Purpose |
 |-----------|---------|
-| `HomeView.tsx` | Landing screen with token balance, CTA, logout |
-| `FormView.tsx` | 5-question form |
-| `LoadingView.tsx` | Animated 7-step progress indicator |
-| `ResultsView.tsx` | Blueprint output with share/PDF/copy |
-| `AccountMenu.tsx` | Avatar dropdown — token balance, history, change password, cancel sub, logout |
-| `TokenStore.tsx` | Token purchase modal (4 packs) |
-| `Logo.tsx` | Brand logo component |
+| `Landing.tsx` | Interactive landing — counter animation, scroll fade-ins, idea selector, dynamic CTA, blueprint preview, FAQ, pricing |
+| `HomeView.tsx` | App home — token balance, CTA, blueprint includes preview |
+| `FormView.tsx` | 5-question form with indigo pill options |
+| `LoadingView.tsx` | Animated progress indicator |
+| `ResultsView.tsx` | Colour-coded 14-section blueprint output |
+| `AccountMenu.tsx` | Avatar dropdown — admin badge OR token balance, history, change password, logout |
+| `TokenStore.tsx` | Token purchase modal — 4 packs, Stripe checkout |
+| `Logo.tsx` | Clickable logo — navigates to `/` |
 
 ---
 
 ## Admin Dashboard
 
-**Access:** `/admin` — only accessible when logged in as `mvlasceanu26.vm@gmail.com`
+**Access:** `/app/admin` — `mvlasceanu26.vm@gmail.com` only
 
 **Features:**
-- Total blueprints generated
-- Unique users
-- Today's count
-- This week's count
+- Stats cards (total blueprints, unique users, today, this week)
 - Bar chart — last 14 days activity
-- Full list of recent blueprints (idea, budget, hours, experience, date)
+- Gift tokens — gift 1/3/5/10 tokens to any user by email, with reason
+- Blueprint catalogue — inline tagging (Industry / Quality / Status / Notes)
+- Filter bar — filter by tag or Untagged
+- Click any blueprint row → view full blueprint
+- Admin email bypasses all token checks and paywall
 
-**How to access:**
-1. Sign in as admin email
-2. Click **Admin** button (top right of home screen)
-3. Or click **Admin Access** button at bottom of login page
+---
+
+## Design System
+
+- **Fonts:** DM Serif Display (headings), DM Sans (body)
+- **Primary:** `#4f46e5` (indigo)
+- **Pill style:** `bg-indigo-50 border-indigo-100 text-indigo-600 rounded-full`
+- **Section colour coding:**
+  - Strategy: `#4f46e5` (indigo)
+  - Market: `#16a34a` (green)
+  - Build: `#ea580c` (orange)
+  - Growth: `#9333ea` (purple)
+- **No em dashes anywhere** — use colon, comma, or rewrite
 
 ---
 
 ## Authentication
 
 - Email + password via Supabase Auth
-- Email confirmation required on signup
-- Forgot password → reset link sent to email
-- Password reset handled in-app at `/auth` (type=recovery hash)
+- Admin mode button in auth footer → dedicated admin sign in form
+- Admin email always redirects to `/app/admin`
+- Regular users redirect to `/app`
+- Password reset via email link → `/app/auth` (type=recovery)
 - Site URL: `https://www.soloblueprint.co.uk`
-- Redirect URL: `https://www.soloblueprint.co.uk/auth`
+- Redirect URL: `https://www.soloblueprint.co.uk/app/auth`
+- Email templates branded as SoloBlueprint
+
+---
+
+## Monitoring
+
+**UptimeRobot:** Pings `/healthz` every 5 minutes. Alerts `mvlasceanu26.vm@gmail.com` if down.
+
+**`/healthz` endpoint checks:**
+- Supabase connection
+- Edge function reachability
+- Anthropic API reachability
+- Stripe API reachability
+
+Returns JSON: `{ status, timestamp, latency_ms, services }`
 
 ---
 
@@ -238,11 +296,14 @@ Token runs out → Token Store modal → Stripe checkout (pending)
 
 **Auto-deploy:** Push to `main` → Netlify builds automatically
 
-**Build settings (netlify.toml):**
+**netlify.toml:**
 ```toml
 [build]
   command = "npm run build"
   publish = "dist"
+
+[functions]
+  directory = "netlify/functions"
 
 [[redirects]]
   from = "/*"
@@ -250,74 +311,63 @@ Token runs out → Token Store modal → Stripe checkout (pending)
   status = 200
 ```
 
-**Manual deploy via CLI:**
+**Deploy edge functions:**
 ```bash
 SUPABASE_ACCESS_TOKEN=<token> supabase functions deploy generate-blueprint --project-ref nlpgbwhxdrxsddhkkcwc --use-api
 ```
 
 ---
 
-## DNS Configuration
+## DNS
 
 - **Registrar:** Spaceship
-- **DNS:** Managed by Netlify
-- **Nameservers:**
-  - dns1.p07.nsone.net
-  - dns2.p07.nsone.net
-  - dns3.p07.nsone.net
-  - dns4.p07.nsone.net
-- Both `soloblueprint.co.uk` and `www.soloblueprint.co.uk` point to Netlify
-- SSL/TLS: Auto-provisioned by Netlify (Let's Encrypt)
+- **DNS:** Managed by Netlify (dns1-4.p07.nsone.net)
+- Both `soloblueprint.co.uk` and `www.soloblueprint.co.uk` → Netlify
+- SSL: Auto-provisioned (Let's Encrypt)
 
 ---
 
-## Environment Variables
+## Legal
 
-### Supabase Edge Function Secrets
-Set in Supabase dashboard → Edge Functions → Secrets:
-- `ANTHROPIC_API_KEY` — Claude API key
-
-### Netlify Environment (if needed)
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_PUBLISHABLE_KEY`
+- **T&Cs:** Plain English summary + full legal — UK law, England & Wales
+- **Privacy Policy:** UK GDPR compliant — admin access disclosed, blueprint cataloguing disclosed, Anthropic processing disclosed
+- **AI disclaimer:** All outputs for informational purposes only
 
 ---
 
 ## What's Built
 
-- ✅ Landing page (DM Serif Display + indigo #4f46e5 brand)
-- ✅ Auth system (sign up, sign in, forgot password, reset password)
-- ✅ Auth gate — unauthenticated users redirected to /auth
-- ✅ Blueprint generation via Claude API (replaced Lovable gateway)
-- ✅ 14-section structured blueprint output
-- ✅ Token system (DB tables, trigger, edge function gate)
-- ✅ 1 free token on signup
-- ✅ Token store UI (4 packs)
-- ✅ Token balance shown in home screen + account menu
-- ✅ Animated loading screen (7-step progress)
-- ✅ Blueprint history (/history)
-- ✅ Share link (/blueprint/:id — public)
-- ✅ PDF export
-- ✅ Copy full blueprint text
-- ✅ Account menu (token balance, history, change password, cancel sub, logout)
-- ✅ Admin dashboard with usage tracking
-- ✅ Admin-only access (email-gated)
-- ✅ SPA routing fix (netlify.toml redirects)
+- ✅ Interactive landing page (counter, scroll animations, idea selector, blueprint preview)
+- ✅ Auth system — sign up, sign in, forgot password, reset, admin mode
+- ✅ Public landing at `/` — app at `/app`
+- ✅ Blueprint generation — 14 sections, plain JSON (no tool_use, prevents timeout)
+- ✅ Token system — 1 free on signup, deduct on generation, auto-refund on failure
+- ✅ Stripe integration — live mode, 4 packs, checkout + webhook, instant token crediting
+- ✅ Admin gift tokens — gift to any user by email with reason
+- ✅ Blueprint catalogue — inline tagging, filter bar, click to view
+- ✅ Colour-coded results view (strategy/market/build/growth)
+- ✅ Paywall gate — sections 1-3 free, 4-14 behind payment
+- ✅ PDF export, share link, copy text
+- ✅ Blueprint history
+- ✅ Account menu — admin badge vs token balance
+- ✅ Admin dashboard — stats, chart, gift tokens, catalogue
+- ✅ T&Cs + Privacy Policy (UK GDPR)
+- ✅ /healthz monitoring endpoint
+- ✅ UptimeRobot monitoring (5-min pings)
+- ✅ Logo links to landing page
+- ✅ Responsive — all screen sizes
+- ✅ No em dashes anywhere
 
 ---
 
 ## What's Pending
 
-- 🔜 **Stripe integration** — checkout + webhooks to credit tokens
-- 🔜 **Token purchase flow** — /checkout?pack= route
-- 🔜 **Cancel subscription** — Stripe customer portal link
-- 🔜 **T&Cs + Privacy Policy** pages
-- 🔜 **Email branding** — Supabase email templates branded as SoloBlueprint
+- 🔜 **Logo** — Marius designing externally
+- 🔜 **Anthropic auto-reload** — set $20 top-up when balance hits $2
 - 🔜 **Make.com automation** — welcome email on signup, nudge after 48hrs
 - 🔜 **Perplexity API** — live market research for Pro tier
 - 🔜 **Firecrawl** — competitor scraping for Pro tier
 - 🔜 **Referral system** — share blueprint → earn tokens
-- 🔜 **Blueprint rating** — thumbs up/down for quality tracking
 
 ---
 
@@ -325,34 +375,43 @@ Set in Supabase dashboard → Edge Functions → Secrets:
 
 > Every decision, feature, and build must be made with the goal of growing this into a million-dollar product. Always think scale, retention, and revenue impact before building anything.
 
-**Default skills always active:** `/g` (growth) · `/p` (prioritize) · `/sd` (system design)
+**Default skills always active:** `/g` · `/p` · `/sd` · `/ui` · `/ghost`
 
-**On-demand build commands:**
+**All slash commands:**
 | Command | Skill |
 |---------|-------|
-| `/rm` | Roadmap — timeline-based steps |
-| `/ss` | Step-by-step — clear numbered steps |
-| `/o` | Optimizer — improve what's given |
-| `/oc` | Optimize code — improve performance |
-| `/tr` | Track — build a tracking system |
-
-**On-demand content commands:**
-| Command | Skill |
-|---------|-------|
+| `/g` | Growth |
+| `/p` | Prioritize |
+| `/sd` | System design |
+| `/ui` | Graphic & UI design |
+| `/ghost` | Ghostwrite in user's voice |
+| `/rm` | Roadmap |
+| `/ss` | Step-by-step |
+| `/o` | Optimizer |
+| `/oc` | Optimize code |
+| `/tr` | Track |
 | `/icp` | Ideal customer profile |
-| `/h` | Hook — strong opening lines |
-| `/v` | Viral — high engagement style |
-| `/per` | Persuasive — convincing tone |
-| `/auth` | Authority — expert tone |
-| `/d` | Data — include stats |
-| `/eng` | Engagement — increase engagement |
-| `/tf` | Tone formal — formal writing |
+| `/h` | Hook |
+| `/v` | Viral |
+| `/per` | Persuasive |
+| `/auth` | Authority |
+| `/d` | Data |
+| `/eng` | Engagement |
+| `/tf` | Tone formal |
+| `/audit` | Full audit |
+| `/funnel` | Conversion funnel |
+| `/email` | Email sequences |
+| `/pitch` | Pitch structure |
 
 ---
 
-## Legal
+## Infra Upgrade Triggers
 
-AI outputs are for informational purposes only and do not constitute professional business, legal, financial, or investment advice. Always consult qualified professionals before acting on any information provided by this tool.
+| Revenue | Action |
+|---------|--------|
+| £5k/month | Add job queue (Inngest or Trigger.dev) in front of Claude API |
+| 10k+ users | Dedicated Postgres + PgBouncer (built into Supabase) |
+| £50k/month | Move edge functions to Railway or Fly.io |
 
 ---
 
