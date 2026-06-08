@@ -137,9 +137,11 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
           {/* OR divider */}
           <div className="my-5 flex items-center gap-3">
             <div className="h-px flex-1 bg-border" />
-            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Or pick a popular idea</span>
+            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Or choose a starting point</span>
             <div className="h-px flex-1 bg-border" />
           </div>
+
+          <p className="text-xs text-muted-foreground mb-3">Tap any idea below to use it as your blueprint idea. You can still add more detail above.</p>
 
           {/* Idea grid */}
           <div className="grid grid-cols-2 gap-2 sm:gap-3 sm:grid-cols-3">
