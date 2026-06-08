@@ -88,7 +88,6 @@ export const FormView = ({ answers, setAnswers, onBack, onSubmit }: FormViewProp
 
   const isComplete = useMemo(() =>
     !!displayIdeaName &&
-    answers.country.trim().length > 0 &&
     !!answers.businessType &&
     !!answers.tone &&
     !!answers.budget &&
