@@ -95,8 +95,9 @@ Deno.serve(async (req) => {
     if (!ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY is not configured");
 
     const { answers, tokenOnly } = (await req.json()) as { answers: FormAnswers; tokenOnly?: boolean };
-    const ideaName = (answers.selectedIdea ?? answers.customIdea ?? "").trim();
-    if (!ideaName) {
+    const ideaName = (answers.ideaName || answers.selectedIdea || answers.customIdea || "").trim();
+    const ideaDescription = (answers.ideaDescription || "").trim();
+    if (!ideaName && !ideaDescription) {
       return new Response(JSON.stringify({ error: "Idea is required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -151,21 +152,22 @@ Deno.serve(async (req) => {
       });
     }
 
-    const ideaDescription = answers.ideaDescription?.trim() ?? "";
     const country = answers.country?.trim() || "United Kingdom";
     const tone = answers.tone || "detailed";
     const businessType = answers.businessType || "online";
     const background = answers.background?.trim() ?? "";
 
-    const userPrompt = `Business idea: ${ideaName}
-${ideaDescription ? `Founder's description: ${ideaDescription}` : ""}
+    const displayName = ideaName || ideaDescription.split(/[.!?]/)[0].trim().split(/\s+/).slice(0, 8).join(" ");
+
+    const userPrompt = `Business idea: ${displayName}
+${ideaDescription ? `Founder's full description: ${ideaDescription}` : ""}
 Country: ${country}
 Business type: ${businessType}
 Budget: ${answers.budget ?? "flexible"}
 Hours/week: ${answers.hours ?? "flexible"}
 Experience: ${answers.experience ?? "beginner"}
 Goal: ${answers.goal ?? "make money"}
-${background ? `Founder background: ${background}. Use this ONLY to identify transferable advantages for this specific idea. Do not redirect or anchor the blueprint to this background.` : ""}
+${background ? `Founder background: ${background}. Use ONLY to identify transferable advantages. Do not redirect blueprint to this background.` : ""}
 
 Return the JSON blueprint for this exact idea.`;
 
@@ -221,7 +223,7 @@ Return the JSON blueprint for this exact idea.`;
         const saveRes = await fetch(`${SUPABASE_URL}/rest/v1/blueprints`, {
           method: "POST",
           headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, "Content-Type": "application/json", Prefer: "return=representation" },
-          body: JSON.stringify({ user_id: userId, idea_name: ideaName, answers, report }),
+          body: JSON.stringify({ user_id: userId, idea_name: displayName, answers, report }),
         });
         const saved = await saveRes.json();
         blueprintId = saved?.[0]?.id ?? null;
@@ -229,7 +231,7 @@ Return the JSON blueprint for this exact idea.`;
     }
 
     // Return blueprint immediately — roadmap generates separately
-    return new Response(JSON.stringify({ ideaName, report, blueprintId }), {
+    return new Response(JSON.stringify({ ideaName: displayName, report, blueprintId }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
 

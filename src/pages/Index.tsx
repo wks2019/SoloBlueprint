@@ -14,7 +14,7 @@ type Report = ReturnType<typeof getMockReport>;
 const ADMIN_EMAIL = "mvlasceanu26.vm@gmail.com";
 
 const initialAnswers: FormAnswers = {
-  selectedIdea: null, customIdea: "", ideaDescription: "", country: "", businessType: null, tone: null, background: "", budget: null, hours: null, experience: null, goal: null,
+  ideaName: "", selectedIdea: null, ideaDescription: "", country: "", businessType: null, tone: null, background: "", budget: null, hours: null, experience: null, goal: null,
 };
 
 const Index = () => {
@@ -59,7 +59,7 @@ const Index = () => {
 
   if (checking) return null;
 
-  const ideaName = answers.selectedIdea ?? answers.customIdea.trim();
+  const ideaName = answers.ideaName || answers.selectedIdea || answers.ideaDescription.trim().split(/[.!?]/)[0].trim().split(/\s+/).slice(0, 8).join(" ");
 
 
 
@@ -69,7 +69,7 @@ const Index = () => {
     try {
       const country = answers.country?.trim() || "United Kingdom";
       const businessType = answers.businessType || "online";
-      const idea = (answers.selectedIdea ?? answers.customIdea ?? "").trim();
+      const idea = (snapAnswers.ideaName || snapAnswers.selectedIdea || snapAnswers.ideaDescription || "").trim();
       const useBpId = bpId !== undefined ? bpId : blueprintIdRef.current;
       console.log("Fetching roadmap for:", idea, "bpId:", useBpId);
       const { data: rmData, error: rmErr } = await supabase.functions.invoke("generate-roadmap", {
@@ -87,7 +87,7 @@ const Index = () => {
   const handleSubmit = async () => {
     // Snapshot answers at submit time to avoid stale closure issues
     const snapAnswers = { ...answers };
-    const snapIdea = (snapAnswers.selectedIdea ?? snapAnswers.customIdea ?? "").trim();
+    const snapIdea = (snapAnswers.ideaName || snapAnswers.selectedIdea || snapAnswers.ideaDescription || "").trim();
     if (!snapIdea) return;
     if (!isAdmin && tokenBalance !== null && tokenBalance <= 0) { setView("store"); return; }
 

@@ -324,7 +324,7 @@ const Landing = () => {
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { icon: "🎯", title: "Built around your idea", desc: "Every section is generated for your specific business. Not a template. Not a generic answer." },
-              { icon: "🇬🇧", title: "Real tools. Real prices.", desc: "Every recommendation comes with a name, a price, and a reason. No vague advice. No "just Google it"." },
+              { icon: "🇬🇧", title: "Real tools. Real prices.", desc: "Every recommendation comes with a name, a price, and a reason. No vague advice." },
               { icon: "📋", title: "Ready to send", desc: "Outreach scripts and email copy written for your exact idea. Copy it, paste it, send it." },
             ].map((c, i) => (
               <FadeUp key={c.title} delay={i * 100}>
