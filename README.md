@@ -416,3 +416,30 @@ SUPABASE_ACCESS_TOKEN=<token> supabase functions deploy generate-blueprint --pro
 ---
 
 *Built by solo founders, for solo founders. soloblueprint.co.uk*
+
+---
+
+## Changelog
+
+### June 8, 2026
+- **Form redesign** — unified idea input: `ideaName` single source of truth, `customIdea` removed, description textarea is primary input, idea grid is shortcut only
+- **Form UX** — "Not sure where to start?" divider, helper text above grid, fallback line below grid, country made optional, button activates from description alone
+- **Em dashes purged** — zero em dashes remaining across entire codebase: FormView, AccountMenu, App, index.css, mockData.js, index.html, all edge functions. Permanent rule.
+- **Resend SMTP connected** — all Supabase auth emails now route through hello@soloblueprint.co.uk via smtp.resend.com:587
+- **Email rate limit raised** — from 2/hour to 100/hour via Supabase auth config
+- **Email confirmation disabled** — users sign up and get straight in, no confirmation email required (re-enable once Resend SMTP verified)
+- **Admin audit rules** — /audit now reads all project chats first before reporting
+- **Memory updated** — Resend API key, communication rules, audit rules, README update rule all added to persistent memory
+
+### June 7, 2026
+- **Stripe live mode activated** — real payments active, all 4 live price IDs created
+- **Gift tokens admin section** — gift 1/3/5/10 tokens to any user by email with reason selector
+- **Auto-refund on failure** — tokens always returned if blueprint generation fails
+- **Supabase project fix** — app was pointing at wrong Supabase project (Lovable), fixed to nlpgbwhxdrxsddhkkcwc
+- **Blueprint generation fix** — rewrote edge function without tool_use schema, plain JSON response, all 14 sections generating within 150s timeout
+- **Admin sign in fix** — admin email always redirects to /app/admin regardless of form mode
+- **/healthz endpoint** — Netlify function monitoring Supabase, edge function, Anthropic, Stripe
+- **UptimeRobot** — pings /healthz every 5 minutes, alerts mvlasceanu26.vm@gmail.com
+- **Landing page** — testimonials replaced with real blueprint preview (browser mockup, blurred locked sections, paywall card)
+- **RLS policies** — users can only read/insert their own data across all tables
+- **Supabase auth** — site URL, redirect URLs, email subjects branded as SoloBlueprint
