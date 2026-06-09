@@ -52,7 +52,7 @@ SECTION-SPECIFIC RULES:
 - diagnosis: Assess the idea honestly. Name the real opportunity AND the real obstacle. Reference a comparable business that succeeded.
 - problem_and_demand: Name the exact pain. Cite real evidence of demand (search volume, market size, trend, or named competitor doing well).
 - target_audience: Find the single most specific person who experiences this problem so painfully they would pay to solve it today without needing to be convinced it is worth solving. Describe their job, age, location, daily frustration, and where they are right now (which platform, community, forum, or feed). End with the one sentence that makes them feel completely understood the moment they read it.
-- clear_offer: Write the exact offer in one sentence. Include price, deliverable, and timeframe. No vagueness.
+- clear_offer: Build a complete pitch narrative in 4 parts. Part 1: the problem so undeniably real that dismissing it feels impossible. Part 2: the solution so obviously right that the only question is why nobody built it sooner. Part 3: the exact offer in one sentence with price, deliverable, and timeframe. Part 4: the proof or traction that makes a complete stranger feel safe paying without hesitation.
 - tools_needed: List every tool needed. Name, purpose, price. Specific to this idea and country.
 - ai_nocode_stack: List AI and no-code tools that give this founder an unfair advantage. Include exact use case per tool.
 - launch_plan: Plain string. 5 phases over 30 days. Each phase: what to do, how long, what done looks like.
