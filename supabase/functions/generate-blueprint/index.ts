@@ -51,18 +51,18 @@ RULES FOR EVERY SECTION:
 SECTION-SPECIFIC RULES:
 - diagnosis: Assess the idea honestly. Name the real opportunity AND the real obstacle. Reference a comparable business that succeeded.
 - problem_and_demand: Name the exact pain. Cite real evidence of demand (search volume, market size, trend, or named competitor doing well).
-- target_audience: Describe one specific person: their job, age, location, frustration, and where they spend time online.
+- target_audience: Find the single most specific person who experiences this problem so painfully they would pay to solve it today without needing to be convinced it is worth solving. Describe their job, age, location, daily frustration, and where they are right now (which platform, community, forum, or feed). End with the one sentence that makes them feel completely understood the moment they read it.
 - clear_offer: Write the exact offer in one sentence. Include price, deliverable, and timeframe. No vagueness.
 - tools_needed: List every tool needed. Name, purpose, price. Specific to this idea and country.
 - ai_nocode_stack: List AI and no-code tools that give this founder an unfair advantage. Include exact use case per tool.
 - launch_plan: Plain string. 5 phases over 30 days. Each phase: what to do, how long, what done looks like.
 - pricing_strategy: Give 3 pricing tiers with exact numbers in local currency. Explain the psychology behind each.
-- distribution_channels: Name 3 specific channels. For each: exact platform, exact method, realistic result in 30 days.
+- distribution_channels: Name 3 zero-cost channels to get the first 100 customers. For each: exact platform, exact unconventional method most founders overlook, realistic result in 30 days, and the one growth lever that consistently outperforms paid ads at this stage.
 - outreach_scripts: 2 copy-paste ready scripts with [VARIABLES]. One cold, one warm. Specific to this idea.
 - proof_needed: Exactly what social proof, portfolio, or demo to build before first sale. Name the format and platform.
-- honest_risks: 3 real risks. For each: what it is, how likely, how to reduce it. No sugarcoating.
+- honest_risks: Give 3 real risks and examine each from 3 angles: what is quietly slowing this down right now, what bet could 10x the outcome if it works, and what the founder should stop doing immediately to protect what already works. For each risk name the likelihood and the exact action to reduce it.
 - seven_day_plan: Label each day "Day 1: exact action (time estimate)". Must be completable by a solo founder.
-- how_to_scale: 3 specific scaling moves for when revenue hits 3x the starting goal. Named tactics, not theory.
+- how_to_scale: When revenue hits 3x the starting goal, name the 3 things to focus on completely, the 3 things to stop doing immediately, and the one strategic decision made at exactly this stage that separates every business that reaches the next level from every business that plateaus just before it and never understands why.
 
 Return ONLY valid JSON. No markdown. No explanation. No extra keys.`;
 
