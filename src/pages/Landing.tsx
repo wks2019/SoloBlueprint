@@ -145,7 +145,7 @@ const Landing = () => {
               { num: `${sections}`, label: "Blueprint sections" },
               { num: "<60s", label: "Time to generate" },
               { num: "£0", label: "To get started" },
-              { num: "AI", label: "Powered by AI" },
+              { num: "3", label: "Free sections to preview" },
             ].map(stat => (
               <div key={stat.label} className="text-center">
                 <span style={{ fontFamily: "'DM Serif Display', serif" }} className="text-2xl sm:text-3xl text-indigo-600 block leading-none">{stat.num}</span>
@@ -157,14 +157,14 @@ const Landing = () => {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="bg-gray-50 border-y border-gray-100 px-4 py-16 sm:px-10 sm:py-20">
+      <section id="how" className="bg-gray-50 border-y border-gray-100 px-4 py-16 sm:px-10 sm:py-20">
         <div className="max-w-4xl mx-auto">
           <FadeUp><p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">How it works</p></FadeUp>
           <FadeUp delay={100}><h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-4">From idea to blueprint in three steps</h2></FadeUp>
           <FadeUp delay={200}><p className="text-gray-500 text-center max-w-md mx-auto mb-14 font-light">Three steps. No fluff.</p></FadeUp>
           <div className="grid sm:grid-cols-3 gap-6">
             {[
-              { num: "01", icon: "✏️", title: "Describe your idea", body: "Tell us what you want to build, where, and how much time you have. 90 seconds." },
+              { num: "01", icon: "✏️", title: "Describe your idea", body: "Tell us what you want to build, where, and how much time you have. Takes 60 seconds." },
               { num: "02", icon: "⚡", title: "We build your plan", body: "Real tools. Real prices. Real outreach scripts. A full 14-section blueprint built around your specific idea." },
               { num: "03", icon: "🚀", title: "Know exactly what to do", body: "Download your blueprint, share it, or start executing today. No more guessing. No more wasted weeks." },
             ].map((step, i) => (
@@ -253,8 +253,8 @@ const Landing = () => {
                 {/* Unlocked sections */}
                 <div className="space-y-2">
                   {[
-                    { num: "01", title: "Business Idea Diagnosis", cat: "strategy", color: "#4f46e5", bg: "#eef2ff", body: "You're entering a high-demand, low-competition niche. Creators produce 10x more content than they can repurpose : most have no system. Your edge: you don't need a big audience to start, just 3–5 clients paying £150–300/mo. At £200/client you need just 3 to hit your £500 target in month one." },
-                    { num: "02", title: "Real Problem & Demand", cat: "market", color: "#16a34a", bg: "#f0fdf4", body: "r/podcasting, r/youtubers, and r/entrepreneur are full of creators asking 'how do I repurpose my content?' LinkedIn creators with 5k+ followers regularly post about this pain. The demand is proven : you're solving a real, recurring problem that creators can't easily automate themselves yet." },
+                    { num: "01", title: "Business Idea Diagnosis", cat: "strategy", color: "#4f46e5", bg: "#eef2ff", body: "You're entering a high-demand, low-competition niche. Creators produce 10x more content than they can repurpose, and most have no system. Your edge: you don't need a big audience to start, just 3–5 clients paying £150–300/mo. At £200/client you need just 3 to hit your £500 target in month one." },
+                    { num: "02", title: "Real Problem & Demand", cat: "market", color: "#16a34a", bg: "#f0fdf4", body: "r/podcasting, r/youtubers, and r/entrepreneur are full of creators asking 'how do I repurpose my content?' LinkedIn creators with 5k+ followers regularly post about this pain. The demand is proven: you're solving a real, recurring problem that creators can't easily automate themselves yet." },
                     { num: "03", title: "Target Audience", cat: "market", color: "#16a34a", bg: "#f0fdf4", body: "Solo podcasters (100–5k listeners), LinkedIn creators (2k–20k followers), and course creators who publish weekly. They earn £500–3k/mo from content but spend 3–6 hours per piece. They'll pay £150–300/mo to get that time back. Find them on Twitter/X, LinkedIn, and in Skool communities." },
                   ].map(s => (
                     <div key={s.num} className="bg-white rounded-xl border border-gray-100 overflow-hidden" style={{ borderTop: `2px solid ${s.color}` }}>
@@ -290,7 +290,7 @@ const Landing = () => {
                   <div className="bg-white border border-indigo-100 rounded-2xl p-5 text-center shadow-[0_-4px_24px_rgba(79,70,229,0.08)]">
                     <div className="text-xl mb-2">🔓</div>
                     <p style={{ fontFamily: "'DM Serif Display', serif" }} className="text-base text-gray-900 mb-1">Unlock your full blueprint</p>
-                    <p className="text-[11px] text-gray-500 mb-4">11 more sections : clear offer, tools, pricing, outreach scripts, 7-day plan.</p>
+                    <p className="text-[11px] text-gray-500 mb-4">11 more sections: clear offer, tools, pricing, outreach scripts, 7-day plan.</p>
                     <div className="space-y-2 mb-4">
                       {[
                         { name: "One blueprint", desc: "This blueprint only", price: "£9", period: "one-off", selected: false },
@@ -340,7 +340,7 @@ const Landing = () => {
       </section>
 
       {/* PRICING */}
-      <section className="px-4 py-16 sm:px-10 sm:py-20 bg-gray-50 border-y border-gray-100">
+      <section id="pricing" className="px-4 py-16 sm:px-10 sm:py-20 bg-gray-50 border-y border-gray-100">
         <div className="max-w-4xl mx-auto">
           <FadeUp><p className="text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-3 text-center">Pricing</p></FadeUp>
           <FadeUp delay={100}><h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-gray-900 text-center mb-4">Simple token pricing</h2></FadeUp>
@@ -357,7 +357,8 @@ const Landing = () => {
                   {plan.featured && <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-indigo-600 px-3 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider whitespace-nowrap">Best value</span>}
                   <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">{plan.name}</p>
                   <p style={{ fontFamily: "'DM Serif Display', serif" }} className="text-2xl sm:text-3xl text-gray-900 mb-0.5">{plan.price}</p>
-                  <p className="text-xs text-gray-400 mb-4">{plan.tokens}</p>
+                  <p className="text-xs text-gray-400 mb-1">{plan.tokens}</p>
+                  <p className="text-[11px] text-indigo-500 font-medium mb-4">{plan.per}</p>
                   <button onClick={handleCTA} className={`w-full rounded-lg py-2 text-xs sm:text-sm font-semibold transition ${plan.featured ? "bg-indigo-600 text-white hover:bg-indigo-700" : "border border-gray-200 text-gray-700 hover:border-indigo-300 hover:text-indigo-600"}`}>
                     Get started
                   </button>
@@ -403,7 +404,7 @@ const Landing = () => {
           <h2 style={{ fontFamily: "'DM Serif Display', serif" }} className="text-3xl sm:text-4xl text-white mb-4">Your plan is 60 seconds away.</h2>
           <p className="text-indigo-200 mb-8 font-light max-w-md mx-auto">Free to start. No card needed. Know exactly what to do by the time you finish your coffee.</p>
           <button onClick={handleCTA} className="w-full sm:w-auto rounded-xl bg-white px-8 py-4 text-base font-semibold text-indigo-600 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
-            Build my blueprint, it is free →
+            Build my free blueprint →
           </button>
         </FadeUp>
       </section>
