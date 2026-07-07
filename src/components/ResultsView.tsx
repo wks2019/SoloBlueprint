@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { track } from "@/lib/track";
 import { useNavigate } from "react-router-dom";
 import { Logo } from "./Logo";
 import type { FormAnswers } from "./FormView";
@@ -275,6 +276,7 @@ const RoadmapPaywall = ({ onUnlock }: { onUnlock: () => void }) => (
 
 const PaywallGate = () => {
   const [selected, setSelected] = useState("monthly");
+  useEffect(() => { track("paywall_view"); }, []);
   const navigate = useNavigate();
   return (
     <div className="relative mt-2">

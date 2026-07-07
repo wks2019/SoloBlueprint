@@ -43,6 +43,7 @@ const Index = () => {
       if (params.get("checkout") === "success") {
         window.history.replaceState({}, "", "/app");
         toast({ title: "Payment successful! 🎉", description: "Your tokens have been credited." });
+        track("purchase_success");
         if (!admin) await refreshTokenBalance(data.session.user.id);
       }
     });
@@ -89,6 +90,7 @@ const Index = () => {
     const snapAnswers = { ...answers };
     const snapIdea = (snapAnswers.ideaName || snapAnswers.selectedIdea || snapAnswers.ideaDescription || "").trim();
     if (!snapIdea) return;
+    track("blueprint_generate", { idea: snapIdea.slice(0, 80) });
     if (!isAdmin && tokenBalance !== null && tokenBalance <= 0) { setView("store"); return; }
 
     setReport({});

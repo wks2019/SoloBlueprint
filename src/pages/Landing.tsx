@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
+import { track } from "@/lib/track";
 import { supabase } from "@/integrations/supabase/client";
 
 const IDEAS = [
@@ -52,6 +53,7 @@ const FadeUp = ({ children, delay = 0, className = "" }: { children: React.React
 };
 
 const Landing = () => {
+  useEffect(() => { track("landing_view"); }, []);
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [selectedIdea, setSelectedIdea] = useState<string | null>(null);
