@@ -339,6 +339,33 @@ const SkeletonCard = ({ num, title }: { num: string; title: string }) => (
   </div>
 );
 
+const RoadmapSkeletonLoader = ({ count = 6 }: { count?: number }) => (
+  <div className="space-y-3">
+    {Array.from({ length: count }).map((_, i) => (
+      <div
+        key={i}
+        className="rounded-2xl border border-border bg-card p-5 animate-pulse"
+        style={{
+          animation: `slideIn 0.4s ease-out ${i * 0.08}s both`,
+        }}
+      >
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-12 h-6 rounded-full bg-muted" />
+            <div className="w-16 h-4 rounded bg-muted" />
+          </div>
+        </div>
+        <div className="h-5 w-1/3 rounded bg-muted mb-3" />
+        <div className="space-y-2 mb-4">
+          <div className="h-3 w-full rounded bg-muted/60" />
+          <div className="h-3 w-5/6 rounded bg-muted/60" />
+        </div>
+        <div className="h-20 w-full rounded-lg bg-muted/40" />
+      </div>
+    ))}
+  </div>
+);
+
 export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = false, isShared = false, roadmapLoading = false, onFetchRoadmap, generating = false, chunksComplete = 0 }: ResultsViewProps) => {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
@@ -487,13 +514,13 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
             </div>
 
             {roadmapLoading ? (
-              <div className="rounded-2xl border border-border bg-card p-8 text-center">
-                <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+              <>
+                <div className="rounded-2xl border border-border bg-card p-4 mb-4 flex items-center gap-2 text-sm text-muted-foreground">
                   <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
                   Building your roadmap...
                 </div>
-                <p className="text-xs text-muted-foreground mt-2">This takes about 15 seconds</p>
-              </div>
+                <RoadmapSkeletonLoader count={6} />
+              </>
             ) : roadmapWeeks.length === 0 ? (
               <div className="rounded-2xl border border-border bg-card p-8 text-center">
                 <p className="text-lg mb-2">🗺️</p>
@@ -511,13 +538,27 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
               </div>
             ) : (
               <>
-                {freeWeeks.map(week => (
-                  <WeekCard key={week.week} week={week} />
+                {freeWeeks.map((week, idx) => (
+                  <div
+                    key={week.week}
+                    style={{
+                      animation: `slideIn 0.4s ease-out ${idx * 0.08}s both`,
+                    }}
+                  >
+                    <WeekCard week={week} />
+                  </div>
                 ))}
 
                 {isPaid ? (
-                  lockedWeeks.map(week => (
-                    <WeekCard key={week.week} week={week} />
+                  lockedWeeks.map((week, idx) => (
+                    <div
+                      key={week.week}
+                      style={{
+                        animation: `slideIn 0.4s ease-out ${(freeWeeks.length + idx) * 0.08}s both`,
+                      }}
+                    >
+                      <WeekCard week={week} />
+                    </div>
                   ))
                 ) : (
                   lockedWeeks.length > 0 && <RoadmapPaywall onUnlock={() => navigate("/app/auth")} />
