@@ -182,7 +182,7 @@ const Index = () => {
     </div>
   );
 
-  if (view === "home") return <HomeView onStart={() => setView("form")} tokenBalance={isAdmin ? null : tokenBalance} isAdmin={isAdmin} />;
+  if (view === "home") return <HomeView onStart={() => setView("form")} onTopUp={() => setView("store")} tokenBalance={isAdmin ? null : tokenBalance} isAdmin={isAdmin} />;
   if (view === "form") return <FormView answers={answers} setAnswers={setAnswers} onBack={() => setView("home")} onSubmit={handleSubmit} />;
 
   if (view === "results") return (
@@ -199,7 +199,7 @@ const Index = () => {
     />
   );
 
-  return <HomeView onStart={() => setView("form")} tokenBalance={isAdmin ? null : tokenBalance} isAdmin={isAdmin} />;
+  return <HomeView onStart={() => setView("form")} onTopUp={() => setView("store")} tokenBalance={isAdmin ? null : tokenBalance} isAdmin={isAdmin} />;
 };
 
 export default Index;

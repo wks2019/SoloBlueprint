@@ -4,11 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 interface HomeViewProps {
   onStart: () => void;
+  onTopUp?: () => void;
   tokenBalance?: number | null;
   isAdmin?: boolean;
 }
 
-export const HomeView = ({ onStart, tokenBalance = null, isAdmin = false }: HomeViewProps) => {
+export const HomeView = ({ onStart, onTopUp, tokenBalance = null, isAdmin = false }: HomeViewProps) => {
   const navigate = useNavigate();
 
   const hasTokens = isAdmin || tokenBalance === null || tokenBalance > 0;
@@ -48,7 +49,7 @@ export const HomeView = ({ onStart, tokenBalance = null, isAdmin = false }: Home
         </p>
 
         <button
-          onClick={onStart}
+          onClick={hasTokens ? onStart : (onTopUp ?? onStart)}
           className="mt-8 w-full max-w-[320px] rounded-xl bg-primary px-6 py-4 text-base font-semibold text-primary-foreground shadow-[0_10px_30px_-10px_hsl(var(--primary)/0.6)] transition hover:brightness-110 active:scale-[0.98]"
         >
           {hasTokens ? "Let's build this →" : "Top up tokens →"}
