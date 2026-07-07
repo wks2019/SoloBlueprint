@@ -28,7 +28,7 @@ export const HomeView = ({ onStart, onTopUp, tokenBalance = null, isAdmin = fals
               Admin
             </button>
           )}
-          <AccountMenu />
+          <AccountMenu onTopUp={onTopUp} />
         </div>
       </header>
 

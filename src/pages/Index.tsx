@@ -85,6 +85,15 @@ const Index = () => {
     finally { setRoadmapLoading(false); }
   };
 
+  useEffect(() => {
+    const stored = sessionStorage.getItem("sb_idea");
+    if (stored) {
+      sessionStorage.removeItem("sb_idea");
+      setAnswers(prev => ({ ...prev, selectedIdea: stored, ideaName: stored }));
+      setView("form");
+    }
+  }, []);
+
   const handleSubmit = async () => {
     // Snapshot answers at submit time to avoid stale closure issues
     const snapAnswers = { ...answers };

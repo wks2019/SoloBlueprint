@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const ADMIN_EMAIL = "mvlasceanu26.vm@gmail.com";
 
-export const AccountMenu = () => {
+export const AccountMenu = ({ onTopUp }: { onTopUp?: () => void } = {}) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -92,7 +92,13 @@ export const AccountMenu = () => {
                 <p className="text-[11px] font-semibold text-foreground">{tokenBalance} remaining</p>
               </div>
               {tokenBalance === 0 && (
-                <p className="mt-1 text-[11px] text-primary font-medium">Top up to generate more →</p>
+                <button
+                  type="button"
+                  onClick={() => { setOpen(false); onTopUp?.(); }}
+                  className="mt-1 text-[11px] text-primary font-medium hover:underline"
+                >
+                  Top up to generate more →
+                </button>
               )}
             </div>
           )}

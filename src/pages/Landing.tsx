@@ -67,7 +67,10 @@ const Landing = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleCTA = () => navigate(isLoggedIn ? "/app" : "/app/auth");
+  const handleCTA = () => {
+    if (selectedIdea) sessionStorage.setItem("sb_idea", selectedIdea);
+    navigate(isLoggedIn ? "/app" : "/app/auth");
+  };
 
   const ctaLabel = selectedIdea
     ? `Build my ${selectedIdea} blueprint →`
