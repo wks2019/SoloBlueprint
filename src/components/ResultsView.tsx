@@ -569,6 +569,9 @@ export const ResultsView = ({ ideaName, answers, report, onStartOver, isPaid = f
         )}
 
         <footer className="mt-12 border-t border-border pt-5 text-center text-xs text-muted-foreground">
+          <p className="mb-2 text-[11px] leading-relaxed">
+            This blueprint is AI-generated information, not professional, legal, financial, or tax advice. Verify facts and figures before acting. See our <a href="/terms" className="underline hover:text-foreground">Terms</a>.
+          </p>
           SoloBlueprint · soloblueprint.co.uk
         </footer>
       </main>

@@ -110,8 +110,10 @@ const paintBackground = (doc: jsPDF) => {
 };
 
 const drawFooter = (doc: jsPDF, pageNum: number, totalPages: number) => {
-  doc.setFontSize(8);
+  doc.setFontSize(7);
   doc.setTextColor(MUTED[0], MUTED[1], MUTED[2]);
+  doc.text("AI-generated information, not professional advice. Verify before acting.", MARGIN, PAGE_H - 12);
+  doc.setFontSize(8);
   doc.text("SoloBlueprint · soloblueprint.co.uk", MARGIN, PAGE_H - 8);
   doc.text(`${pageNum} / ${totalPages}`, PAGE_W - MARGIN, PAGE_H - 8, { align: "right" });
 };
